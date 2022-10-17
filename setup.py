@@ -5,6 +5,15 @@ import os
 import io
 
 
+install_requires = [
+    "numpy",
+    "networkx",
+    "scikit-learn",
+    "scipy",
+    "numba"
+]
+
+
 def read_file(fname):
     path = os.path.join(os.path.dirname(__file__), fname)
     return io.open(path, encoding='utf8').read()
@@ -12,9 +21,7 @@ def read_file(fname):
 
 setup(name="rolewalk",
       version="0.0.1",
-      description=("Structural node embedding on directed graphs"
-                   " using bidirectional random walks"),
-      long_description=read_file('README.md'),
+      description="Structural node embedding on directed graphs",
       py_modules=["rolewalk"],
       author="Maixent Chenebaux",
       author_email="max.chbx@gmail.com",
@@ -22,6 +29,7 @@ setup(name="rolewalk",
       maintainer_email="max.chbx@gmail.com",
       url="https://github.com/kerighan/rolewalk",
       download_url="http://pypi.python.org/pypi/rolewalk",
+      install_requires=install_requires,
       keywords="graph, node, embedding, structural, random walks",
       platforms=["Linux", "Mac OSX", "Windows", "Unix"],
       classifiers=[
@@ -34,5 +42,5 @@ setup(name="rolewalk",
           "Topic :: Scientific/Engineering :: Bio-Informatics",
           "Topic :: Scientific/Engineering :: Information Analysis",
           "Topic :: Scientific/Engineering :: Mathematics",
-          "Topic :: Scientific/Engineering :: Physics",
+          "Topic :: Scientific/Engineering :: Physics"
       ])
