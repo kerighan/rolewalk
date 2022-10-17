@@ -7,8 +7,8 @@ from networkx.drawing.nx_pydot import graphviz_layout
 import numpy as np
 
 # instantiate balanced tree
-G = nx.balanced_tree(2, 7)
-k = int(np.log2(len(G.nodes)))
+# G = nx.balanced_tree(2, 7)
+G = nx.barbell_graph(10, 5)
 
 # create embeddings
 X = rolewalk2(G, walk_len=4, embedding_dim=2)
@@ -20,4 +20,3 @@ plt.show()
 pos = graphviz_layout(G, prog="dot")
 nx.draw(G, node_color=y, node_size=50, pos=pos)
 plt.show()
-
