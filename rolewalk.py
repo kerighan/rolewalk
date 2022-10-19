@@ -1,133 +1,98 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import numpy as np
 import networkx as nx
-from sklearn.preprocessing import normalize
+import numpy as np
 from scipy.sparse import identity
-from numba import njit, prange
+from sklearn.preprocessing import normalize
 
 
-@njit(fastmath=True)
-def _compute_entropy(row, delta):
-    entropy = -(row * np.log(row)).sum()
-    if delta > 1:
-        return entropy / np.log(delta)
-    return entropy
+def compute_iter(X, T_indptr, T_data, theta, n, w, dim):
+    for i in range(n):
+        a, b = T_indptr[i:i+2]
+        probabilities = np.expand_dims(T_data[a:b], -1)
+        phi = np.mean(np.exp(1j * probabilities * theta), axis=0)
+        X[i, w*dim:(w+1)*dim] = np.concatenate([phi.real, phi.imag])
 
 
-@njit(fastmath=True)
-def compute_directed_embedding(
-    n, n_samples, indptr, indptr_T, data, data_T,
-    t_min=1, t_max=100, use_entropy=True,
-):
-    X = np.zeros((n, n_samples * 4 + 2 * use_entropy), dtype=np.float32)
-    timesteps = np.linspace(t_min, t_max, n_samples)
-    for i in prange(n):
-        vec = []
-        # normalized adjacency matrix
-        a, b = indptr[i:i+2]
-        delta = b - a
-        row = data[a:b]
-
-        # transposed normalized adjacency matrix
-        a, b = indptr_T[i:i+2]
-        delta_T = b - a
-        row_T = data_T[a:b]
-
-        if use_entropy:
-            vec.append(_compute_entropy(row, delta))
-            vec.append(_compute_entropy(row_T, delta_T))
-
-        for t in timesteps:
-            phi = np.mean(np.exp(1j * row * t))
-            vec.append(phi.real)
-            vec.append(phi.imag)
-            # add transposed components
-            phi = np.mean(np.exp(1j * row_T * t))
-            vec.append(phi.real)
-            vec.append(phi.imag)
-        X[i] = vec
-    return X
+def compute_embedding(X, H, n, theta, walk_len=3, offset=0):
+    dim = 2 * theta.shape[1]
+    T = H.copy()
+    for w in range(walk_len):
+        T @= H
+        compute_iter(X, T.indptr, T.data, theta, n, w + offset*walk_len, dim)
 
 
-@njit(fastmath=True)
-def compute_undirected_embedding(n, n_samples, indptr, data, t_min=1, t_max=100, use_entropy=True):
-    X = np.zeros((n, n_samples * 2 + use_entropy), dtype=np.float32)
-    timesteps = np.linspace(t_min, t_max, n_samples)
-    for i in prange(n):
-        vec = []
-        a, b = indptr[i:i+2]
-        row = data[a:b]
+class RoleWalk:
+    def __init__(
+        self, walk_len=3, n_samples=10, bounds=(1e-3, 100),
+        embedding_dim=2, random_state=0, clustering="k-means"
+    ):
+        self.walk_len = walk_len
+        self.n_samples = n_samples
+        self.bounds = bounds
+        self.embedding_dim = embedding_dim
 
-        if use_entropy:
-            vec.append(_compute_entropy(row, b - a))
-        for t in timesteps:
-            phi = np.mean(np.exp(1j * row * t))
-            vec.append(phi.real)
-            vec.append(phi.imag)
-        X[i] = vec
-    return X
+        # timesteps
+        theta = np.linspace(bounds[0], bounds[1], n_samples)
+        theta = theta[None, :].astype(np.float32)
+        self.theta = theta
 
+        self.random_state = random_state
 
-@njit(fastmath=True)
-def _fill_in_entropy(X, i, j, row, n):
-    entropy = -(row * np.log(row)).sum()
-    if n > 1:
-        entropy /= np.log(n)
-    X[i, j] = entropy
-
-
-def entropy_embedding(A, n, walk_len):
-    H = normalize(.1*identity(n) + A, norm="l1")
-    H_T = normalize(.1*identity(n) + A.T, norm="l1")
-
-    H_j = H
-    H_T_j = H_T
-
-    X = np.zeros((n, 2 * walk_len), dtype=np.float32)
-    for j in range(walk_len - 1):
-        H_j *= H
-        H_T_j *= H_T
-        indptr, data = H_j.indptr, H_j.data
-        indptr_T, data_T = H_T_j.indptr, H_T_j.data
-        for i in prange(n):
-            # out edges entropy
-            a, b = indptr[i:i+2]
-            row = data[a:b]
-            _fill_in_entropy(X, i, 2*j, row, b-a)
-
-            # in edges entropy
-            a, b = indptr_T[i:i+2]
-            row = data_T[a:b]
-            _fill_in_entropy(X, i, 2*j+1, row, b-a)
-    return X
-
-
-def rolewalk(
-    G,
-    walk_len=4,
-    n_samples=50,
-    t_min=1,
-    t_max=100,
-    method="characteristic",
-    use_entropy=True
-):
-    if method == "characteristic":
+    def fit_transform(self, G):
         n = len(G.nodes)
-        A = nx.adjacency_matrix(G)
+        A = nx.to_scipy_sparse_matrix(G)
+        # extract raw embedding from sampling the characteristic function
         if nx.is_directed(G):
-            H = normalize(identity(n) + A, norm="l1")**walk_len
-            H_T = normalize(identity(n) + A.T, norm="l1")**walk_len
-            return compute_directed_embedding(
-                n, n_samples, H.indptr, H_T.indptr, H.data, H_T.data,
-                t_min=t_min, t_max=t_max, use_entropy=use_entropy)
+            dim = 4 * self.n_samples * self.walk_len
+            X = np.zeros((n, dim), dtype=np.float32)
+            H = normalize(identity(n) + A, norm="l1")
+            H_T = normalize(identity(n) + A.T, norm="l1")
+            del A
+            compute_embedding(X, H, n, self.theta, self.walk_len, offset=0)
+            compute_embedding(X, H_T, n, self.theta, self.walk_len, offset=1)
         else:
-            H = normalize(identity(n) + A, norm="l1")**walk_len
-            return compute_undirected_embedding(
-                n, n_samples, H.indptr, H.data,
-                t_min=t_min, t_max=t_max, use_entropy=use_entropy)
-    elif method == "entropy":
-        n = len(G.nodes)
-        A = nx.adjacency_matrix(G)
-        return entropy_embedding(A, n, walk_len)
+            dim = 2 * self.n_samples * self.walk_len
+            X = np.zeros((n, dim), dtype=np.float32)
+            H = normalize(A, norm="l1")
+            compute_embedding(X, H, n, self.theta, self.walk_len)
 
+        # random projection
+        if self.embedding_dim is not None:
+            r = np.random.RandomState(self.random_state)
+            U = r.random(
+                size=(X.shape[1], self.embedding_dim)).astype(np.float32)
+            Q, _ = np.linalg.qr(U)
+            X = X @ Q
+        return X
+
+    def fit_predict(
+        self, G,
+        min_n_roles=2,
+        max_n_roles=8,
+        method="kmeans",
+        metric="silhouette"
+    ):
+        X = self.fit_transform(G)
+
+        if metric == "silhouette":
+            from sklearn.metrics import silhouette_score as get_score
+        elif metric == "calinski_harabasz":
+            from sklearn.metrics import calinski_harabasz_score as get_score
+
+        if method == "kmeans":
+            from sklearn.cluster import KMeans as Clusterer
+            X += np.random.normal(size=X.shape, scale=1e-5)  # avoid duplicates
+        elif method == "agglomerative":
+            from sklearn.cluster import AgglomerativeClustering as Clusterer
+        elif method == "spectral":
+            from sklearn.cluster import SpectralClustering as Clusterer
+
+        best_score = -float("inf")
+        for i in range(min_n_roles, max_n_roles+1):
+            labels = Clusterer(n_clusters=i).fit_predict(X)
+            score = get_score(X, labels)
+            if score > best_score:
+                best_score = score
+                best_y = labels[:]
+        return best_y

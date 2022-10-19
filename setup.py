@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from setuptools import setup
-import os
 import io
+import os
 
+from setuptools import setup
 
 install_requires = [
     "numpy",
@@ -20,7 +20,7 @@ def read_file(fname):
 
 
 setup(name="rolewalk",
-      version="0.0.1",
+      version="1.0.0",
       description="Structural node embedding on directed graphs",
       py_modules=["rolewalk"],
       author="Maixent Chenebaux",
