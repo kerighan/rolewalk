@@ -25,7 +25,7 @@ def compute_embedding(X, H, n, theta, walk_len=3, offset=0):
 class RoleWalk:
     def __init__(
         self, walk_len=3, n_samples=10, bounds=(1e-3, 100),
-        embedding_dim=2, random_state=0, clustering="k-means"
+        embedding_dim=2, random_state=0
     ):
         self.walk_len = walk_len
         self.n_samples = n_samples
@@ -69,11 +69,14 @@ class RoleWalk:
     def fit_predict(
         self, G,
         min_n_roles=2,
-        max_n_roles=8,
+        max_n_roles=10,
         method="kmeans",
         metric="silhouette"
     ):
-        X = self.fit_transform(G)
+        if not isinstance(G, np.ndarray):
+            X = self.fit_transform(G)
+        else:
+            X = G
 
         if metric == "silhouette":
             from sklearn.metrics import silhouette_score as get_score

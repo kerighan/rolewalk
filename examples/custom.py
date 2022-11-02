@@ -2,6 +2,7 @@ import time
 
 import matplotlib.pyplot as plt
 import networkx as nx
+from networkx.drawing.nx_pydot import graphviz_layout
 from rolewalk import RoleWalk
 from sklearn.cluster import KMeans
 
@@ -27,5 +28,6 @@ y = KMeans(7).fit_predict(X)
 plt.subplot(121)
 plt.scatter(X[:, 0], X[:, 1], c=y)
 plt.subplot(122)
-nx.draw_networkx(G, node_color=y)
+pos = graphviz_layout(G, prog="neato")
+nx.draw_networkx(G, node_color=y, pos=pos, font_color="#FFFFFF")
 plt.show()
