@@ -5,7 +5,7 @@ from networkx.drawing.nx_pydot import graphviz_layout
 from rolewalk import RoleWalk
 from sklearn.cluster import KMeans
 
-G = nx.balanced_tree(2, 7)
+G = nx.barbell_graph(10, 5)
 X = RoleWalk(walk_len=3).fit_transform(G)
 y = RoleWalk(walk_len=3).fit_predict(X)
 
