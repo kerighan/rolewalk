@@ -20,7 +20,7 @@ G.add_edges_from([
     ("G", "N")
 ])
 start_time = time.time()
-X = RoleWalk().fit_transform(G)
+X = RoleWalk().transform(G)
 print(time.time() - start_time)
 
 y = KMeans(7).fit_predict(X)

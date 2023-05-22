@@ -39,9 +39,9 @@ class RoleWalk:
 
         self.random_state = random_state
 
-    def fit_transform(self, G):
+    def transform(self, G):
         n = len(G.nodes)
-        A = nx.to_scipy_sparse_matrix(G)
+        A = nx.to_scipy_sparse_array(G)
         # extract raw embedding from sampling the characteristic function
         if nx.is_directed(G):
             dim = 4 * self.n_samples * self.walk_len
@@ -74,7 +74,7 @@ class RoleWalk:
         metric="silhouette"
     ):
         if not isinstance(G, np.ndarray):
-            X = self.fit_transform(G)
+            X = self.transform(G)
         else:
             X = G
 
