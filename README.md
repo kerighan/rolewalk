@@ -4,7 +4,7 @@ Structural role embedding on directed graphs
 ```python
 import networkx as nx
 from sklearn.cluster import KMeans
-from rolewalk import rolewalk
+from rolewalk import RoleWalk
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_pydot import graphviz_layout
 
@@ -12,7 +12,7 @@ from networkx.drawing.nx_pydot import graphviz_layout
 G = nx.balanced_tree(2, 6)
 
 # create embeddings
-X = rolewalk(G, walk_len=5)
+X = RoleWalk(walk_len=5).transform(G)
 y = KMeans(7).fit_predict(X)
 
 # draw graph
