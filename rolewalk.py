@@ -18,8 +18,8 @@ def compute_embedding(X, H, n, theta, walk_len=3, offset=0):
     dim = 2 * theta.shape[1]
     T = H.copy()
     for w in range(walk_len):
-        T @= H
         compute_iter(X, T.indptr, T.data, theta, n, w + offset*walk_len, dim)
+        T @= H
 
 
 class RoleWalk:
