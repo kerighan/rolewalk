@@ -49,3 +49,18 @@ Graphs with known structural role labels are evaluated with a
 logistic‑regression classifier, reporting accuracy and macro‑F1 scores.
 Graphs without ground‑truth labels are evaluated using the silhouette
 score after K‑means clustering.
+
+## Robustness to Edge Perturbations
+
+The `perturbation_robustness.py` script assesses how RoleWalk embeddings
+degrade when random edges are added or removed. It generates several
+perturbed versions of each graph, recomputes embeddings and metrics, and
+summarizes the results. Enable the `--plot` flag to visualize accuracy or
+silhouette score versus perturbation level.
+
+```bash
+python perturbation_robustness.py --plot
+```
+
+Results are written to `robustness.csv` and plots are saved as
+`robustness_<graph>_<metric>.png`.
