@@ -14,6 +14,10 @@ from rolewalk import RoleWalk
 from datasets import (
     generate_barbell_graph,
     generate_tree_graph,
+    generate_ring_of_cliques,
+    generate_grid_graph,
+    generate_star_graph,
+    generate_house_graph,
     load_wikipedia_voting_graph,
 )
 
