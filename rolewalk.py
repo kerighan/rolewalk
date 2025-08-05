@@ -10,7 +10,10 @@ def compute_iter(X, T_indptr, T_data, theta, n, w, dim):
     for i in range(n):
         a, b = T_indptr[i:i+2]
         probabilities = np.expand_dims(T_data[a:b], -1)
-        phi = np.mean(np.exp(1j * probabilities * theta), axis=0)
+        if probabilities.size == 0:
+            phi = np.zeros(theta.shape[1], dtype=np.float32)
+        else:
+            phi = np.mean(np.exp(1j * probabilities * theta), axis=0)
         X[i, w*dim:(w+1)*dim] = np.concatenate([phi.real, phi.imag])
 
 
