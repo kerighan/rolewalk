@@ -61,7 +61,7 @@ class RoleWalk:
         else:
             dim = 2 * self.n_samples * self.walk_len
             X = np.zeros((n, dim), dtype=np.float32)
-            H = normalize(A, norm="l1")
+            H = normalize(identity(n) + A, norm="l1")
             compute_embedding(X, H, n, self.theta, self.walk_len)
 
         # random projection
