@@ -58,15 +58,16 @@ score after K‑means clustering.
 
 ## Robustness to Edge Perturbations
 
-The `perturbation_robustness.py` script assesses how RoleWalk embeddings
-degrade when random edges are added or removed. It generates several
-perturbed versions of each graph, recomputes embeddings and metrics, and
-summarizes the results. Enable the `--plot` flag to visualize accuracy or
-silhouette score versus perturbation level.
+The `perturbation_robustness.py` script assesses how both RoleWalk and
+GraphWave embeddings degrade when random edges are added or removed. It
+generates several perturbed versions of each graph, recomputes embeddings
+and metrics, and summarizes the results. Enable the `--plot` flag to
+visualize accuracy or silhouette score versus perturbation level for each
+method.
 
 ```bash
 python perturbation_robustness.py --plot
 ```
 
 Results are written to `robustness.csv` and plots are saved as
-`robustness_<graph>_<metric>.png`.
+`robustness_<graph>_<method>_<metric>.png`.

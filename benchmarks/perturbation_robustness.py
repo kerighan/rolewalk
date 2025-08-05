@@ -11,27 +11,29 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 
-# Reuse graph generators and evaluation helpers from the comparison script
-from compare_graphwave_rolewalk import (
+try:  # Optional dependency used for comparison
+    from karateclub.node_embedding.structural import GraphWave
+except Exception:  # pragma: no cover
+    GraphWave = None  # type: ignore
+
+# Graph generators shared with the comparison script
+from datasets import (
     generate_barbell_graph,
     generate_tree_graph,
     load_wikipedia_voting_graph,
 )
 
-
-# Evaluation helpers duplicated here to avoid importing optional GraphWave
+# Evaluation helpers duplicated from the comparison script
 
 def evaluate_classification(X: np.ndarray, y: np.ndarray) -> Tuple[float, float]:
-    """Return accuracy and macro F1 for a train/test split."""
+    """Return accuracy and macro F1 for a train/test split.
+
+    Stratification is skipped when a class has fewer than two samples to
+    avoid noisy warnings from ``train_test_split``.
+    """
     class_counts = np.bincount(y)
     stratify: Optional[np.ndarray]
-    if class_counts.min() < 2:
-        warnings.warn(
-            "At least one class has fewer than two samples; stratified split is disabled."
-        )
-        stratify = None
-    else:
-        stratify = y
+    stratify = y if class_counts.min() >= 2 else None
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.5, stratify=stratify, random_state=0
@@ -98,82 +100,92 @@ def evaluate_graph(
     perturb_levels: List[float],
     n_variants: int,
 ) -> pd.DataFrame:
-    """Compute metrics for perturbed versions of ``G``."""
+    """Compute metrics for perturbed versions of ``G`` for each embedding method."""
 
     rng = np.random.default_rng(0)
-    rw = RoleWalk(walk_len=3, embedding_dim=16)
+    methods = {
+        "rolewalk": lambda H: RoleWalk(walk_len=3, embedding_dim=16, random_state=0).transform(H)
+    }
+    if GraphWave is not None:
+        methods["graphwave"] = lambda H: GraphWave().fit(H).get_embedding()
+    else:  # pragma: no cover
+        warnings.warn("GraphWave is unavailable; skipping GraphWave comparison.")
 
-    # Baseline
-    X_base = rw.transform(G)
-    if labels is not None:
-        base_acc, base_f1 = evaluate_classification(X_base, labels)
-    else:
-        base_sil = evaluate_clustering(X_base)
-
-    rows = []
-    for level in perturb_levels:
-        if level == 0:
-            if labels is not None:
-                rows.append(
-                    {
-                        "perturbation": 0.0,
-                        "accuracy": base_acc,
-                        "macro_f1": base_f1,
-                        "degradation_acc": 0.0,
-                        "degradation_f1": 0.0,
-                    }
-                )
-            else:
-                rows.append(
-                    {
-                        "perturbation": 0.0,
-                        "silhouette": base_sil,
-                        "degradation_silhouette": 0.0,
-                    }
-                )
-            continue
-
-        metrics = []
-        for _ in range(n_variants):
-            H = perturb_graph(G, level, level, rng)
-            X = rw.transform(H)
-            if labels is not None:
-                acc, f1 = evaluate_classification(X, labels)
-                metrics.append((acc, f1))
-            else:
-                sil = evaluate_clustering(X)
-                metrics.append((sil,))
-
+    rows: List[dict] = []
+    for method_name, embed_fn in methods.items():
+        X_base = embed_fn(G)
         if labels is not None:
-            accs, f1s = zip(*metrics)
-            mean_acc = float(np.mean(accs))
-            mean_f1 = float(np.mean(f1s))
-            rows.append(
-                {
-                    "perturbation": level,
-                    "accuracy": mean_acc,
-                    "macro_f1": mean_f1,
-                    "degradation_acc": base_acc - mean_acc,
-                    "degradation_f1": base_f1 - mean_f1,
-                }
-            )
+            base_acc, base_f1 = evaluate_classification(X_base, labels)
         else:
-            sils = [m[0] for m in metrics]
-            mean_sil = float(np.mean(sils))
-            rows.append(
-                {
-                    "perturbation": level,
-                    "silhouette": mean_sil,
-                    "degradation_silhouette": base_sil - mean_sil,
-                }
-            )
+            base_sil = evaluate_clustering(X_base)
+
+        for level in perturb_levels:
+            if level == 0:
+                if labels is not None:
+                    rows.append(
+                        {
+                            "method": method_name,
+                            "perturbation": 0.0,
+                            "accuracy": base_acc,
+                            "macro_f1": base_f1,
+                            "degradation_acc": 0.0,
+                            "degradation_f1": 0.0,
+                        }
+                    )
+                else:
+                    rows.append(
+                        {
+                            "method": method_name,
+                            "perturbation": 0.0,
+                            "silhouette": base_sil,
+                            "degradation_silhouette": 0.0,
+                        }
+                    )
+                continue
+
+            metrics = []
+            for _ in range(n_variants):
+                H = perturb_graph(G, level, level, rng)
+                X = embed_fn(H)
+                if labels is not None:
+                    acc, f1 = evaluate_classification(X, labels)
+                    metrics.append((acc, f1))
+                else:
+                    sil = evaluate_clustering(X)
+                    metrics.append((sil,))
+
+            if labels is not None:
+                accs, f1s = zip(*metrics)
+                mean_acc = float(np.mean(accs))
+                mean_f1 = float(np.mean(f1s))
+                rows.append(
+                    {
+                        "method": method_name,
+                        "perturbation": level,
+                        "accuracy": mean_acc,
+                        "macro_f1": mean_f1,
+                        "degradation_acc": base_acc - mean_acc,
+                        "degradation_f1": base_f1 - mean_f1,
+                    }
+                )
+            else:
+                sils = [m[0] for m in metrics]
+                mean_sil = float(np.mean(sils))
+                rows.append(
+                    {
+                        "method": method_name,
+                        "perturbation": level,
+                        "silhouette": mean_sil,
+                        "degradation_silhouette": base_sil - mean_sil,
+                    }
+                )
 
     return pd.DataFrame(rows)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Evaluate RoleWalk robustness to edge perturbations"
+        description="Evaluate embedding robustness to edge perturbations"
     )
     parser.add_argument(
         "--output", default="robustness.csv", help="Where to store the CSV summary."
@@ -222,18 +234,19 @@ def main():
     if args.plot:
         import matplotlib.pyplot as plt
 
-        for name, df_graph in df.groupby("graph"):
-            metric_cols = [c for c in df_graph.columns if c not in {"graph", "perturbation"}]
-            # only plot original metrics, not degradation
+        for (name, method), df_graph in df.groupby(["graph", "method"]):
+            metric_cols = [
+                c for c in df_graph.columns if c not in {"graph", "method", "perturbation"}
+            ]
             metrics = [c for c in metric_cols if not c.startswith("degradation")]
             for metric in metrics:
                 plt.figure()
                 plt.plot(df_graph["perturbation"], df_graph[metric], marker="o")
                 plt.xlabel("Perturbation level")
                 plt.ylabel(metric)
-                plt.title(f"{name} graph")
+                plt.title(f"{name} graph - {method}")
                 plt.tight_layout()
-                plt.savefig(f"robustness_{name}_{metric}.png")
+                plt.savefig(f"robustness_{name}_{method}_{metric}.png")
                 plt.close()
 
 
