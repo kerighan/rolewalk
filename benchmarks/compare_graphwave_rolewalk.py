@@ -63,6 +63,10 @@ def main():
     graphs = {
         "barbell": generate_barbell_graph,
         "tree": generate_tree_graph,
+        "ring_of_cliques": generate_ring_of_cliques,
+        "grid": generate_grid_graph,
+        "star": generate_star_graph,
+        "house": generate_house_graph,
         "wiki": load_wikipedia_voting_graph,
     }
 
@@ -84,17 +88,26 @@ def main():
 
         if labels is not None:
             acc, f1 = evaluate_classification(X_rw, labels)
+            m_ap = mean_average_precision(X_rw, labels)
             results.append(
-                {"graph": name, "method": "rolewalk", "accuracy": acc, "macro_f1": f1}
+                {
+                    "graph": name,
+                    "method": "rolewalk",
+                    "accuracy": acc,
+                    "macro_f1": f1,
+                    "map": m_ap,
+                }
             )
             if X_gw is not None:
                 acc, f1 = evaluate_classification(X_gw, labels)
+                m_ap = mean_average_precision(X_gw, labels)
                 results.append(
                     {
                         "graph": name,
                         "method": "graphwave",
                         "accuracy": acc,
                         "macro_f1": f1,
+                        "map": m_ap,
                     }
                 )
         else:
