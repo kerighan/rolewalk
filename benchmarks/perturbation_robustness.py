@@ -104,10 +104,14 @@ def evaluate_graph(
 
     rng = np.random.default_rng(0)
     methods = {
-        "rolewalk": lambda H: RoleWalk(walk_len=3, embedding_dim=16, random_state=0).transform(H)
+        "rolewalk": lambda H: RoleWalk(walk_len=3, embedding_dim=400, random_state=0).transform(H)
     }
     if GraphWave is not None:
-        methods["graphwave"] = lambda H: GraphWave().fit(H).get_embedding()
+        def get_embedding(H):
+            algo = GraphWave()
+            algo.fit(H)
+            return algo.get_embedding()
+        methods["graphwave"] = get_embedding
     else:  # pragma: no cover
         warnings.warn("GraphWave is unavailable; skipping GraphWave comparison.")
 
