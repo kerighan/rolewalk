@@ -16,8 +16,8 @@ try:  # Optional dependency used for comparison
 except Exception:  # pragma: no cover
     GraphWave = None  # type: ignore
 
-# Reuse graph generators and evaluation helpers from the comparison script
-from compare_graphwave_rolewalk import (
+# Graph generators shared with the comparison script
+from datasets import (
     generate_barbell_graph,
     generate_tree_graph,
     load_wikipedia_voting_graph,
