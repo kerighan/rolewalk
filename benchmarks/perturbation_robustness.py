@@ -20,6 +20,10 @@ except Exception:  # pragma: no cover
 from datasets import (
     generate_barbell_graph,
     generate_tree_graph,
+    generate_ring_of_cliques,
+    generate_grid_graph,
+    generate_star_graph,
+    generate_house_graph,
     load_wikipedia_voting_graph,
 )
 
@@ -215,6 +219,10 @@ def main():
     graphs = {
         "barbell": generate_barbell_graph,
         "tree": generate_tree_graph,
+        "ring_of_cliques": generate_ring_of_cliques,
+        "grid": generate_grid_graph,
+        "star": generate_star_graph,
+        "house": generate_house_graph,
         "wiki": load_wikipedia_voting_graph,
     }
 
