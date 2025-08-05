@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score, silhouette_score
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 
-from rolewalk import RoleWalk
+from rolewalk import RoleWalk, mean_average_precision
 
 try:
     from karateclub.node_embedding.structural import GraphWave
@@ -185,17 +185,26 @@ def main():
 
         if labels is not None:
             acc, f1 = evaluate_classification(X_rw, labels)
+            m_ap = mean_average_precision(X_rw, labels)
             results.append(
-                {"graph": name, "method": "rolewalk", "accuracy": acc, "macro_f1": f1}
+                {
+                    "graph": name,
+                    "method": "rolewalk",
+                    "accuracy": acc,
+                    "macro_f1": f1,
+                    "map": m_ap,
+                }
             )
             if X_gw is not None:
                 acc, f1 = evaluate_classification(X_gw, labels)
+                m_ap = mean_average_precision(X_gw, labels)
                 results.append(
                     {
                         "graph": name,
                         "method": "graphwave",
                         "accuracy": acc,
                         "macro_f1": f1,
+                        "map": m_ap,
                     }
                 )
         else:

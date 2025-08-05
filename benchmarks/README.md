@@ -51,6 +51,8 @@ The script currently evaluates the following graphs:
 
 Graphs with known structural role labels are evaluated with a
 logistic‑regression classifier, reporting accuracy and macro‑F1 scores.
+In addition, nodes are ranked by structural similarity to compute
+retrieval metrics such as mean average precision (mAP).
 Graphs without ground‑truth labels are evaluated using the silhouette
 score after K‑means clustering.
 
