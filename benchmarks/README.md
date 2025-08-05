@@ -43,6 +43,10 @@ The script currently evaluates the following graphs:
 
 - Barbell graph
 - Balanced tree
+- Ring of cliques
+- Grid graph
+- Star graph
+- House graph
 - Wikipedia voting network (if available via `karateclub`)
 
 Graphs with known structural role labels are evaluated with a

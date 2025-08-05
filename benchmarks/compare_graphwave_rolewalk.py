@@ -46,6 +46,56 @@ def generate_tree_graph(r: int = 2, h: int = 3) -> Tuple[nx.Graph, np.ndarray]:
     return G, np.asarray(labels, dtype=int)
 
 
+def generate_ring_of_cliques(
+    n_cliques: int = 4, clique_size: int = 5
+) -> Tuple[nx.Graph, np.ndarray]:
+    """Return a ring of cliques and role labels.
+
+    Nodes that connect cliques are assigned label 1 while internal clique
+    nodes receive label 0.
+    """
+    G = nx.connected_caveman_graph(n_cliques, clique_size)
+    labels = np.zeros(G.number_of_nodes(), dtype=int)
+    for v in G.nodes():
+        if G.degree[v] > clique_size - 1:
+            labels[v] = 1  # bridge nodes
+    return G, labels
+
+
+def generate_grid_graph(m: int = 5, n: int = 5) -> Tuple[nx.Graph, np.ndarray]:
+    """Return a 2-D grid and role labels based on node position.
+
+    Interior nodes are labeled 0, edge nodes 1, and corner nodes 2.
+    """
+    G = nx.grid_2d_graph(m, n)
+    G = nx.convert_node_labels_to_integers(G, first_label=0, ordering="sorted")
+    labels = []
+    for v in G.nodes():
+        deg = G.degree[v]
+        if deg == 4:
+            labels.append(0)  # interior
+        elif deg == 3:
+            labels.append(1)  # edge
+        else:
+            labels.append(2)  # corner
+    return G, np.asarray(labels, dtype=int)
+
+
+def generate_star_graph(n_leaves: int = 5) -> Tuple[nx.Graph, np.ndarray]:
+    """Return a star graph and role labels (center vs. leaves)."""
+    G = nx.star_graph(n_leaves)
+    labels = np.ones(G.number_of_nodes(), dtype=int)
+    labels[0] = 0  # center node
+    return G, labels
+
+
+def generate_house_graph() -> Tuple[nx.Graph, np.ndarray]:
+    """Return a house graph and role labels."""
+    G = nx.house_graph()
+    labels = np.array([0, 0, 1, 1, 2], dtype=int)
+    return G, labels
+
+
 def load_wikipedia_voting_graph() -> Tuple[Optional[nx.Graph], Optional[np.ndarray]]:
     """Attempt to load the Wikipedia voting network using karateclub."""
     try:
@@ -110,6 +160,10 @@ def main():
     graphs = {
         "barbell": generate_barbell_graph,
         "tree": generate_tree_graph,
+        "ring_of_cliques": generate_ring_of_cliques,
+        "grid": generate_grid_graph,
+        "star": generate_star_graph,
+        "house": generate_house_graph,
         "wiki": load_wikipedia_voting_graph,
     }
 
