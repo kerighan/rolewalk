@@ -41,7 +41,10 @@ class RoleWalk:
 
     def transform(self, G):
         n = len(G.nodes)
-        A = nx.to_scipy_sparse_array(G)
+        try:
+            A = nx.to_scipy_sparse_matrix(G)
+        except AttributeError:
+            A = nx.to_scipy_sparse_array(G)
         # extract raw embedding from sampling the characteristic function
         if nx.is_directed(G):
             dim = 4 * self.n_samples * self.walk_len
