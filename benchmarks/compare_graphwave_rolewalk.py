@@ -64,14 +64,31 @@ def load_wikipedia_voting_graph() -> Tuple[Optional[nx.Graph], Optional[np.ndarr
 
 
 def evaluate_classification(X: np.ndarray, y: np.ndarray) -> Tuple[float, float]:
+    """Return accuracy and macro F1 for a train/test split.
+
+    The split is stratified unless at least one class has fewer than two
+    samples, in which case stratification is skipped and a warning is emitted.
+    """
+
+    class_counts = np.bincount(y)
+    stratify: Optional[np.ndarray]
+    if class_counts.min() < 2:
+        warnings.warn(
+            "At least one class has fewer than two samples; stratified split "
+            "is disabled."
+        )
+        stratify = None
+    else:
+        stratify = y
+
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.5, stratify=y, random_state=0
+        X, y, test_size=0.5, stratify=stratify, random_state=0
     )
     clf = LogisticRegression(max_iter=1000)
     clf.fit(X_train, y_train)
     pred = clf.predict(X_test)
     acc = accuracy_score(y_test, pred)
-    f1 = f1_score(y_test, pred, average="macro")
+    f1 = f1_score(y_test, pred, average="macro", labels=np.unique(y), zero_division=0)
     return acc, f1
 
 
