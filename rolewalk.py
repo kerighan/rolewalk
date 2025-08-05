@@ -3,6 +3,7 @@
 import networkx as nx
 import numpy as np
 from scipy.sparse import identity
+from sklearn.metrics import pairwise_distances
 from sklearn.preprocessing import normalize
 
 
@@ -102,3 +103,59 @@ class RoleWalk:
                 best_score = score
                 best_y = labels[:]
         return best_y
+
+
+def pairwise_role_distances(X, metric="euclidean"):
+    """Compute pairwise distances between node role embeddings.
+
+    Parameters
+    ----------
+    X : ndarray of shape (n_nodes, n_features)
+        Embeddings of graph nodes, typically produced by :meth:`RoleWalk.transform`.
+    metric : str, optional
+        Distance metric passed to :func:`sklearn.metrics.pairwise_distances`.
+
+    Returns
+    -------
+    distances : ndarray of shape (n_nodes, n_nodes)
+        Pairwise distance matrix.
+    ranking : ndarray of shape (n_nodes, n_nodes - 1)
+        For each node, indices of other nodes sorted by increasing distance.
+    """
+
+    dists = pairwise_distances(X, metric=metric)
+    # ignore self-distances when ranking
+    np.fill_diagonal(dists, np.inf)
+    order = np.argsort(dists, axis=1)
+    return dists, order
+
+
+def mean_average_precision(X, labels, metric="euclidean"):
+    """Return mean average precision for retrieving matching roles.
+
+    Parameters
+    ----------
+    X : ndarray of shape (n_nodes, n_features)
+        Node embeddings.
+    labels : ndarray of shape (n_nodes,)
+        Ground truth role labels for each node.
+    metric : str, optional
+        Distance metric used to rank nodes by structural similarity.
+
+    Notes
+    -----
+    Nodes with no other instances of their label contribute zero to the mean.
+
+    """
+
+    _, ranking = pairwise_role_distances(X, metric=metric)
+    aps = []
+    for i, order in enumerate(ranking):
+        rel = labels[order] == labels[i]
+        n_rel = rel.sum()
+        if n_rel == 0:
+            aps.append(0.0)
+            continue
+        precision = np.cumsum(rel) / (np.arange(len(rel)) + 1)
+        aps.append(float((precision[rel]).mean()))
+    return float(np.mean(aps))
