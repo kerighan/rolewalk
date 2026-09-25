@@ -43,3 +43,39 @@ def test_pairwise_role_distances_and_map():
 
     m_ap = mean_average_precision(X, labels)
     assert 0.7 < m_ap < 0.8  # expected value is 0.75
+
+
+def test_fit_predict_does_not_mutate_input():
+    X = RoleWalk().transform(nx.path_graph(6))
+    X_copy = X.copy()
+    RoleWalk().fit_predict(X, max_n_roles=3)
+    np.testing.assert_array_equal(X, X_copy)
+
+
+def test_fit_predict_rejects_unknown_options():
+    X = RoleWalk().transform(nx.path_graph(6))
+    for kwargs in ({"metric": "nope"}, {"method": "nope"}):
+        try:
+            RoleWalk().fit_predict(X, **kwargs)
+        except ValueError:
+            continue
+        raise AssertionError(f"no ValueError for {kwargs}")
+
+
+def test_theta_schemes():
+    geo = RoleWalk(n_samples=5)
+    assert geo.theta_scheme == "geomspace"
+    np.testing.assert_allclose(geo.theta[0], np.geomspace(1, 100, 5), rtol=1e-6)
+
+    lin = RoleWalk(n_samples=5, theta_scheme="linspace")
+    np.testing.assert_allclose(lin.theta[0], np.linspace(1e-3, 100, 5), rtol=1e-6)
+
+    custom = RoleWalk(n_samples=3, bounds=(2, 8))
+    np.testing.assert_allclose(custom.theta[0], [2, 4, 8], rtol=1e-6)
+
+    try:
+        RoleWalk(theta_scheme="nope")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("no ValueError for unknown theta_scheme")

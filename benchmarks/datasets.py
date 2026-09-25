@@ -128,7 +128,122 @@ def load_wikipedia_voting_graph() -> Tuple[Optional[nx.Graph], Optional[np.ndarr
         with urlopen(url) as resp:
             data = gzip.decompress(resp.read()).decode("utf-8")
         G = nx.parse_edgelist(io.StringIO(data), nodetype=int, create_using=nx.DiGraph())
+        # SNAP ids are sparse; karateclub requires consecutive 0..n-1 indices
+        G = nx.convert_node_labels_to_integers(G)
         return G, None
     except Exception as err:  # pragma: no cover
         warnings.warn(f"Unable to load Wikipedia voting graph: {err}")
         return None, None
+
+
+# ---------------------------------------------------------------------------
+# Synthetic "shapes on a cycle" graphs, as in the GraphWave paper
+# (Donnat et al., KDD 2018): motifs are attached to a base cycle and every
+# node's role is its position inside its motif.
+# ---------------------------------------------------------------------------
+
+def _shape_house() -> nx.Graph:
+    return nx.house_graph()
+
+
+def _shape_star(n_leaves: int = 5) -> nx.Graph:
+    return nx.star_graph(n_leaves)
+
+
+def _shape_clique(k: int = 5) -> nx.Graph:
+    return nx.complete_graph(k)
+
+
+def _shape_fan(n_blades: int = 6) -> nx.Graph:
+    """Hub joined to every node of a path."""
+    G = nx.path_graph(range(1, n_blades + 1))
+    G.add_edges_from((0, i) for i in range(1, n_blades + 1))
+    return G
+
+
+def _shape_diamond() -> nx.Graph:
+    return nx.Graph([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (3, 4), (4, 5), (4, 6), (5, 6)])
+
+
+def _shape_tree(r: int = 2, h: int = 2) -> nx.Graph:
+    return nx.balanced_tree(r, h)
+
+
+SHAPES = {
+    "house": _shape_house,
+    "star": _shape_star,
+    "clique": _shape_clique,
+    "fan": _shape_fan,
+    "diamond": _shape_diamond,
+    "tree": _shape_tree,
+}
+
+
+def _refine_colors(G: nx.Graph, colors: dict) -> dict:
+    """1-WL colour refinement until the partition stops changing."""
+    n_classes = len(set(colors.values()))
+    while True:
+        signatures = {
+            v: (colors[v], tuple(sorted(colors[u] for u in G.neighbors(v))))
+            for v in G
+        }
+        palette = {s: i for i, s in enumerate(sorted(set(signatures.values())))}
+        new = {v: palette[signatures[v]] for v in G}
+        if len(palette) == n_classes:
+            return new
+        colors, n_classes = new, len(palette)
+
+
+def generate_shapes_graph(
+    shapes: Tuple[str, ...] = ("house",) * 10,
+    spacing: int = 3,
+    seed: int = 0,
+) -> Tuple[nx.Graph, np.ndarray]:
+    """Attach ``shapes`` to a base cycle, one every ``spacing`` cycle nodes.
+
+    The cycle has ``len(shapes) * spacing`` nodes and shape order is shuffled
+    with ``seed``. Labels:
+
+    - plain cycle nodes share one role;
+    - a cycle node carrying a shape gets one role per shape type;
+    - inside a shape, roles are the orbits of the shape with its attachment
+      node (node 0) marked, obtained by colour refinement. The same position
+      in two copies of a shape gets the same role.
+    """
+    rng = np.random.default_rng(seed)
+    shapes = list(shapes)
+    rng.shuffle(shapes)
+    n_cycle = len(shapes) * spacing
+
+    G = nx.cycle_graph(n_cycle)
+    labels = [0] * n_cycle
+    roles = {}  # (kind, shape name, local colour) -> global role id
+
+    def role(key):
+        if key not in roles:
+            roles[key] = len(roles) + 1
+        return roles[key]
+
+    for k, name in enumerate(shapes):
+        anchor = k * spacing
+        S = SHAPES[name]()
+        colors = _refine_colors(S, {v: int(v == 0) for v in S})
+        offset = G.number_of_nodes()
+        G.add_edges_from((u + offset, v + offset) for u, v in S.edges())
+        G.add_edge(anchor, offset)
+        labels[anchor] = role(("anchor", name))
+        labels.extend(role(("shape", name, colors[v])) for v in sorted(S))
+
+    return G, np.asarray(labels, dtype=int)
+
+
+def generate_houses(n_shapes: int = 10, seed: int = 0):
+    """GraphWave paper setting: houses on a cycle."""
+    return generate_shapes_graph(("house",) * n_shapes, spacing=3, seed=seed)
+
+
+def generate_varied(n_per_shape: int = 5, seed: int = 0):
+    """Every motif type, ``n_per_shape`` copies each."""
+    return generate_shapes_graph(
+        tuple(s for s in SHAPES for _ in range(n_per_shape)), spacing=3, seed=seed
+    )

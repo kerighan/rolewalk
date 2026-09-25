@@ -6,7 +6,7 @@ from rolewalk import RoleWalk
 from sklearn.cluster import KMeans
 
 G = nx.balanced_tree(2, 7)
-X = RoleWalk(walk_len=3).fit_transform(G)
+X = RoleWalk(walk_len=3).transform(G)
 y = RoleWalk(walk_len=3).fit_predict(X)
 
 plt.subplot(121)

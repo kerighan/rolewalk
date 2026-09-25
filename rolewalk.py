@@ -26,18 +26,54 @@ def compute_embedding(X, H, n, theta, walk_len=3, offset=0):
         T @= H
 
 
+THETA_SCHEMES = {
+    # log-spaced: multi-scale kernel, robust to the choice of the upper bound
+    "geomspace": ((1, 100), np.geomspace),
+    # uniform (RoleWalk <= 1.0 behaviour): periodic kernel, degrades under
+    # edge noise when the upper bound is too large
+    "linspace": ((1e-3, 100), np.linspace),
+}
+
+
 class RoleWalk:
+    """Structural role embedding from random-walk transition probabilities.
+
+    Each node is described, for each walk step, by the empirical
+    characteristic function of its transition probabilities, sampled at
+    ``n_samples`` values of theta. Squared distances between embeddings are
+    then MMDs between those distributions under the kernel
+    ``K(d) = mean_theta cos(theta * d)``, so ``theta_scheme`` and ``bounds``
+    set the kernel's shape and bandwidth (see benchmarks/theta_study.py).
+
+    Parameters
+    ----------
+    theta_scheme : {"geomspace", "linspace"}
+        How theta is spread over ``bounds``.
+    bounds : tuple of float, optional
+        Smallest and largest theta. Defaults to (1, 100) for "geomspace" and
+        (1e-3, 100) for "linspace".
+    """
+
     def __init__(
-        self, walk_len=3, n_samples=10, bounds=(1e-3, 100),
-        embedding_dim=2, random_state=0
+        self, walk_len=3, n_samples=10, bounds=None,
+        embedding_dim=2, random_state=0, theta_scheme="geomspace"
     ):
+        if theta_scheme not in THETA_SCHEMES:
+            raise ValueError(
+                f"Unknown theta_scheme {theta_scheme!r}, expected one of "
+                f"{sorted(THETA_SCHEMES)}")
+        default_bounds, spacing = THETA_SCHEMES[theta_scheme]
+        if bounds is None:
+            bounds = default_bounds
+
         self.walk_len = walk_len
         self.n_samples = n_samples
         self.bounds = bounds
+        self.theta_scheme = theta_scheme
         self.embedding_dim = embedding_dim
 
         # timesteps
-        theta = np.linspace(bounds[0], bounds[1], n_samples)
+        theta = spacing(bounds[0], bounds[1], n_samples)
         theta = theta[None, :].astype(np.float32)
         self.theta = theta
 
@@ -45,10 +81,7 @@ class RoleWalk:
 
     def transform(self, G):
         n = len(G.nodes)
-        try:
-            A = nx.to_scipy_sparse_matrix(G)
-        except AttributeError:
-            A = nx.to_scipy_sparse_array(G)
+        A = nx.to_scipy_sparse_array(G, format="csr")
         # extract raw embedding from sampling the characteristic function
         if nx.is_directed(G):
             dim = 4 * self.n_samples * self.walk_len
@@ -89,14 +122,24 @@ class RoleWalk:
             from sklearn.metrics import silhouette_score as get_score
         elif metric == "calinski_harabasz":
             from sklearn.metrics import calinski_harabasz_score as get_score
+        else:
+            raise ValueError(
+                f"Unknown metric {metric!r}, expected 'silhouette' or "
+                "'calinski_harabasz'")
 
         if method == "kmeans":
             from sklearn.cluster import KMeans as Clusterer
-            X += np.random.normal(size=X.shape, scale=1e-5)  # avoid duplicates
+            # avoid duplicates, without mutating the caller's array
+            r = np.random.RandomState(self.random_state)
+            X = X + r.normal(size=X.shape, scale=1e-5)
         elif method == "agglomerative":
             from sklearn.cluster import AgglomerativeClustering as Clusterer
         elif method == "spectral":
             from sklearn.cluster import SpectralClustering as Clusterer
+        else:
+            raise ValueError(
+                f"Unknown method {method!r}, expected 'kmeans', "
+                "'agglomerative' or 'spectral'")
 
         best_score = -float("inf")
         for i in range(min_n_roles, max_n_roles+1):
@@ -129,7 +172,8 @@ def pairwise_role_distances(X, metric="euclidean"):
     dists = pairwise_distances(X, metric=metric)
     # ignore self-distances when ranking
     np.fill_diagonal(dists, np.inf)
-    order = np.argsort(dists, axis=1)
+    # self sorts last (infinite distance), drop it from the ranking
+    order = np.argsort(dists, axis=1)[:, :-1]
     return dists, order
 
 

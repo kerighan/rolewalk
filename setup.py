@@ -7,10 +7,9 @@ from setuptools import setup
 
 install_requires = [
     "numpy",
-    "networkx",
+    "networkx>=2.7",
     "scikit-learn",
-    "scipy",
-    "numba"
+    "scipy"
 ]
 
 
@@ -20,7 +19,7 @@ def read_file(fname):
 
 
 setup(name="rolewalk",
-      version="1.0.1",
+      version="1.1.0",
       description="Structural node embedding on directed graphs",
       py_modules=["rolewalk"],
       author="Maixent Chenebaux",

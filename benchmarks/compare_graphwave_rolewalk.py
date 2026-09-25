@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score, silhouette_score
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 
-from rolewalk import RoleWalk
+from rolewalk import RoleWalk, mean_average_precision
 from datasets import (
     generate_barbell_graph,
     generate_tree_graph,
@@ -84,7 +84,7 @@ def main():
         X_rw = rw.transform(G)
         if GraphWave is not None:
             gw = GraphWave()
-            gw.fit(G)
+            gw.fit(G.copy())  # fit() adds self-loops in place
             X_gw = gw.get_embedding()
         else:  # pragma: no cover
             warnings.warn("GraphWave is unavailable; skipping.")

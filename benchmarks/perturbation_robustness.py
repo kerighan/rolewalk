@@ -113,11 +113,18 @@ def evaluate_graph(
     if GraphWave is not None:
         def get_embedding(H):
             algo = GraphWave()
-            algo.fit(H)
+            algo.fit(H.copy())  # fit() adds self-loops in place
             return algo.get_embedding()
         methods["graphwave"] = get_embedding
     else:  # pragma: no cover
         warnings.warn("GraphWave is unavailable; skipping GraphWave comparison.")
+
+    # same perturbed variants for every method, so the comparison is paired
+    variants = {
+        level: [perturb_graph(G, level, level, rng) for _ in range(n_variants)]
+        for level in perturb_levels
+        if level != 0
+    }
 
     rows: List[dict] = []
     for method_name, embed_fn in methods.items():
@@ -152,8 +159,7 @@ def evaluate_graph(
                 continue
 
             metrics = []
-            for _ in range(n_variants):
-                H = perturb_graph(G, level, level, rng)
+            for H in variants[level]:
                 X = embed_fn(H)
                 if labels is not None:
                     acc, f1 = evaluate_classification(X, labels)
@@ -214,6 +220,12 @@ def main():
         default=5,
         help="Number of random variants to generate per perturbation level",
     )
+    parser.add_argument(
+        "--graphs",
+        nargs="*",
+        default=None,
+        help="Subset of graphs to evaluate (default: all)",
+    )
     args = parser.parse_args()
 
     graphs = {
@@ -225,6 +237,12 @@ def main():
         "house": generate_house_graph,
         "wiki": load_wikipedia_voting_graph,
     }
+
+    if args.graphs:
+        unknown = set(args.graphs) - set(graphs)
+        if unknown:
+            parser.error(f"unknown graphs: {sorted(unknown)}")
+        graphs = {name: graphs[name] for name in args.graphs}
 
     results = []
     for name, loader in graphs.items():
