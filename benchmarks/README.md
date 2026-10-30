@@ -141,3 +141,12 @@ estimates (`k` = 10 to 1,000 sources), both against the exact betweenness
 ```bash
 python betweenness_benchmark.py
 ```
+
+## Plots
+
+`plot_benchmarks.py` draws the README's charts from the CSVs above, in
+light and dark versions, into `docs/img/`.
+
+```bash
+python plot_benchmarks.py
+```

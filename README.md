@@ -13,10 +13,10 @@ labels new nodes live.
 Highlights
 ----------
 
-- **Better roles than GraphWave, 600-2,600x faster.** On the GraphWave
-  paper's own benchmark (motifs on a cycle, with edge noise), RoleWalk
-  recovers roles with an ARI of 0.60 against 0.52, and embeds 2,750 nodes in
-  15 ms against 40 s.
+- **Better roles than GraphWave, 180-2,700x faster**, the gap growing with
+  graph size. On the GraphWave paper's own benchmark (motifs on a cycle,
+  with edge noise), RoleWalk recovers roles with an ARI of 0.60 against
+  0.52, and embeds 2,750 nodes in 15 ms against 40 s.
 - **Inductive.** A node's embedding only depends on its neighbourhood, so
   what is learned on one graph applies to another, with no retraining.
 - **Predicts centralities it never computes.** From the embedding alone,
@@ -147,6 +147,16 @@ core.
 
 ### Role recovery
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/role_recovery-dark.png">
+  <img alt="RoleWalk recovers roles better than GraphWave at every noise level" src="docs/img/role_recovery-light.png">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/speed-dark.png">
+  <img alt="RoleWalk embeds 180 to 2,700 times faster than GraphWave" src="docs/img/speed-light.png">
+</picture>
+
 The GraphWave paper's setting (Donnat et al., KDD 2018): house, star,
 clique, fan, diamond and tree motifs attached to a cycle, each node's role
 being its position in its motif; 1-10% of edges are then removed and added
@@ -166,6 +176,11 @@ Accuracy is a logistic regression on half the nodes, mAP the retrieval of
 same-role nodes by embedding distance.
 
 ### Predicting centralities
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/centrality-dark.png">
+  <img alt="Spearman correlation of predicted centralities, log-degree vs RoleWalk" src="docs/img/centrality-light.png">
+</picture>
 
 Gradient boosting on the embedding, Spearman correlation with the true
 centrality, 6 graph families of 1,000-2,000 nodes
@@ -189,6 +204,11 @@ the hardest to read from a few walk steps.
 
 ### Betweenness: learning vs sampling
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/betweenness-dark.png">
+  <img alt="Spearman correlation vs time for RoleWalk and source sampling on three graph families" src="docs/img/betweenness-light.png">
+</picture>
+
 The usual way to estimate betweenness on large graphs is to run the
 shortest-path searches from `k` sampled sources only. RoleWalk instead
 learns it once on a small graph (a 2,000-node graph, 11-17 s including the
@@ -209,6 +229,11 @@ betweenness as `k` grows, whereas RoleWalk ranks nodes, plateaus around
 0.91-0.96, and needs a training graph of the same family.
 
 ### Finding roles
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/clustering-dark.png">
+  <img alt="ARI of methods that choose the number of roles" src="docs/img/clustering-light.png">
+</picture>
 
 ARI against true roles on the synthetic graphs, noise 0-5%
 (`clustering_benchmark.py`):
