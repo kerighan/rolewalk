@@ -113,3 +113,8 @@ dmypy.json
 .pyre/
 
 .vscode
+
+# local data
+get_tweets.py
+tweets.pkl
+politics/

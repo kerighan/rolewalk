@@ -1,7 +1,7 @@
 from karateclub.dataset import GraphReader
 from karateclub.node_embedding.structural import GraphWave
 import matplotlib.pyplot as plt
-from rolewalk2 import rolewalk2
+from rolewalk import RoleWalk
 import time
 
 reader = GraphReader("twitch")
@@ -9,7 +9,7 @@ G = reader.get_graph()
 print(G, G.is_directed())
 
 start_time = time.time()
-X = rolewalk2(G, walk_len=3, embedding_dim=2)
+X = RoleWalk(walk_len=3, embedding_dim=2).transform(G)
 # mdl = GraphWave(sample_number=20)
 # mdl.fit(G)
 # X = mdl.get_embedding()

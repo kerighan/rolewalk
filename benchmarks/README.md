@@ -90,6 +90,15 @@ python synthetic_benchmark.py                                    # houses (80 no
 python synthetic_benchmark.py --datasets houses_large varied_large --seeds 3   # 800 and 2750 nodes
 ```
 
+Methods: `rolewalk` (current defaults), `rolewalk_w5` (`walk_len=5`),
+`rolewalk_mean` (1.1 defaults, `aggregate="mean"`), `rolewalk_linspace`
+(1.0 defaults) and `graphwave`. The GraphWave rows of the committed CSVs come
+from an earlier run on the same graphs and seeds.
+
+`mean_average_precision` breaks ties between equal distances arbitrarily, so
+when nodes with different labels have identical embeddings (no noise,
+`varied`), mAP can move by about 0.02 from float32 rounding alone.
+
 Per-seed results are written to `synthetic.csv` (or `--output`) and a
 mean ± std summary is printed. The script pins BLAS to one thread: with many
 small solves, multithreading was ~80x slower on a 20-core machine.
@@ -97,3 +106,38 @@ small solves, multithreading was ~80x slower on a 20-core machine.
 GraphWave needs a working `karateclub`, which in recent environments means
 `gensim>=4.3.3` (scipy 1.13 removed `scipy.linalg.triu`) and `pygsp==0.5.1`
 (newer pygsp renamed the heat kernel's `tau` argument).
+
+## Clustering
+
+`clustering_benchmark.py` compares clustering algorithms on RoleWalk
+embeddings of the synthetic graphs, with the true number of roles given
+(`fixed`) or to be found (`auto`), and writes `clustering.csv`. See the main
+README for the results and the method `RoleWalk.fit_predict` uses.
+
+```bash
+python clustering_benchmark.py
+```
+
+## Centralities
+
+`centrality_benchmark.py` predicts centralities (degree, PageRank,
+betweenness, closeness, harmonic, eigenvector, clustering, k-core) from
+RoleWalk embeddings with gradient boosting, on held-out nodes
+(`centrality.csv`) or on another graph of the same family (`--transfer`,
+`centrality_transfer.csv`). See the main README for the results.
+
+```bash
+python centrality_benchmark.py
+python centrality_benchmark.py --transfer
+```
+
+## Betweenness: learning vs sampling
+
+`betweenness_benchmark.py` trains a regressor on a 2,000-node graph, then
+compares its predictions on a new 5,000-node graph with source-sampling
+estimates (`k` = 10 to 1,000 sources), both against the exact betweenness
+(time and Spearman correlation). Results go to `betweenness.csv`.
+
+```bash
+python betweenness_benchmark.py
+```

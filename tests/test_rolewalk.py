@@ -1,7 +1,10 @@
 import numpy as np
 import networkx as nx
+from sklearn.preprocessing import normalize
 
-from rolewalk import RoleWalk, mean_average_precision, pairwise_role_distances
+from rolewalk import (
+    RoleWalk, compute_embedding, compute_iter, mean_average_precision,
+    pairwise_role_distances, role_summary)
 
 
 def test_transform_shapes():
@@ -22,13 +25,26 @@ def test_transform_shapes():
     assert Xd.shape == (Gd.number_of_nodes(), expected_d_dim)
 
 
-def test_fit_predict_returns_valid_role_count():
-    G = nx.path_graph(5)
+def test_fit_predict_fixed_number_of_roles():
     rw = RoleWalk()
-    min_roles, max_roles = 2, 4
-    labels = rw.fit_predict(G, min_n_roles=min_roles, max_n_roles=max_roles)
-    n_roles = len(np.unique(labels))
-    assert min_roles <= n_roles <= max_roles
+    labels = rw.fit_predict(nx.barbell_graph(8, 4), n_roles=3)
+    assert len(np.unique(labels)) == 3 == rw.n_roles_
+
+
+def test_fit_predict_finds_roles():
+    # barbell: clique cores, clique gates, and two depths along the bar
+    G = nx.barbell_graph(8, 4)
+    rw = RoleWalk()
+    labels = rw.fit_predict(G)
+    assert rw.n_roles_ == 4
+    assert labels[0] == labels[15] != labels[7] == labels[12]
+    assert labels[8] == labels[11] != labels[9] == labels[10]
+    assert rw.n_roles_ in rw.silhouette_scores_
+
+    rw.fit_predict(G, max_n_roles=3)
+    assert rw.n_roles_ <= 3
+    # nothing to tell apart: a single role
+    assert len(np.unique(rw.fit_predict(nx.cycle_graph(10)))) == 1
 
 
 def test_pairwise_role_distances_and_map():
@@ -52,16 +68,6 @@ def test_fit_predict_does_not_mutate_input():
     np.testing.assert_array_equal(X, X_copy)
 
 
-def test_fit_predict_rejects_unknown_options():
-    X = RoleWalk().transform(nx.path_graph(6))
-    for kwargs in ({"metric": "nope"}, {"method": "nope"}):
-        try:
-            RoleWalk().fit_predict(X, **kwargs)
-        except ValueError:
-            continue
-        raise AssertionError(f"no ValueError for {kwargs}")
-
-
 def test_theta_schemes():
     geo = RoleWalk(n_samples=5)
     assert geo.theta_scheme == "geomspace"
@@ -79,3 +85,98 @@ def test_theta_schemes():
         pass
     else:
         raise AssertionError("no ValueError for unknown theta_scheme")
+
+
+def test_aggregates():
+    # star: the hub reaches every leaf, a leaf reaches only the hub
+    G = nx.star_graph(4)
+    X = RoleWalk(walk_len=1, n_samples=3, embedding_dim=None).transform(G)
+    leaves = X[1:]
+    np.testing.assert_allclose(leaves, leaves[[0]].repeat(4, 0), atol=1e-6)
+    assert not np.allclose(X[0], X[1])
+
+    # "sum" is the full characteristic function: imaginary part ~ theta * sum(p)
+    rw = RoleWalk(walk_len=1, n_samples=3, bounds=(1e-3, 1e-2),
+                  embedding_dim=None)
+    X = rw.transform(nx.path_graph(5))
+    np.testing.assert_allclose(X[:, 3:], np.tile(rw.theta, (5, 1)), rtol=1e-3)
+
+    try:
+        RoleWalk(aggregate="nope")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("no ValueError for unknown aggregate")
+
+
+def test_compute_iter_chunks_match():
+    G = nx.gnp_random_graph(60, 0.1, seed=0)
+    H = normalize(nx.to_scipy_sparse_array(G, format="csr"), norm="l1").tocsr()
+    theta = RoleWalk().theta
+    for aggregate in ("sum", "mean"):
+        np.testing.assert_allclose(
+            compute_iter(H, theta, aggregate, chunk_size=5),
+            compute_iter(H, theta, aggregate), atol=1e-5)
+
+
+def test_pruning_matches_exact_walks():
+    G = nx.barabasi_albert_graph(300, 2, seed=0)
+    H = normalize(nx.to_scipy_sparse_array(G, format="csr"), norm="l1").tocsr()
+    theta = RoleWalk().theta
+    exact = compute_embedding(H, theta, walk_len=4)
+    pruned = compute_embedding(H, theta, walk_len=4, tol=1e-3)
+    err = np.linalg.norm(pruned - exact, axis=1) / np.linalg.norm(exact, axis=1)
+    assert err.max() < 0.05
+
+
+def test_role_summary():
+    G = nx.star_graph(5)
+    summary = role_summary(G, [0, 1, 1, 1, 1, 1])
+    assert list(summary.index) == [1, 0]  # largest role first
+    assert summary.loc[0, "degree"] == 5
+    assert summary.loc[1, "links_to"] == "0 (100%)"
+    assert "high degree" in summary.loc[0, "profile"]
+    assert summary.loc[1, "share"] == 5 / 6
+
+    D = nx.DiGraph([(0, 1), (0, 2), (1, 2)])
+    summary = role_summary(D, [0, 1, 1], X=np.eye(3))
+    assert {"in_degree", "out_degree"} <= set(summary.columns)
+    assert summary.loc[0, "out_degree"] == 2
+
+
+def test_transform_subset_of_nodes():
+    for G in (nx.barabasi_albert_graph(200, 2, seed=0),
+              nx.gnp_random_graph(100, 0.05, seed=0, directed=True)):
+        G = nx.relabel_nodes(G, {v: f"n{v}" for v in G})
+        rw = RoleWalk()
+        X = rw.transform(G)
+        nodes = ["n17", "n3", "n42"]
+        np.testing.assert_allclose(
+            rw.transform(G, nodes), X[[17, 3, 42]], atol=1e-5)
+
+
+def test_fit_predict_save_load(tmp_path):
+    G = nx.barbell_graph(8, 4)
+    rw = RoleWalk(role_names=["a", "b", "c", "d"])
+    labels = rw.fit_predict(G)
+    np.testing.assert_array_equal(rw.predict(G), labels)
+    assert rw.fit(G) is rw
+
+    path = tmp_path / "model.npz"
+    rw.save(path)
+    loaded = RoleWalk.load(path)
+    assert loaded.role_names == ["a", "b", "c", "d"]
+    assert loaded.n_roles_ == rw.n_roles_
+    np.testing.assert_array_equal(loaded.predict(G), labels)
+    # roles carry over to another graph with the same structure
+    H = nx.barbell_graph(8, 4)
+    H = nx.relabel_nodes(H, {v: 100 + v for v in H})
+    np.testing.assert_array_equal(
+        loaded.predict(H, nodes=[100, 107, 108]), labels[[0, 7, 8]])
+
+    try:
+        RoleWalk().predict(G)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("predict before fit did not raise")

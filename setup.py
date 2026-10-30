@@ -9,7 +9,8 @@ install_requires = [
     "numpy",
     "networkx>=2.7",
     "scikit-learn",
-    "scipy"
+    "scipy",
+    "pandas"
 ]
 
 
@@ -19,7 +20,7 @@ def read_file(fname):
 
 
 setup(name="rolewalk",
-      version="1.1.0",
+      version="1.2.0",
       description="Structural node embedding on directed graphs",
       py_modules=["rolewalk"],
       author="Maixent Chenebaux",

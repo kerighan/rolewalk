@@ -68,7 +68,8 @@ def graphwave(G: nx.Graph) -> np.ndarray:
 METHODS: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
     "rolewalk": rolewalk(),
     "rolewalk_w5": rolewalk(walk_len=5),
-    "rolewalk_linspace": rolewalk(theta_scheme="linspace"),  # <= 1.0 default
+    "rolewalk_mean": rolewalk(aggregate="mean"),  # 1.1 default
+    "rolewalk_linspace": rolewalk(theta_scheme="linspace", aggregate="mean"),  # <= 1.0 default
 }
 if GraphWave is not None:
     METHODS["graphwave"] = graphwave
