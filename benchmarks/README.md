@@ -155,8 +155,9 @@ baseline there. Film is not a role task: class 3 is an independent set
 method beats the majority class within classes 0-2. Role2Vec separates the
 node type (0.946 vs 0.72-0.75 for structural methods) through walk
 co-occurrence, which is position, not role; labels are not homophilous
-either (edge homophily 0.28, 0.33 expected at random). struc2vec is stochastic: rerunning it moved its Europe score
-from 0.56 to 0.60. On Wikipedia, no method dominates (precision@10 averaged
+either (edge homophily 0.28, 0.33 expected at random). struc2vec is stochastic: over 5 runs (`struc2vec_runs.py`,
+`struc2vec_runs.csv`) it scores 0.705 ± 0.022 on Brazil, 0.561 ± 0.020 on
+Europe and 0.596 ± 0.004 on the USA. On Wikipedia, no method dominates (precision@10 averaged
 over the networks each method ran on: RoleWalk 0.13 for bots and 0.32 for
 admins, RESD 0.11 / 0.25, GraphWave 0.12 / 0.30, struc2vec 0.15 / 0.39 on
 the three smallest networks only).

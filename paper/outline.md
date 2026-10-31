@@ -113,7 +113,7 @@ mechanism for unseen nodes found), ReFeX, RWSE rows.*
 |---|---|---|---|---|---|---|
 | RoleWalk | 0.743 | 0.583 | 0.657 | **0.860** | **0.487** | 0.569 |
 | RoleWalk + curvature | 0.741 | 0.596 | **0.666** | **0.860** | 0.485 | 0.581 |
-| struc2vec | 0.681 | **0.598** | 0.590 | – (too slow) | – | – |
+| struc2vec (mean of 5 runs) | 0.705 ± 0.022 | 0.561 ± 0.020 | 0.596 ± 0.004 | – (too slow) | – | – |
 | RESD | 0.728 | 0.544 | 0.653 | 0.857 | 0.476 | 0.563 |
 | GraphWave | **0.769** | 0.561 | 0.587 | **0.860** | 0.481 | – (memory) |
 | ReFeX | 0.691 | 0.576 | 0.622 | 0.851 | 0.478 | 0.579 |
@@ -121,8 +121,9 @@ mechanism for unseen nodes found), ReFeX, RWSE rows.*
 | RWSE | 0.711 | 0.572 | 0.517 | 0.855 | 0.363 | 0.450 |
 | Degree | 0.756 | 0.554 | 0.567 | 0.858 | 0.476 | 0.478 |
 
-*\*Film is a node-type task, see Section 6.4. TODO: struc2vec averaged over
-several runs (Europe moved 0.56 -> 0.60 between runs); std in appendix.*
+*\*Film is a node-type task, see Section 6.4. struc2vec is not seeded: its
+runs range 0.53-0.58 on Europe (`struc2vec_runs.py`); std over splits in
+appendix. With struc2vec averaged, RoleWalk leads on Europe too.*
 
 ### Fig. 1 — Accuracy vs embedding time (log scale), all methods, all datasets
 
