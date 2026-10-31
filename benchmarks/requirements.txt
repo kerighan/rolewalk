@@ -6,3 +6,9 @@ matplotlib
 karateclub
 gensim>=4.3.3
 pygsp==0.5.1
+fastdtw
+joblib
+# struc2vec (role_benchmark.py), install without its optional TensorFlow models:
+# pip install --no-deps git+https://github.com/shenweichen/GraphEmbedding.git@1027d10292de4dab266aec78bc54c6f6b220a04c
+torch  # RESD baseline, pe_benchmark.py
+# pe_benchmark.py also needs torch_geometric (and a GPU to run in reasonable time)

@@ -20,7 +20,7 @@ def read_file(fname):
 
 
 setup(name="rolewalk",
-      version="1.2.0",
+      version="1.3.0",
       description="Structural node embedding on directed graphs",
       py_modules=["rolewalk"],
       author="Maixent Chenebaux",

@@ -48,7 +48,7 @@ def compute_iter(T, theta, aggregate="sum", chunk_size=2**20):
 
 
 def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
-                      rows=None):
+                      rows=None, shells=False, curvature=None):
     """Stack ``compute_iter`` over the first ``walk_len`` powers of ``H``.
 
     With ``rows``, only those rows of the powers are computed, which only
@@ -58,9 +58,29 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     the powers sparse around hubs. Their mass is exactly what a row is
     missing from 1, and since ``exp(i theta p) - 1 ~ i theta p`` for small
     p, the "sum" features add it back to first order.
+
+    With ``shells``, each step also gives the probability mass of every
+    "onion layer": nodes at distance 0, 1, ..., w of the start after w steps.
+    Mass that stays in inner layers reveals walks that loop back, which the
+    characteristic function alone cannot place. A node lies within k steps
+    when it is in the support of the k-th power, so the layers come from the
+    powers already computed. Layer masses are multiplied by ``||theta||``:
+    for a small probability, the characteristic function is about
+    ``i theta p``, so this puts a unit of mass on the same scale as in the
+    characteristic function. Unscaled, they weigh ~0.02% of the variance and
+    leave distances (hence k-means roles) unchanged
+    (see benchmarks/kernel_grid.py).
+
+    With ``curvature``, an array of node curvatures (see
+    :func:`node_curvature`), each step also gives the mean and standard
+    deviation of the curvature where the walk lands, on the same scale.
     """
+    scale = np.float32(np.linalg.norm(theta))
     features = []
     T = H if rows is None else H[rows]
+    if shells:
+        supports = [identity(H.shape[0], format="csr")
+                    if rows is None else identity(H.shape[0], format="csr")[rows]]
     for w in range(walk_len):
         if w > 0:
             # the densest power, so never compute one past the last step
@@ -73,7 +93,48 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
             pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
             phi[:, theta.shape[1]:] += pruned[:, None] * theta
         features.append(phi)
+        if shells:
+            within = [np.asarray(T.multiply(S).sum(axis=1)).ravel()
+                      for S in supports]
+            within.append(np.asarray(T.sum(axis=1)).ravel())
+            layers = np.diff(np.column_stack(within), prepend=0, axis=1)
+            features.append(scale * layers.astype(np.float32))
+            if w < walk_len - 1:
+                S = T.copy()
+                S.data[:] = 1
+                supports.append(S)
+        if curvature is not None:
+            mean = T @ curvature
+            std = np.sqrt(np.maximum(T @ curvature ** 2 - mean ** 2, 0))
+            features.append(scale * np.column_stack([mean, std]).astype(np.float32))
     return np.hstack(features)
+
+
+def node_curvature(A, nodes=None):
+    """Mean curvature of the edges around each node.
+
+    The curvature of an edge x-y is the overlap ``sum_z min(m_x(z), m_y(z))``
+    of the one-step lazy walk distributions from x and from y: high in
+    cliques (spherical, the walks stay together), low in trees (hyperbolic,
+    they split). It is a probabilistic proxy of Ollivier-Ricci curvature,
+    ``1 - W1(m_x, m_y)``, which it bounds from above since every unit of
+    mass that does not overlap moves at least one step. Being made of
+    probabilities, it keeps embeddings comparable across graphs.
+
+    Directions are ignored. With ``nodes`` (indices), only those nodes get a
+    curvature; the others are 0.
+    """
+    n = A.shape[0]
+    U = ((A + A.T) > 0).astype(np.float64).tocsr()
+    U.setdiag(0)
+    U.eliminate_zeros()
+    H = normalize(identity(n) + U, norm="l1").tocsr()
+    E = (U if nodes is None else U[nodes]).tocoo()
+    x = E.row if nodes is None else np.asarray(nodes)[E.row]
+    overlap = np.asarray(H[x].minimum(H[E.col]).sum(axis=1)).ravel()
+    deg = np.asarray(U.sum(axis=1)).ravel()
+    kappa = np.bincount(x, overlap, minlength=n)
+    return kappa / np.maximum(deg, 1)
 
 
 AGGREGATES = ("sum", "mean")
@@ -113,6 +174,17 @@ class RoleWalk:
         Transition probabilities below ``tol`` are dropped after each walk
         step. 1e-4 is 2-3x faster on graphs with hubs, with no measurable
         loss; 0 computes the walks exactly.
+    shells : bool
+        Also describe, at each step, how the walk's probability mass splits
+        over the "onion layers" around the node (distance 0, 1, ..., step).
+        Loops and triangles keep mass in inner layers. Adds
+        ``walk_len * (walk_len + 3) / 2`` features for about 15% more time
+        (default since 1.3.0; models saved before load with ``False``).
+    curvature : bool
+        Also describe the local geometry the walk explores: mean and spread,
+        at each step, of the curvature of the nodes it lands on (see
+        :func:`node_curvature`), from tree-like (hyperbolic) to clique-like
+        (spherical). Adds ``2 * walk_len`` features.
     embedding_dim : int, optional
         If set, randomly project the embedding to this many dimensions. Low
         values lose role information: keep None except for plotting.
@@ -132,7 +204,8 @@ class RoleWalk:
     def __init__(
         self, walk_len=3, n_samples=10, bounds=None,
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
-        aggregate="sum", tol=1e-4, role_names=None
+        aggregate="sum", tol=1e-4, shells=True, curvature=False,
+        role_names=None
     ):
         if theta_scheme not in THETA_SCHEMES:
             raise ValueError(
@@ -152,6 +225,8 @@ class RoleWalk:
         self.theta_scheme = theta_scheme
         self.aggregate = aggregate
         self.tol = tol
+        self.shells = shells
+        self.curvature = curvature
         self.embedding_dim = embedding_dim
 
         # timesteps
@@ -177,7 +252,20 @@ class RoleWalk:
             rows = np.array([index[v] for v in nodes], dtype=np.int64)
         # extract raw embedding from sampling the characteristic function
         H = normalize(identity(n) + A, norm="l1").tocsr()
-        args = (self.theta, self.walk_len, self.aggregate, self.tol, rows)
+        kappa = None
+        if self.curvature:
+            near = None
+            if rows is not None:
+                # the walks only land within walk_len steps of the rows
+                U = ((A + A.T) > 0).tocsr()
+                reach = np.zeros(n, dtype=bool)
+                reach[rows] = True
+                for _ in range(self.walk_len):
+                    reach |= np.asarray(U.T @ reach).ravel() > 0
+                near = np.flatnonzero(reach)
+            kappa = node_curvature(A, near)
+        args = (self.theta, self.walk_len, self.aggregate, self.tol, rows,
+                self.shells, kappa)
         X = compute_embedding(H, *args)
         if nx.is_directed(G):
             H_T = normalize(identity(n) + A.T, norm="l1").tocsr()
@@ -285,7 +373,9 @@ class RoleWalk:
             "embedding_dim": self.embedding_dim,
             "random_state": self.random_state,
             "theta_scheme": self.theta_scheme, "aggregate": self.aggregate,
-            "tol": self.tol, "role_names": self.role_names,
+            "tol": self.tol, "shells": self.shells,
+            "curvature": self.curvature,
+            "role_names": self.role_names,
         }
         arrays = {"theta": self.theta}
         if hasattr(self, "cluster_centers_"):
@@ -297,7 +387,10 @@ class RoleWalk:
         """Load a model written by :meth:`save`."""
         # no pickle: loading a file cannot run code
         with np.load(path, allow_pickle=False) as data:
-            model = cls(**json.loads(str(data["params"])))
+            params = json.loads(str(data["params"]))
+            params.setdefault("shells", False)  # saved before 1.3.0
+            params.setdefault("curvature", False)
+            model = cls(**params)
             model.theta = data["theta"]
             if "cluster_centers" in data:
                 model.cluster_centers_ = data["cluster_centers"]

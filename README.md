@@ -281,5 +281,7 @@ Parameters
 | `theta_scheme`, `bounds` | `"geomspace"`, (1, 100) | how theta is spread; log-spacing is robust to the upper bound under edge noise (`theta_study.py`) |
 | `aggregate` | `"sum"` | `"mean"` (RoleWalk <= 1.1) averages over reached nodes only and loses how many there are: ARI 0.535 instead of 0.600 |
 | `tol` | 1e-4 | probability pruning; 2-3.5x faster on hub-heavy graphs, pairwise distances correlated at 0.99999 with exact walks; 0 for exact walks |
+| `shells` | True | adds, per step, the walk's probability mass in each "onion layer" (distance 0, 1, ... from the node): loops and triangles keep mass inside. Unsupervised role score 0.274 to 0.323 (`kernel_grid.py`), USA airports 0.628 to 0.657, same speed within 15%. Models saved before 1.3 load with `False` |
+| `curvature` | False | adds the mean and spread of the curvature where the walk lands (overlap of the lazy walks at both ends of each edge, a probabilistic proxy of Ollivier-Ricci): tree-like vs clique-like neighbourhoods. Better roles within a graph (directed motifs 0.91 to 0.99), slightly worse transfer |
 | `embedding_dim` | None | random projection, for plotting only: 2 dimensions drop accuracy from about 0.80 to 0.55 |
 | `role_names` | None | names of fitted roles, saved with the model |

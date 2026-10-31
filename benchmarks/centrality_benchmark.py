@@ -5,9 +5,14 @@ and scored on the other half (Spearman correlation between predicted and true
 values, averaged over 2-fold cross-validation). Features are:
 
 - ``degree``: log-degree only, the obvious baseline;
-- ``rolewalk``: the RoleWalk embedding. Adding the degree to it changes
-  nothing: on unweighted graphs, its first walk step is a function of the
-  degree.
+- ``rolewalk``: the RoleWalk embedding (``rolewalk_noshells``: version 1.2,
+  without onion layers; ``rolewalk_curvature``: with ``curvature=True``).
+  Adding the degree to it changes nothing: on unweighted graphs, its first
+  walk step is a function of the degree;
+- the inductive baselines of ``role_benchmark.py``: RWSE, ReFeX and
+  GraphWave. struc2vec, Role2Vec and RESD learn coordinates specific to each
+  graph, so they cannot transfer; neither can ReFeX, whose number of
+  features depends on the graph (correlation pruning, quantile bins).
 
 Graphs have 1,000-2,000 nodes: on the small classic real graphs (karate,
 Les Misérables...) there are too few nodes to train a regressor on.
@@ -38,6 +43,7 @@ from sklearn.model_selection import KFold
 
 from rolewalk import RoleWalk
 from datasets import generate_varied
+import role_benchmark as rb
 
 warnings.filterwarnings("ignore")
 
@@ -78,10 +84,21 @@ def largest_component(G: nx.Graph) -> nx.Graph:
     return G
 
 
+FEATURES: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
+    "degree": lambda G: np.log1p(np.array([d for _, d in G.degree()], dtype=float))[:, None],
+    "rolewalk": lambda G: RoleWalk(walk_len=4).transform(G),
+    "rolewalk_noshells": lambda G: RoleWalk(walk_len=4, shells=False).transform(G),
+    "rolewalk_curvature": lambda G: RoleWalk(walk_len=4, curvature=True).transform(G),
+    "rwse": rb.rwse,
+    "refex": rb.refex,
+}
+if "graphwave" in rb.METHODS:
+    FEATURES["graphwave"] = rb.graphwave
+SELECTED = list(FEATURES)
+
+
 def features(G: nx.Graph) -> Dict[str, np.ndarray]:
-    X = RoleWalk(walk_len=4).transform(G)
-    deg = np.log1p(np.array([d for _, d in G.degree()], dtype=float))[:, None]
-    return {"degree": deg, "rolewalk": X}
+    return {name: FEATURES[name](G) for name in SELECTED}
 
 
 def targets(G: nx.Graph) -> Dict[str, np.ndarray]:
@@ -125,6 +142,8 @@ def transfer(name: str, G_train: nx.Graph, G_test: nx.Graph, seed: int):
         y = y_train[target]
         y_fit = np.log(y + 1e-6 * (y.max() + 1e-12))
         for feat in f_train:
+            if f_train[feat].shape[1] != f_test[feat].shape[1]:
+                continue  # graph-specific features (ReFeX)
             pred = regressor().fit(f_train[feat], y_fit).predict(f_test[feat])
             rows.append({"graph": name, "seed": seed, "target": target,
                          "features": feat, "spearman": spearman(y_test[target], pred)})
@@ -135,8 +154,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--transfer", action="store_true")
     parser.add_argument("--seeds", type=int, default=2)
+    parser.add_argument("--features", nargs="*", default=list(FEATURES),
+                        choices=list(FEATURES))
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
+    SELECTED[:] = args.features
 
     rows = []
     for name, make in GRAPHS.items():

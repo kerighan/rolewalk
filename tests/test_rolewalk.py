@@ -4,25 +4,25 @@ from sklearn.preprocessing import normalize
 
 from rolewalk import (
     RoleWalk, compute_embedding, compute_iter, mean_average_precision,
-    pairwise_role_distances, role_summary)
+    node_curvature, pairwise_role_distances, role_summary)
 
 
 def test_transform_shapes():
     walk_len = 2
     n_samples = 5
-    rw = RoleWalk(walk_len=walk_len, n_samples=n_samples, embedding_dim=None)
+    n_shells = walk_len * (walk_len + 3) // 2
+    for shells, extra in ((False, 0), (True, n_shells)):
+        rw = RoleWalk(walk_len=walk_len, n_samples=n_samples, shells=shells)
 
-    # Undirected graph
-    G = nx.path_graph(3)
-    X = rw.transform(G)
-    expected_dim = 2 * n_samples * walk_len
-    assert X.shape == (G.number_of_nodes(), expected_dim)
+        # Undirected graph
+        G = nx.path_graph(3)
+        X = rw.transform(G)
+        assert X.shape == (3, 2 * n_samples * walk_len + extra)
 
-    # Directed graph
-    Gd = nx.DiGraph([(0, 1), (1, 2), (2, 0)])
-    Xd = rw.transform(Gd)
-    expected_d_dim = 4 * n_samples * walk_len
-    assert Xd.shape == (Gd.number_of_nodes(), expected_d_dim)
+        # Directed graph: out- and in-walks
+        Gd = nx.DiGraph([(0, 1), (1, 2), (2, 0)])
+        Xd = rw.transform(Gd)
+        assert Xd.shape == (3, 2 * (2 * n_samples * walk_len + extra))
 
 
 def test_fit_predict_fixed_number_of_roles():
@@ -35,7 +35,9 @@ def test_fit_predict_finds_roles():
     # barbell: clique cores, clique gates, and two depths along the bar
     G = nx.barbell_graph(8, 4)
     rw = RoleWalk()
-    labels = rw.fit_predict(G)
+    # the gates score 0.955 merged with the cores vs 1.0 apart: within the
+    # default tolerance, so ask for the best silhouette
+    labels = rw.fit_predict(G, tolerance=0)
     assert rw.n_roles_ == 4
     assert labels[0] == labels[15] != labels[7] == labels[12]
     assert labels[8] == labels[11] != labels[9] == labels[10]
@@ -97,7 +99,7 @@ def test_aggregates():
 
     # "sum" is the full characteristic function: imaginary part ~ theta * sum(p)
     rw = RoleWalk(walk_len=1, n_samples=3, bounds=(1e-3, 1e-2),
-                  embedding_dim=None)
+                  embedding_dim=None, shells=False)
     X = rw.transform(nx.path_graph(5))
     np.testing.assert_allclose(X[:, 3:], np.tile(rw.theta, (5, 1)), rtol=1e-3)
 
@@ -148,11 +150,11 @@ def test_transform_subset_of_nodes():
     for G in (nx.barabasi_albert_graph(200, 2, seed=0),
               nx.gnp_random_graph(100, 0.05, seed=0, directed=True)):
         G = nx.relabel_nodes(G, {v: f"n{v}" for v in G})
-        rw = RoleWalk()
-        X = rw.transform(G)
-        nodes = ["n17", "n3", "n42"]
-        np.testing.assert_allclose(
-            rw.transform(G, nodes), X[[17, 3, 42]], atol=1e-5)
+        for rw in (RoleWalk(), RoleWalk(curvature=True)):
+            X = rw.transform(G)
+            nodes = ["n17", "n3", "n42"]
+            np.testing.assert_allclose(
+                rw.transform(G, nodes), X[[17, 3, 42]], atol=1e-5)
 
 
 def test_fit_predict_save_load(tmp_path):
@@ -180,3 +182,51 @@ def test_fit_predict_save_load(tmp_path):
         pass
     else:
         raise AssertionError("predict before fit did not raise")
+
+
+def test_shells():
+    # path 0-1-2-3: two steps of the lazy walk from 0
+    G = nx.path_graph(4)
+    H = normalize(nx.to_scipy_sparse_array(G, format="csr")
+                  + np.eye(4), norm="l1")
+    rw = RoleWalk(walk_len=2, n_samples=3)
+    X = rw.transform(G)
+    layers = X[:, -3:] / np.linalg.norm(rw.theta)  # step 2: distance 0, 1, 2
+    H2 = np.asarray(H @ H)
+    np.testing.assert_allclose(layers[0], [H2[0, 0], H2[0, 1], H2[0, 2]],
+                               atol=1e-6)
+    np.testing.assert_allclose(layers.sum(axis=1), 1, atol=1e-6)
+    # a triangle keeps more mass at distance 1 than a path's end
+    T = nx.Graph([(0, 1), (1, 2), (2, 0), (2, 3)])
+    X = rw.transform(T)
+    assert X[0, -2] > RoleWalk(walk_len=2, n_samples=3).transform(
+        nx.path_graph(3))[0, -2]
+
+
+def test_models_saved_before_shells_load_without(tmp_path):
+    import json
+    rw = RoleWalk(shells=False)
+    rw.save(tmp_path / "model.npz")
+    with np.load(tmp_path / "model.npz") as data:
+        params = json.loads(str(data["params"]))
+        theta = data["theta"]
+    del params["shells"]  # as written by RoleWalk 1.2
+    np.savez(tmp_path / "old.npz", params=json.dumps(params), theta=theta)
+    assert RoleWalk.load(tmp_path / "old.npz").shells is False
+
+
+def test_node_curvature():
+    A = lambda G: nx.to_scipy_sparse_array(G, format="csr")
+    # clique: both lazy walks spread uniformly over the same k nodes
+    np.testing.assert_allclose(node_curvature(A(nx.complete_graph(5))), 1)
+    # star: hub and leaf walks share only the two edge ends
+    star = node_curvature(A(nx.star_graph(4)))
+    assert star.max() < 0.5
+    # curvature is in [0, 1] and only depends on probabilities
+    tree = node_curvature(A(nx.balanced_tree(2, 4)))
+    assert 0 <= tree.min() and tree.max() <= 1
+    X = RoleWalk(walk_len=2, n_samples=3, curvature=True).transform(
+        nx.complete_graph(5))
+    rw = RoleWalk(walk_len=2, n_samples=3)
+    np.testing.assert_allclose(X[:, -2] / np.linalg.norm(rw.theta), 1,
+                               atol=1e-6)  # mean at step 2

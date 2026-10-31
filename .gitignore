@@ -118,3 +118,6 @@ dmypy.json
 get_tweets.py
 tweets.pkl
 politics/
+
+# downloaded benchmark data
+benchmarks/data/
