@@ -150,7 +150,12 @@ Accuracy (mean over 50 splits):
 | Degree only | 0.756 | 0.554 | 0.567 | 0.858 | 0.476 | 0.478 | 0 s |
 
 Airport and actor labels track activity, so log-degree alone is a strong
-baseline there. struc2vec is stochastic: rerunning it moved its Europe score
+baseline there. Film is not a role task: class 3 is an independent set
+(no edge inside it) in its own block of node ids, i.e. a node type, and no
+method beats the majority class within classes 0-2. Role2Vec separates the
+node type (0.946 vs 0.72-0.75 for structural methods) through walk
+co-occurrence, which is position, not role; labels are not homophilous
+either (edge homophily 0.28, 0.33 expected at random). struc2vec is stochastic: rerunning it moved its Europe score
 from 0.56 to 0.60. On Wikipedia, no method dominates (precision@10 averaged
 over the networks each method ran on: RoleWalk 0.13 for bots and 0.32 for
 admins, RESD 0.11 / 0.25, GraphWave 0.12 / 0.30, struc2vec 0.15 / 0.39 on
@@ -227,9 +232,12 @@ python clustering_benchmark.py
 
 `centrality_benchmark.py` predicts centralities (degree, PageRank,
 betweenness, closeness, harmonic, eigenvector, clustering, k-core) from
-RoleWalk embeddings with gradient boosting, on held-out nodes
+RoleWalk embeddings and the inductive baselines (RWSE, ReFeX, GraphWave,
+degree) with gradient boosting, on held-out nodes
 (`centrality.csv`) or on another graph of the same family (`--transfer`,
-`centrality_transfer.csv`). See the main README for the results.
+`centrality_transfer.csv`). Mean Spearman over the non-degree centralities, in transfer: RoleWalk 0.850
+(1.2: 0.825), ReFeX 0.794 (only where its feature count matches across
+graphs), RWSE 0.726, GraphWave 0.614, degree 0.546.
 
 ```bash
 python centrality_benchmark.py
