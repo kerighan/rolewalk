@@ -298,22 +298,12 @@ co-occurrence = position, which a structural (automorphism-invariant)
 embedding cannot and should not capture. Recommendation: do not use film
 to compare role methods.*
 
-## 7. Case study: roles of French politicians on X
+## 7. Limitations
 
-*Directed interaction graph (859 politicians, 11k links, October 2026), 7
-roles named after anchor politicians; month-to-month role changes.*
-
-*Stability per politician: data (drop 10% of days, 20 runs; not a
-bootstrap, which removes 24% of edges and biases everyone downwards) and
-method (refit with onion layers / curvature). Top tier stable (Le Pen,
-Bardella, Mélenchon, Lisnard: 100%, 2/2 variants); Knafo top tier in 80% of
-runs and 2/2 variants; Zemmour never top tier (second tier 95%) but his
-exact middle-tier role changes with the method. Middle tiers: ~90% stable
-to data, ~50% to method → a continuum; show stability next to the role.*
-
-## 8. Limitations
-
-- *Roles below the top tier are a continuum: hard clusters overstate them.*
+- *On real networks, roles below the most central tier often form a
+  continuum: hard clusters overstate them, and the k-means partition of the
+  middle tiers is sensitive to feature scaling. Report per-node stability
+  (resampled data, method variants) next to the role.*
 - *Degree-like labels (airports) favour trivial baselines.*
 - *One real directed labelled benchmark (wiki-RfA); more would help.*
 - *ZINC on a small model only.*
