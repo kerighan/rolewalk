@@ -185,6 +185,27 @@ best baseline 0.73 (Role2Vec) / 0.47 (degree) / 0.43 (ReFeX).
 python directed_benchmark.py
 ```
 
+Real directed roles come from Wikipedia requests for adminship (SNAP
+wiki-RfA, voter -> candidate, `wiki-rfa` and `rfa-candidates` in
+`role_benchmark.py`, results in `roles_rfa.csv`). Elected or not among the
+3,494 candidates: RoleWalk with curvature 0.823, RoleWalk 0.808 (0.791 with
+directions dropped), RESD and Role2Vec 0.798, ReFeX 0.794, in/out degree
+0.755, RWSE 0.690.
+
+## Expressiveness
+
+`expressiveness_benchmark.py` counts the pairs of non-isomorphic,
+1-WL-equivalent graphs each encoding tells apart (`expressiveness.csv`):
+all 20 pairs of the networkx atlas (<= 7 nodes), 3,181 pairs of random
+3- and 4-regular graphs, 10 CSL classes, and classic pairs. RoleWalk (3
+steps) separates every atlas and regular pair, RWSE (16 steps) all but one
+regular pair; CSL needs 5 walk steps to reach 10/10 (6/10 with 3); the
+Shrikhande / rook strongly regular pair (beyond 3-WL) defeats every method.
+
+```bash
+python expressiveness_benchmark.py
+```
+
 ## Structural encoding for GNNs (ZINC)
 
 `pe_benchmark.py` feeds each encoding, batch-normalised and projected, to

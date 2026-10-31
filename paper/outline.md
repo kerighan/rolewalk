@@ -77,7 +77,7 @@ characteristic function samples.*
 - *Relation to GraphWave: same characteristic-function construction on a
   heat kernel; lazy walk instead => sparse, local, directed, inductive
   (no per-graph scale selection).*
-- *Expressiveness vs 1-WL (TODO: CSL / BREC experiment).*
+- *Expressiveness vs 1-WL: Table 4c.*
 - *Stability to edge perturbations (empirical: robustness benchmark).*
 
 ## 5. Experiments
@@ -146,8 +146,41 @@ distributed undirected (TODO: rebuild directed versions from SNAP).*
 | struc2vec | 0.510 | 0.366 | 0.277 | 0.141 | 0.260 |
 | In/out degree | 0.516 | 0.466 | 0.405 | 0.310 | 0.349 |
 
-*TODO: one real directed labelled dataset (candidates: wiki-RfA admins,
-politicians with official functions, Twitter bot datasets).*
+### Table 4b — Real directed roles: Wikipedia requests for adminship (SNAP wiki-RfA)
+
+*11,377 users, 188k votes (voter -> candidate). Task A: elected or not among
+the 3,494 candidates; task B: voter / failed candidate / admin. Methods that
+cannot read directions get the undirected graph.*
+
+| Method | Elected? (candidates) | 3 classes | Time |
+|---|---|---|---|
+| **RoleWalk + curvature** | **0.823** | **0.943** | 5 s |
+| RoleWalk | 0.808 | 0.938 | 4 s |
+| RoleWalk 1.2 | 0.793 | 0.934 | 4 s |
+| RoleWalk, directions dropped | 0.791 | 0.863 | |
+| RoleWalk + curvature, directions dropped | 0.814 | 0.900 | |
+| RESD | 0.798 | 0.843 | 68 s |
+| Role2Vec | 0.798 | 0.857 | 82 s |
+| ReFeX | 0.794 | 0.847 | 1 s |
+| In/out degree | 0.755 | 0.922 | 0 s |
+| RWSE (out-walk) | 0.690 | 0.826 | 51 s |
+
+*struc2vec and GraphWave do not run at this size. TODO: other real directed
+sets (politicians with official functions, directed Wikipedia talk).*
+
+### Table 4c — Expressiveness (pairs told apart; all sets 1-WL-indistinguishable)
+
+| | Atlas <= 7 nodes (20 pairs) | Random regular (3,181 pairs) | CSL (10 classes) | Decalin / bicyclopentyl | 2 triangles / hexagon | Shrikhande / rook (SRG) |
+|---|---|---|---|---|---|---|
+| **RoleWalk (3 steps)** | **20** | **3,181** | 6 | yes | yes | no |
+| RoleWalk (5 steps) | **20** | **3,181** | **10** | yes | yes | no |
+| RoleWalk 1.2 (no layers) | 16 | 3,180 | 6 | yes | yes | no |
+| RWSE (16 steps) | **20** | 3,180 | **10** | yes | yes | no |
+| Degree (= 1-WL here) | 0 | 0 | 1 | no | no | no |
+
+*Strictly beyond 1-WL; matches RWSE with 3 steps instead of 16; SRG pair is
+beyond 3-WL and out of reach, as expected. TODO: BREC (data is pickled,
+loading needs approval).*
 
 ### Table 5 — Centrality transfer (train on one graph, test on another of the same family; Spearman)
 
@@ -256,7 +289,7 @@ than a hard label. TODO: stability scores.*
 
 - *Roles below the top tier are a continuum: hard clusters overstate them.*
 - *Degree-like labels (airports) favour trivial baselines.*
-- *No real directed labelled benchmark yet.*
+- *One real directed labelled benchmark (wiki-RfA); more would help.*
 - *ZINC on a small model only.*
 
 ## Appendix

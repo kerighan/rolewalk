@@ -54,7 +54,7 @@ from sklearn.preprocessing import StandardScaler
 
 from rolewalk import RoleWalk
 from baselines import refex, resd
-from datasets import DATA_DIR, load_airports, load_rone
+from datasets import DATA_DIR, load_airports, load_rone, load_wiki_rfa
 
 try:
     from karateclub.node_embedding.structural import GraphWave, Role2Vec
@@ -72,7 +72,14 @@ DATASETS = {
     **{r: (lambda r=r: load_airports(r), "clf") for r in REGIONS},
     **{n: (lambda n=n: load_rone(n), "clf") for n in ("reality-call", "actor", "film")},
     **{f"{w}-wiki": (lambda w=w: load_rone(f"{w}-wiki-talk"), "topk") for w in WIKI},
+    # directed: Wikipedia adminship votes; all users, then elected or not
+    # among candidates only (voters never receive a vote, which is trivial)
+    "wiki-rfa": (load_wiki_rfa, "clf"),
+    "rfa-candidates": (lambda: (lambda G, y: (G, np.where(y > 0, y, -1)))(*load_wiki_rfa()),
+                       "clf"),
 }
+# methods that read edge directions; the others get the undirected graph
+DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree"}
 
 
 def rolewalk(G: nx.Graph) -> np.ndarray:
@@ -102,6 +109,8 @@ def rwse(G: nx.Graph, k: int = 16) -> np.ndarray:
 
 
 def degree(G: nx.Graph) -> np.ndarray:
+    if G.is_directed():
+        return np.log1p([[G.in_degree(v), G.out_degree(v)] for v in range(len(G))])
     return np.log1p([[G.degree(v)] for v in range(len(G))])
 
 
@@ -197,6 +206,8 @@ def embed(name: str, method: str, G: nx.Graph, cache: bool):
     if cache and os.path.exists(path):
         saved = np.load(path)
         return saved["X"], float(saved["time"])
+    if G.is_directed() and method not in DIRECTED:
+        G = nx.Graph(G.to_undirected())
     start = time.perf_counter()
     X = METHODS[method](G)
     elapsed = time.perf_counter() - start

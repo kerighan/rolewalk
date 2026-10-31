@@ -390,3 +390,46 @@ def generate_directed_shapes(n_per_shape: int = 5, spacing: int = 3,
         labels.extend(role(("shape", name, colors[v])) for v in sorted(S))
 
     return G, np.asarray(labels, dtype=int)
+
+
+def load_wiki_rfa() -> Tuple[nx.DiGraph, np.ndarray]:
+    """Votes of Wikipedia requests for adminship (SNAP wiki-RfA), directed.
+
+    An edge u -> v means u voted on v's request (support, neutral or
+    oppose alike: only the structure is kept). Labels: 0 = voter only,
+    1 = candidate never elected, 2 = elected admin. Votes without a voter
+    name are dropped. Nodes are relabelled ``0..n-1`` in name order.
+    """
+    import gzip
+
+    path = os.path.join(DATA_DIR, "rfa", "wiki-RfA.txt.gz")
+    if not os.path.exists(path):  # pragma: no cover - network access
+        from urllib.request import urlretrieve
+
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        urlretrieve("https://snap.stanford.edu/data/wiki-RfA.txt.gz", path)
+    edges, elected, candidates = set(), set(), set()
+    record = {}
+    with gzip.open(path, "rt", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            line = line.rstrip("\n")
+            if not line:
+                src, tgt = record.get("SRC"), record.get("TGT")
+                if tgt:
+                    candidates.add(tgt)
+                    if record.get("RES") == "1":
+                        elected.add(tgt)
+                    if src and src != tgt:
+                        edges.add((src, tgt))
+                record = {}
+            elif ":" in line:
+                key, value = line.split(":", 1)
+                record[key] = value
+    names = sorted({u for e in edges for u in e})
+    index = {u: i for i, u in enumerate(names)}
+    G = nx.DiGraph()
+    G.add_nodes_from(range(len(names)))
+    G.add_edges_from((index[u], index[v]) for u, v in edges)
+    y = np.array([2 if u in elected else 1 if u in candidates else 0
+                  for u in names])
+    return G, y
