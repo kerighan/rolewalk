@@ -1,7 +1,7 @@
-method,false_differences,atlas,regular,csl_classes,decalin / bicyclopentyl,two triangles / hexagon,"Shrikhande / 4x4 rook (SRG, beyond 3-WL)"
-rolewalk,0,20/20,3181/3181,6/10,yes,yes,no
-rolewalk_curvature,0,20/20,3181/3181,6/10,yes,yes,no
-rolewalk_noshells,0,16/20,3180/3181,6/10,yes,yes,no
-rolewalk_w5,0,20/20,3181/3181,10/10,yes,yes,no
-rwse,0,20/20,3180/3181,10/10,yes,yes,no
-degree,0,0/20,0/3181,1/10,no,no,no
+method,false_differences,atlas,regular,csl_classes,decalin / bicyclopentyl,two triangles / hexagon,"Shrikhande / 4x4 rook (SRG, beyond 3-WL)",brec_basic,brec_regular,brec_extension,brec_cfi,brec_4-vertex,brec_distance-regular,brec_total,brec_false_differences
+rolewalk,0,20/20,3181/3181,6/10,yes,yes,no,60/60,50/100,97/100,0/100,0/20,0/20,207/400,0
+rolewalk_curvature,0,20/20,3181/3181,6/10,yes,yes,no,60/60,50/100,97/100,0/100,0/20,0/20,207/400,0
+rolewalk_noshells,0,16/20,3180/3181,6/10,yes,yes,no,58/60,48/100,97/100,0/100,0/20,0/20,203/400,0
+rolewalk_w5,0,20/20,3181/3181,10/10,yes,yes,no,60/60,50/100,100/100,3/100,0/20,0/20,213/400,0
+rwse,0,20/20,3180/3181,10/10,yes,yes,no,60/60,50/100,100/100,4/100,0/20,0/20,214/400,0
+degree,0,0/20,0/3181,1/10,no,no,no,0/60,0/100,0/100,0/100,0/20,0/20,0/400,0

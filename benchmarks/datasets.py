@@ -433,3 +433,25 @@ def load_wiki_rfa() -> Tuple[nx.DiGraph, np.ndarray]:
     y = np.array([2 if u in elected else 1 if u in candidates else 0
                   for u in names])
     return G, y
+
+
+BREC_RANGES = {"basic": (0, 60), "regular": (60, 160), "extension": (160, 260),
+               "cfi": (260, 360), "4-vertex": (360, 380), "distance-regular": (380, 400)}
+
+
+def load_brec(n_relabel: int = 32, n_pairs: int = 400):
+    """BREC pairs (Wang & Zhang 2023) as networkx graphs.
+
+    Pair ``i`` occupies entries ``[i * 2 * n_relabel, (i + 1) * 2 * n_relabel)``
+    of the file, alternating relabelled copies of its two graphs; entries
+    after the 400 pairs are BREC's reliability copies. Returns, per pair, the
+    two graphs and a relabelled copy of the first (isomorphic to it). Download
+    BREC_data_all.zip from github.com/GraphPKU/BREC and unzip it into
+    data/brec.
+    """
+    path = os.path.join(DATA_DIR, "brec", "brec_v3.npy")
+    raw = np.load(path)  # fixed-width graph6 bytes: no pickle involved
+    graph = lambda i: nx.from_graph6_bytes(raw[i].rstrip(b"\x00"))  # noqa: E731
+    step = 2 * n_relabel
+    return [(graph(i * step), graph(i * step + 1), graph(i * step + 2))
+            for i in range(n_pairs)]

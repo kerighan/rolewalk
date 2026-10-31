@@ -16,7 +16,9 @@ Graph sets, all generated locally:
   2, 3, 4, 5, 6, 9, 11, 12, 13, 16), all 4-regular, so 1-WL-equivalent;
 - classic pairs: decalin / bicyclopentyl, two triangles / hexagon, and
   Shrikhande / 4x4 rook's graph (strongly regular with equal parameters,
-  beyond 3-WL).
+  beyond 3-WL);
+- ``brec``: the 400 pairs of BREC (Wang & Zhang 2023) by category, if
+  data/brec/brec_v3.npy is present (see ``datasets.load_brec``).
 
     python expressiveness_benchmark.py
 """
@@ -29,6 +31,8 @@ import pandas as pd
 
 from rolewalk import RoleWalk
 import role_benchmark as rb
+from datasets import BREC_RANGES, DATA_DIR, load_brec
+import os
 
 TOL = 1e-4
 CSL_SKIPS = (2, 3, 4, 5, 6, 9, 11, 12, 13, 16)
@@ -44,15 +48,24 @@ METHODS = {
 
 
 def signature(X: np.ndarray) -> np.ndarray:
-    X = np.round(X.astype(np.float64), 6)
-    return X[np.lexsort(X.T[::-1])]
+    return X.astype(np.float64)
 
 
 def differ(a: np.ndarray, b: np.ndarray) -> bool:
+    """Whether the multisets of rows differ, beyond ``TOL`` (relative).
+
+    Rows are matched by optimal assignment: sorting them would be fragile,
+    as rounding noise can swap two nearly equal rows.
+    """
+    from scipy.optimize import linear_sum_assignment
+    from scipy.spatial.distance import cdist
+
     if a.shape != b.shape:
         return True
+    cost = cdist(a, b, "chebyshev")
+    rows, cols = linear_sum_assignment(cost)
     scale = max(np.abs(a).max(), np.abs(b).max(), 1e-12)
-    return np.abs(a - b).max() > TOL * scale
+    return cost[rows, cols].max() > TOL * scale
 
 
 def wl_hash(G: nx.Graph) -> str:
@@ -108,6 +121,8 @@ def main():
     regular = regular_pairs()
     csl = [nx.circulant_graph(41, [1, s]) for s in CSL_SKIPS]
     classic = classic_pairs()
+    brec = (load_brec() if os.path.exists(os.path.join(DATA_DIR, "brec", "brec_v3.npy"))
+            else None)
     print(f"{len(pairs)} 1-WL-equivalent atlas pairs, {len(regular)} regular "
           f"pairs, {len(csl)} CSL classes")
 
@@ -136,6 +151,15 @@ def main():
                "regular": f"{reg}/{len(regular)}", "csl_classes": f"{classes}/{len(csl)}"}
         for label, (a, b) in classic.items():
             row[label] = "yes" if differ(sig(a), sig(b)) else "no"
+        if brec:
+            told, false = 0, 0
+            for category, (lo, hi) in BREC_RANGES.items():
+                n = sum(differ(sig(brec[i][0]), sig(brec[i][1])) for i in range(lo, hi))
+                row[f"brec_{category}"] = f"{n}/{hi - lo}"
+                told += n
+            false = sum(differ(sig(g), sig(c)) for g, _, c in brec)
+            row["brec_total"] = f"{told}/{len(brec)}"
+            row["brec_false_differences"] = false
         rows.append(row)
         print(row, flush=True)
 

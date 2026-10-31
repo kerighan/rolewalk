@@ -18,6 +18,7 @@ epoch gives the test MAE. Needs torch_geometric.
 
     python pe_benchmark.py
     python pe_benchmark.py --epochs 100 --seeds 1 --encodings none rolewalk
+    python pe_benchmark.py --model gps --epochs 400 --encodings rwse curvature+rwse
 """
 import argparse
 import os
@@ -31,7 +32,7 @@ import torch
 from torch import nn
 from torch_geometric.datasets import ZINC
 from torch_geometric.loader import DataLoader
-from torch_geometric.nn import GINEConv, global_add_pool
+from torch_geometric.nn import GINEConv, GPSConv, global_add_pool
 from torch_geometric.utils import to_scipy_sparse_matrix
 
 from rolewalk import RoleWalk
@@ -95,15 +96,57 @@ class GINE(nn.Module):
         return self.head(global_add_pool(h, data.batch)).squeeze(-1)
 
 
-def run(encoding, splits, pe_dims, epochs, seed, device):
+class GPS(nn.Module):
+    """GraphGPS configuration for ZINC (Rampasek et al. 2022): 10 layers of
+    GINE + multi-head attention, width 64, 4 heads, attention dropout 0.5."""
+
+    def __init__(self, encoding: str, pe_dims: dict, hidden: int = 64,
+                 layers: int = 10):
+        super().__init__()
+        self.parts = [] if encoding == "none" else encoding.split("+")
+        self.atom = nn.Embedding(28, hidden)
+        self.bond = nn.Embedding(4, hidden)
+        self.pe = nn.ModuleDict({
+            p: nn.Sequential(nn.BatchNorm1d(pe_dims[p]), nn.Linear(pe_dims[p], hidden))
+            for p in self.parts})
+        self.convs = nn.ModuleList(
+            GPSConv(hidden, GINEConv(nn.Sequential(
+                nn.Linear(hidden, hidden), nn.ReLU(), nn.Linear(hidden, hidden)),
+                edge_dim=hidden), heads=4, attn_kwargs={"dropout": 0.5})
+            for _ in range(layers))
+        self.head = nn.Sequential(nn.Linear(hidden, hidden), nn.ReLU(),
+                                  nn.Linear(hidden, hidden // 2), nn.ReLU(),
+                                  nn.Linear(hidden // 2, 1))
+
+    def forward(self, data):
+        h = self.atom(data.x.squeeze(-1))
+        for p in self.parts:
+            h = h + self.pe[p](data[p])
+        e = self.bond(data.edge_attr)
+        for conv in self.convs:
+            h = conv(h, data.edge_index, data.batch, edge_attr=e)
+        return self.head(global_add_pool(h, data.batch)).squeeze(-1)
+
+
+def run(encoding, splits, pe_dims, epochs, seed, device, arch="gine"):
     torch.manual_seed(seed)
     np.random.seed(seed)
-    loaders = {name: DataLoader(graphs, batch_size=128, shuffle=name == "train")
+    batch_size = 32 if arch == "gps" else 128
+    loaders = {name: DataLoader(graphs, batch_size=batch_size, shuffle=name == "train")
                for name, graphs in splits.items()}
-    model = GINE(encoding, pe_dims).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, factor=0.5, patience=15, min_lr=1e-5)
+    if arch == "gps":
+        model = GPS(encoding, pe_dims).to(device)
+        optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-5)
+        # linear warm-up then cosine decay, as in GraphGPS
+        warmup = min(50, epochs // 10)
+        scheduler = torch.optim.lr_scheduler.LambdaLR(
+            optimizer, lambda e: (e + 1) / warmup if e < warmup else
+            0.5 * (1 + np.cos(np.pi * (e - warmup) / max(1, epochs - warmup))))
+    else:
+        model = GINE(encoding, pe_dims).to(device)
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, factor=0.5, patience=15, min_lr=1e-5)
 
     def evaluate(loader):
         model.eval()
@@ -124,7 +167,7 @@ def run(encoding, splits, pe_dims, epochs, seed, device):
             loss.backward()
             optimizer.step()
         val = evaluate(loaders["val"])
-        scheduler.step(val)
+        scheduler.step(val) if arch == "gine" else scheduler.step()
         if val < best[0]:
             best = (val, evaluate(loaders["test"]))
     n_params = sum(p.numel() for p in model.parameters())
@@ -137,6 +180,7 @@ def main():
                         choices=ENCODINGS)
     parser.add_argument("--epochs", type=int, default=300)
     parser.add_argument("--seeds", type=int, default=3)
+    parser.add_argument("--model", default="gine", choices=["gine", "gps"])
     parser.add_argument("--output", default="pe_zinc.csv")
     args = parser.parse_args()
 
@@ -161,7 +205,8 @@ def main():
     for seed in range(args.seeds):
         for encoding in args.encodings:
             start = time.perf_counter()
-            result = run(encoding, splits, pe_dims, args.epochs, seed, device)
+            result = run(encoding, splits, pe_dims, args.epochs, seed, device,
+                         args.model)
             rows.append({"encoding": encoding, "seed": seed,
                          "time": time.perf_counter() - start, **result})
             print(f"seed={seed} {encoding}: test MAE {result['test_mae']:.4f} "

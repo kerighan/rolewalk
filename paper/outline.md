@@ -40,8 +40,11 @@ encodings.*
 - *Deep: DRNE, GAS, RESD (RONE survey).*
 - *GNN structural/positional encodings: RWSE (GPS), LapPE, SignNet, GPSE.*
 - *Curvature on graphs: Ollivier-Ricci, Forman, Jost-Liu bound.*
-- *Directed: magnetic Laplacian (MagNet) — direction-aware but not role
-  embeddings.*
+- *Directed structural roles: struc2vec++ (Steenfatt et al. 2018, directed
+  weighted struc2vec), SDW2vec (Applied Network Science 2025, weighted
+  signed directed). TODO: compare if code available.*
+- *Directed proximity: magnetic Laplacian (MagNet), NERD — direction-aware
+  but not role embeddings.*
 
 ## 3. Method
 
@@ -68,7 +71,11 @@ characteristic function samples.*
 
 ## 4. Properties (theory)
 
-*TODO, short and formal:*
+*Draft in `paper/theory.md`: P1 invariance and locality (why it
+transfers), P2 distances are an MMD, P3 RWSE is the distance-0 onion layer,
+P4 relation to GraphWave and why GraphWave cannot transfer (1/n
+normalisation and per-graph scale), P5 strongly regular graphs are a hard
+limit, P6 complexity.*
 
 - *Invariance: automorphic (structurally equivalent) nodes get identical
   embeddings.*
@@ -87,14 +94,18 @@ characteristic function samples.*
 | | Inductive (transfer) | Directed | Weighted | Fast (USA, 1,190 nodes) | Online (new node) | Deterministic |
 |---|---|---|---|---|---|---|
 | **RoleWalk** | ✅ | ✅ | ✅ | ✅ 0.2 s | ✅ | ✅ |
-| struc2vec | ❌ | ❌ | ❌ | ❌ 564 s | ❌ | ❌ |
-| GraphWave | ❌ (chance in transfer) | ❌ | ✅ | ~ 18 s | ❌ | ✅ |
-| Role2Vec | ❌ | ❌ | ❌ | ~ 10 s | ❌ | ❌ |
+| struc2vec | ❌ | ❌ (struc2vec++, 2018: ✅) | ❌ (struc2vec++: ✅) | ❌ 564 s | ❌ | ❌ |
+| GraphWave | ❌ (chance in transfer, see P4) | ~ (extension discussed, not implemented) | ✅ | ~ 18 s | ❌ | ✅ |
+| Role2Vec | ~ (claimed by the paper; word2vec spaces per run) | ✅ in the paper (karateclub: undirected) | ❌ | ~ 10 s | ~ | ❌ |
 | RESD | ❌ | ❌ | ❌ | ~ 8 s | ❌ | ❌ |
 | ReFeX | ~ (feature count varies) | ~ | ~ | ✅ 0.1 s | ~ | ✅ |
 | RWSE | ✅ (weaker) | ~ | ✅ | ✅ 1.7 s | ✅ | ✅ |
 
-*TODO: verify every ❌/~ against the original papers.*
+*Checked against the papers for struc2vec (undirected and unweighted;
+struc2vec++ by Steenfatt et al., Complex Networks 2018, extends it to
+directed weighted graphs), Role2Vec (Ahmed et al., IJCAI 2018: directed
+input and inductive by design) and GraphWave. TODO: RESD (directed? no
+mechanism for unseen nodes found), ReFeX, RWSE rows.*
 
 ### Table 2 — Role classification (accuracy, 50 stratified 80/20 splits)
 
@@ -178,9 +189,18 @@ sets (politicians with official functions, directed Wikipedia talk).*
 | RWSE (16 steps) | **20** | 3,180 | **10** | yes | yes | no |
 | Degree (= 1-WL here) | 0 | 0 | 1 | no | no | no |
 
-*Strictly beyond 1-WL; matches RWSE with 3 steps instead of 16; SRG pair is
-beyond 3-WL and out of reach, as expected. TODO: BREC (data is pickled,
-loading needs approval).*
+BREC (400 pairs, Wang & Zhang 2023):
+
+| | Basic (60) | Regular (100) | Extension (100) | CFI (100) | 4-vertex (20) | Distance-reg. (20) | Total |
+|---|---|---|---|---|---|---|---|
+| RoleWalk (3 steps) | 60 | 50 | 97 | 0 | 0 | 0 | 207 |
+| RoleWalk (5 steps) | 60 | 50 | 100 | 3 | 0 | 0 | 213 |
+| RoleWalk 1.2 | 58 | 48 | 97 | 0 | 0 | 0 | 203 |
+| RWSE (16 steps) | 60 | 50 | 100 | 4 | 0 | 0 | **214** |
+
+*Beyond 1-WL; on par with RWSE with 5 steps instead of 16; CFI,
+4-vertex and distance-regular pairs defeat walk statistics (see P5).
+No false difference on BREC's isomorphic relabellings.*
 
 ### Table 5 — Centrality transfer (train on one graph, test on another of the same family; Spearman)
 
@@ -280,10 +300,15 @@ to compare role methods.*
 ## 7. Case study: roles of French politicians on X
 
 *Directed interaction graph (859 politicians, 11k links, October 2026), 7
-roles named after anchor politicians; month-to-month role changes; stability
-analysis: top tier (têtes d'affiche) stable across embedding variants,
-middle tiers form a continuum; report a per-person stability score rather
-than a hard label. TODO: stability scores.*
+roles named after anchor politicians; month-to-month role changes.*
+
+*Stability per politician: data (drop 10% of days, 20 runs; not a
+bootstrap, which removes 24% of edges and biases everyone downwards) and
+method (refit with onion layers / curvature). Top tier stable (Le Pen,
+Bardella, Mélenchon, Lisnard: 100%, 2/2 variants); Knafo top tier in 80% of
+runs and 2/2 variants; Zemmour never top tier (second tier 95%) but his
+exact middle-tier role changes with the method. Middle tiers: ~90% stable
+to data, ~50% to method → a continuum; show stability next to the role.*
 
 ## 8. Limitations
 
