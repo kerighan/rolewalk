@@ -178,7 +178,7 @@ cannot read directions get the undirected graph.*
 | RWSE (out-walk) | 0.690 | 0.826 | 51 s |
 
 *struc2vec and GraphWave do not run at this size. TODO: other real directed
-sets (politicians with official functions, directed Wikipedia talk).*
+sets (directed Wikipedia talk rebuilt from SNAP).*
 
 ### Table 4c — Expressiveness (pairs told apart; all sets 1-WL-indistinguishable)
 
