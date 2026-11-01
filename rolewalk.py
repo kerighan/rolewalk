@@ -85,8 +85,9 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     Mass that stays in inner layers reveals walks that loop back, which the
     characteristic function alone cannot place. A node lies within k steps
     when it is in the support of the k-th power, so the layers come from the
-    powers already computed, read before pruning, so that layers are exact
-    up to three steps. Layer masses are multiplied by ``||theta||``:
+    powers already computed, read before pruning, so that every retained
+    entry gets its exact distance up to three steps (the layer masses still
+    lose what pruning drops). Layer masses are multiplied by ``||theta||``:
     for a small probability, the characteristic function is about
     ``i theta p``, so this puts a unit of mass on the same scale as in the
     characteristic function. Unscaled, they weigh ~0.02% of the variance and
@@ -287,26 +288,41 @@ def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
 def _edge_triangles_kernel(indptr, indices, rank):
     """Common neighbours of every edge (CSR positions of a symmetric
     adjacency), by enumerating each triangle once from its lowest-ranked
-    node along edges oriented by rank: O(m sqrt(m))."""
+    node along edges oriented by rank (degree, then index). Only forward
+    neighbours are scanned, at most sqrt(2 |E|) per node: O(|E|^1.5)."""
     n = len(indptr) - 1
+    # forward adjacency: neighbours of higher rank, with their CSR position
+    fwd_ptr = np.zeros(n + 1, dtype=np.int64)
+    for v in range(n):
+        k = 0
+        for e in range(indptr[v], indptr[v + 1]):
+            if rank[indices[e]] > rank[v]:
+                k += 1
+        fwd_ptr[v + 1] = fwd_ptr[v] + k
+    fwd = np.empty(fwd_ptr[n], dtype=np.int64)
+    fwd_pos = np.empty(fwd_ptr[n], dtype=np.int64)
+    for v in range(n):
+        k = fwd_ptr[v]
+        for e in range(indptr[v], indptr[v + 1]):
+            if rank[indices[e]] > rank[v]:
+                fwd[k] = indices[e]
+                fwd_pos[k] = e
+                k += 1
     count = np.zeros(len(indices), dtype=np.int64)
     mark = np.full(n, -1, dtype=np.int64)  # mark[z] = position of edge v-z
     for v in range(n):
-        for e in range(indptr[v], indptr[v + 1]):
-            if rank[indices[e]] > rank[v]:
-                mark[indices[e]] = e
-        for e in range(indptr[v], indptr[v + 1]):
-            w = indices[e]
-            if rank[w] <= rank[v]:
-                continue
-            for f in range(indptr[w], indptr[w + 1]):
-                z = indices[f]
-                if rank[z] > rank[w] and mark[z] >= 0:
-                    count[e] += 1  # v-w
-                    count[f] += 1  # w-z
+        for a in range(fwd_ptr[v], fwd_ptr[v + 1]):
+            mark[fwd[a]] = fwd_pos[a]
+        for a in range(fwd_ptr[v], fwd_ptr[v + 1]):
+            w = fwd[a]
+            for b in range(fwd_ptr[w], fwd_ptr[w + 1]):
+                z = fwd[b]
+                if mark[z] >= 0:
+                    count[fwd_pos[a]] += 1  # v-w
+                    count[fwd_pos[b]] += 1  # w-z
                     count[mark[z]] += 1  # v-z
-        for e in range(indptr[v], indptr[v + 1]):
-            mark[indices[e]] = -1
+        for a in range(fwd_ptr[v], fwd_ptr[v + 1]):
+            mark[fwd[a]] = -1
     return count
 
 
@@ -381,10 +397,13 @@ class RoleWalk:
 
     Each node is described, for each walk step, by the empirical
     characteristic function of its transition probabilities, sampled at
-    ``n_samples`` values of theta. Squared distances between embeddings are
-    then MMDs between those distributions under the kernel
-    ``K(d) = mean_theta cos(theta * d)``, so ``theta_scheme`` and ``bounds``
-    set the kernel's shape and bandwidth (see benchmarks/theta_study.py).
+    ``n_samples`` values of theta, and by the mass it keeps at each
+    distance. Without curvature, squared distances between embeddings are
+    the MMD between the nodes' walk footprints (finite measures over
+    probabilities and layers) under the kernel
+    ``sum_theta [cos theta (a - b) - cos theta a - cos theta b + 1]
+    + ||theta||^2 a b [same layer]`` (see the paper), so ``theta_scheme``
+    and ``bounds`` set the kernel's shape and bandwidth.
 
     Parameters
     ----------
@@ -497,6 +516,8 @@ class RoleWalk:
         """
         n = len(G.nodes)
         A = nx.to_scipy_sparse_array(G, format="csr")
+        if A.nnz and (not np.isfinite(A.data).all() or A.data.min() < 0):
+            raise ValueError("edge weights must be finite and non-negative")
         rows = None
         if nodes is not None:
             index = {v: i for i, v in enumerate(G.nodes)}

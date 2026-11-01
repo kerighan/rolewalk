@@ -311,3 +311,23 @@ def test_fused_kernel_matches_sparse_powers():
                                        atol=1e-5 * np.abs(sparse).max())
     X = RoleWalk(n_jobs=4).transform(G)
     np.testing.assert_allclose(X, RoleWalk().transform(G), rtol=1e-6, atol=1e-6)
+
+
+def test_negative_weights_rejected():
+    G = nx.Graph()
+    G.add_edge(0, 1, weight=-1.0)
+    G.add_edge(1, 2, weight=1.0)
+    try:
+        RoleWalk().transform(G)
+    except ValueError:
+        return
+    raise AssertionError("negative weights must be rejected")
+
+
+def test_triangle_curvature_linear_on_stars():
+    import time
+    A = nx.to_scipy_sparse_array(nx.star_graph(200000), format="csr")
+    start = time.perf_counter()
+    kappa = node_curvature(A)
+    assert time.perf_counter() - start < 5
+    np.testing.assert_allclose(kappa[1:], 2 / 200001)
