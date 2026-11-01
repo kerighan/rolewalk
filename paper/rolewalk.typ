@@ -319,8 +319,8 @@ while RoleWalk keeps its accuracy.
 = Experiments
 
 All CPU timings on one core. Classification: logistic regression on
-standardised embeddings, 50 stratified 80/20 splits. Code and CSV files
-in `benchmarks/`.
+standardised embeddings, 50 stratified 80/20 splits. Best in bold, second
+underlined. Code and CSV files in `benchmarks/`.
 
 #figure(caption: [Properties. Checked against each paper; "\~" partial.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
@@ -339,15 +339,15 @@ in `benchmarks/`.
 #figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. `roles.csv`, `struc2vec_runs.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film#super[\*]],
-    [*RoleWalk*], [0.743], [0.583], [0.657], [*0.860*], [*0.487*], [0.569],
-    [*RoleWalk + curv.*], [0.741], [*0.596*], [*0.666*], [*0.860*], [0.485], [0.581],
+    [*RoleWalk*], [0.743], [#underline[0.583]], [#underline[0.657]], [*0.860*], [*0.487*], [0.569],
+    [*RoleWalk + curv.*], [0.741], [*0.596*], [*0.666*], [*0.860*], [#underline[0.485]], [#underline[0.581]],
     [struc2vec], [0.705 ± .022], [0.561 ± .020], [0.596 ± .004], [–], [–], [–],
     [RESD], [0.728], [0.544], [0.653], [0.857], [0.476], [0.563],
     [GraphWave], [*0.769*], [0.561], [0.587], [*0.860*], [0.481], [–],
     [ReFeX], [0.691], [0.576], [0.622], [0.851], [0.478], [0.579],
     [Role2Vec], [0.476], [0.366], [0.562], [0.844], [0.399], [*0.743*],
     [RWSE], [0.711], [0.572], [0.517], [0.855], [0.363], [0.450],
-    [Degree], [0.756], [0.554], [0.567], [0.858], [0.476], [0.478],
+    [Degree], [#underline[0.756]], [0.554], [0.567], [#underline[0.858]], [0.476], [0.478],
   )
   #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory.]
 ] <tab-roles>
@@ -355,7 +355,7 @@ in `benchmarks/`.
 #figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over networks. `roles.csv`.])[
   #table(columns: 3, align: (left, center, center),
     [], [Bots], [Admins],
-    [RoleWalk], [0.129], [0.324],
+    [RoleWalk], [#underline[0.129]], [#underline[0.324]],
     [struc2vec (3 smallest networks)], [*0.146*], [*0.391*],
     [GraphWave], [0.115], [0.298],
     [RESD], [0.114], [0.254],
@@ -370,7 +370,7 @@ in `benchmarks/`.
   #table(columns: 6, align: (left,) + (center,) * 5,
     [], [Acc. 0%], [Acc. 5%], [Acc. 10%], [ARI 5%], [mAP 5%],
     [*RoleWalk + curv.*], [*0.989*], [*0.712*], [*0.547*], [*0.381*], [*0.625*],
-    [RoleWalk], [0.908], [0.680], [0.510], [0.366], [0.574],
+    [RoleWalk], [#underline[0.908]], [#underline[0.680]], [#underline[0.510]], [#underline[0.366]], [#underline[0.574]],
     [RoleWalk, undirected], [0.767], [0.560], [0.420], [0.351], [0.479],
     [Role2Vec], [0.730], [0.451], [0.368], [0.148], [0.295],
     [ReFeX], [0.532], [0.429], [0.431], [0.342], [0.356],
@@ -385,9 +385,9 @@ in `benchmarks/`.
   #table(columns: 4, align: (left, center, center, center),
     [], [A: elected], [B: 3 classes], [Time],
     [*RoleWalk + curv.*], [*0.823*], [*0.943*], [5 s],
-    [RoleWalk], [0.808], [0.938], [4 s],
+    [RoleWalk], [0.808], [#underline[0.938]], [4 s],
     [RoleWalk, undirected], [0.791], [0.863], [],
-    [RoleWalk + curv., undirected], [0.814], [0.900], [],
+    [RoleWalk + curv., undirected], [#underline[0.814]], [0.900], [],
     [RESD], [0.798], [0.843], [68 s],
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
@@ -400,10 +400,10 @@ in `benchmarks/`.
 #figure(caption: [Expressiveness: pairs told apart. Every set is 1-WL-indistinguishable. No false difference on random relabellings. `expressiveness.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Atlas ≤ 7 (20)], [Regular (3,181)], [CSL (10 cl.)], [Decalin / bicyc.], [$2 C_3$ / $C_6$], [SRG pair#super[\*]],
-    [*RoleWalk (3 steps)*], [*20*], [*3,181*], [6], [yes], [yes], [no],
+    [*RoleWalk (3 steps)*], [*20*], [*3,181*], [#underline[6]], [yes], [yes], [no],
     [RoleWalk (5 steps)], [*20*], [*3,181*], [*10*], [yes], [yes], [no],
-    [RoleWalk, no layers], [16], [3,180], [6], [yes], [yes], [no],
-    [RWSE (16 steps)], [*20*], [3,180], [*10*], [yes], [yes], [no],
+    [RoleWalk, no layers], [#underline[16]], [#underline[3,180]], [#underline[6]], [yes], [yes], [no],
+    [RWSE (16 steps)], [*20*], [#underline[3,180]], [*10*], [yes], [yes], [no],
     [Degree (= 1-WL)], [0], [0], [1], [no], [no], [no],
   )
   #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook, beyond 3-WL; not separable by @prop-drg.]
@@ -413,7 +413,7 @@ in `benchmarks/`.
   #table(columns: 8, align: (left,) + (center,) * 7,
     [], [Basic (60)], [Regular (100)], [Extension (100)], [CFI (100)], [4-vertex (20)], [Dist.-reg. (20)], [Total],
     [RoleWalk (3 steps)], [60], [50], [97], [0], [0], [0], [207],
-    [RoleWalk (5 steps)], [60], [50], [100], [3], [0], [0], [213],
+    [RoleWalk (5 steps)], [60], [50], [100], [3], [0], [0], [#underline[213]],
     [RoleWalk, no layers], [58], [48], [97], [0], [0], [0], [203],
     [RWSE (16 steps)], [60], [50], [100], [4], [0], [0], [*214*],
   )
@@ -423,14 +423,14 @@ in `benchmarks/`.
 #figure(caption: [Centrality transfer: a gradient-boosting regressor from embedding to centrality is fitted on one graph and evaluated (Spearman) on another graph of the same family and size (other seed) (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs). `centrality_transfer.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [RoleWalk], [\+ curv.], [ReFeX#super[†]], [RWSE], [GraphWave], [Degree],
-    [Betweenness], [0.901], [*0.905*], [0.844], [0.708], [0.723], [0.634],
-    [Closeness], [*0.866*], [0.864], [0.684], [0.732], [0.597], [0.428],
-    [Clustering], [*0.873*], [0.870], [0.852], [0.803], [0.392], [0.212],
-    [k-core], [0.747], [0.748], [*0.935*], [0.660], [0.566], [0.692],
-    [Eigenvector], [*0.656*], [0.649], [0.492], [0.531], [0.462], [0.428],
-    [Harmonic], [*0.918*], [0.916], [0.782], [0.784], [0.699], [0.500],
-    [PageRank], [*0.990*], [*0.990*], [0.968], [0.864], [0.857], [0.927],
-    [Mean], [*0.850*], [0.849], [0.794], [0.726], [0.614], [0.546],
+    [Betweenness], [#underline[0.901]], [*0.905*], [0.844], [0.708], [0.723], [0.634],
+    [Closeness], [*0.866*], [#underline[0.864]], [0.684], [0.732], [0.597], [0.428],
+    [Clustering], [*0.873*], [#underline[0.870]], [0.852], [0.803], [0.392], [0.212],
+    [k-core], [0.747], [#underline[0.748]], [*0.935*], [0.660], [0.566], [0.692],
+    [Eigenvector], [*0.656*], [#underline[0.649]], [0.492], [0.531], [0.462], [0.428],
+    [Harmonic], [*0.918*], [#underline[0.916]], [0.782], [0.784], [0.699], [0.500],
+    [PageRank], [*0.990*], [*0.990*], [#underline[0.968]], [0.864], [0.857], [0.927],
+    [Mean], [*0.850*], [#underline[0.849]], [0.794], [0.726], [0.614], [0.546],
   )
   #text(size: 8pt)[#super[†] Only where its number of features matches across graphs.]
 ] <tab-centrality>
@@ -438,7 +438,7 @@ in `benchmarks/`.
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree. `role_transfer.csv`.])[
   #table(columns: 6, align: center,
     [Degree], [RoleWalk], [\+ curv.], [RoleWalk, no layers], [RWSE], [GraphWave],
-    [0.542], [*0.488*], [0.470], [0.445], [0.375], [0.249 (chance)],
+    [0.542], [*0.488*], [#underline[0.470]], [0.445], [0.375], [0.249 (chance)],
   )
 ] <tab-airport-transfer>
 
@@ -448,12 +448,12 @@ in `benchmarks/`.
     [none], [0.202 ± 0.010], [],
     [RWSE], [0.107 ± 0.004], [],
     [RoleWalk], [0.108 ± 0.008], [],
-    [RoleWalk + RWSE], [0.104 ± 0.006], [],
+    [RoleWalk + RWSE], [#underline[0.104 ± 0.006]], [],
     [*RoleWalk + curv. + RWSE*], [*0.095 ± 0.002*], [],
     table.hline(stroke: 0.6pt),
     [GPS], [Test MAE], [Val. MAE],
     [RWSE (published: 0.070 ± 0.004)], [0.077 ± 0.006], [0.103 ± 0.000],
-    [RoleWalk + curv.], [0.076 ± 0.001], [0.092 ± 0.003],
+    [RoleWalk + curv.], [#underline[0.076 ± 0.001]], [#underline[0.092 ± 0.003]],
     [*RoleWalk + curv. + RWSE*], [*0.073 ± 0.001*], [*0.089 ± 0.005*],
   )
   #text(size: 8pt)[#todo[GPS seeds 2-3 running; Peptides (LRGB)]]
@@ -483,11 +483,11 @@ in `benchmarks/`.
 #figure(caption: [Same budget of features, replacing the characteristic function. Airports: mean accuracy; Transfer: airport transfer; Motifs: synthetic accuracy.])[
   #table(columns: 5, align: (left,) + (center,) * 4,
     [], [Airports], [Transfer], [Motifs (varied / houses)], [Time 20k],
-    [*Characteristic function*], [0.656], [0.445], [*0.744* / 0.733], [6.5 s],
+    [*Characteristic function*], [#underline[0.656]], [#underline[0.445]], [*0.744* / #underline[0.733]], [6.5 s],
     [Laplace transform], [*0.657*], [0.345], [0.614 / 0.717], [18 s],
     [Dyadic histogram (Haar)], [0.631], [0.353], [0.614 / 0.725], [15 s],
     [Power sums (Rényi)], [0.653], [0.420], [0.647 / 0.692], [9.7 s],
-    [Top-10 probabilities], [0.652], [*0.512*], [0.679 / *0.758*], [3.5 s],
+    [Top-10 probabilities], [0.652], [*0.512*], [#underline[0.679] / *0.758*], [3.5 s],
   )
 ]
 
@@ -497,13 +497,13 @@ in `benchmarks/`.
   #table(columns: 5, align: (left,) + (center,) * 4,
     [], [Airports], [Transfer], [Motifs (varied / houses)], [Directed acc.],
     [No geometry], [0.656], [0.445], [0.744 / 0.733], [0.678],
-    [\+ onion layers (moments)], [0.661], [0.488], [0.744 / *0.758*], [0.682],
-    [\+ layers, one CF per layer], [0.654], [0.424], [0.751 / 0.742], [0.695],
+    [\+ onion layers (moments)], [0.661], [#underline[0.488]], [0.744 / #underline[0.758]], [0.682],
+    [\+ layers, one CF per layer], [0.654], [0.424], [#underline[0.751] / 0.742], [0.695],
     [\+ degree marks (joint CF)], [0.65–0.67], [0.34–0.36], [–], [–],
-    [\+ curvature, counting bound], [0.667], [0.388], [0.754 / 0.767], [0.721],
+    [\+ curvature, counting bound], [#underline[0.667]], [0.388], [*0.754* / *0.767*], [#underline[0.721]],
     [\+ curvature, probabilistic (moments)], [*0.669*], [0.470], [0.725 / 0.742], [0.712],
     [\+ curvature, exact Ollivier-Ricci], [0.662], [*0.494*], [0.746 / 0.750], [*0.743*],
-    [\+ curvature, integrated CF], [0.663], [0.400], [0.751 / 0.750], [0.697],
+    [\+ curvature, integrated CF], [0.663], [0.400], [#underline[0.751] / 0.750], [0.697],
   )
 ]
 
@@ -526,8 +526,8 @@ left out.
   #table(columns: 3, align: (left, center, center),
     [], [Class 3 vs rest], [Within classes 0–2],
     [Role2Vec], [*0.946*], [0.637],
-    [RoleWalk + curv.], [0.740], [0.634],
-    [ReFeX], [0.745], [0.627],
+    [RoleWalk + curv.], [0.740], [#underline[0.634]],
+    [ReFeX], [#underline[0.745]], [0.627],
     [Degree], [0.536], [0.623],
     [Majority class], [0.593], [0.623],
   )
