@@ -33,13 +33,15 @@ Highlights
   self (30%)".
 - **Save once, label live.** A fitted model is a small `.npz` file;
   labelling a handful of nodes in a live graph takes milliseconds.
-- **Scales.** 100,000 nodes embedded in under 30 s on one CPU core.
+- **Scales.** A million nodes in 20 s to 3 min on one CPU core, with
+  `numba` installed; rows are independent, so `n_jobs` threads divide that.
 
 Install
 -------
 
 ```bash
-pip install .        # from a clone of this repository
+pip install .          # from a clone of this repository
+pip install ".[fast]"  # with numba: fused walk kernel, ~2x faster, low memory
 ```
 
 Quickstart

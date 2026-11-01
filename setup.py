@@ -30,6 +30,7 @@ setup(name="rolewalk",
       url="https://github.com/kerighan/rolewalk",
       download_url="http://pypi.python.org/pypi/rolewalk",
       install_requires=install_requires,
+      extras_require={"fast": ["numba"]},
       keywords="graph, node, embedding, structural, random walks",
       platforms=["Linux", "Mac OSX", "Windows", "Unix"],
       classifiers=[

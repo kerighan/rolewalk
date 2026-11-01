@@ -290,3 +290,24 @@ def test_mixed_separates_shared_targets():
     # undirected graphs are unchanged
     G = nx.karate_club_graph()
     np.testing.assert_array_equal(RoleWalk(mixed=True).transform(G), RoleWalk().transform(G))
+
+
+def test_fused_kernel_matches_sparse_powers():
+    import rolewalk
+    if rolewalk.numba is None:
+        return
+    G = nx.powerlaw_cluster_graph(1500, 3, 0.3, seed=2)
+    D = nx.gnp_random_graph(300, 0.03, seed=3, directed=True)
+    for graph in (G, D):
+        for kw in (dict(tol=0), dict(tol=1e-4), dict(tol=1e-3, max_missing=0.05),
+                   dict(curvature=True), dict(shells=False)):
+            fused = RoleWalk(**kw).transform(graph)
+            saved, rolewalk.numba = rolewalk.numba, None
+            try:
+                sparse = RoleWalk(**kw).transform(graph)
+            finally:
+                rolewalk.numba = saved
+            np.testing.assert_allclose(fused, sparse, rtol=1e-4,
+                                       atol=1e-5 * np.abs(sparse).max())
+    X = RoleWalk(n_jobs=4).transform(G)
+    np.testing.assert_allclose(X, RoleWalk().transform(G), rtol=1e-6, atol=1e-6)

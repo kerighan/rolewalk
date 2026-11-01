@@ -133,6 +133,187 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     return np.hstack(features)
 
 
+try:
+    import numba
+except ImportError:  # pragma: no cover
+    numba = None
+
+
+def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
+                      max_missing, shells, kappa, n_threads):
+    """Fused walk: for each root, propagate a sparse row step by step and
+    summarise it on the fly (characteristic function, layers, curvature),
+    without materialising the powers. Same features as compute_embedding
+    with aggregate="sum"; each thread holds O(n) workspace."""
+    n = len(indptr) - 1
+    m = len(theta)
+    use_kappa = len(kappa) > 0
+    per_step = 2 * m + 2 * use_kappa
+    width = walk_len * per_step + (walk_len * (walk_len + 3) // 2 if shells else 0)
+    out = np.zeros((len(rows), width), dtype=np.float32)
+    scale = np.sqrt(np.sum(theta ** 2))
+    # below this probability every angle is under 0.1: Taylor series from
+    # power sums instead of 2 m sines (error below 1e-12)
+    small_p = 0.1 / np.max(theta)
+    chunks = np.linspace(0, len(rows), n_threads + 1).astype(np.int64)
+    for c in numba.prange(n_threads):
+        acc = np.zeros(n)
+        dist = np.full(n, -1, dtype=np.int64)
+        touched = np.empty(n, dtype=np.int64)
+        seen = np.empty(n, dtype=np.int64)
+        cur_idx = np.empty(n, dtype=np.int64)
+        cur_val = np.empty(n)
+        layers = np.zeros(walk_len + 1)
+        M = np.zeros(9)
+        for r in range(chunks[c], chunks[c + 1]):
+            u = rows[r]
+            n_seen = 1
+            seen[0] = u
+            dist[u] = 0
+            n_cur = 1
+            cur_idx[0] = u
+            cur_val[0] = 1.0
+            col = 0
+            for w in range(walk_len):
+                # next row = current row @ H, in a dense accumulator
+                n_touch = 0
+                for a in range(n_cur):
+                    j = cur_idx[a]
+                    p = cur_val[a]
+                    for e in range(indptr[j], indptr[j + 1]):
+                        k = indices[e]
+                        if acc[k] == 0.0:
+                            touched[n_touch] = k
+                            n_touch += 1
+                        acc[k] += p * data[e]
+                total = 0.0
+                small = 0.0
+                for t in range(n_touch):
+                    k = touched[t]
+                    if dist[k] < 0:  # first reached now, before pruning
+                        dist[k] = w + 1
+                        seen[n_seen] = k
+                        n_seen += 1
+                    total += acc[k]
+                    if acc[k] < tol:
+                        small += acc[k]
+                prune = w > 0 and tol > 0.0
+                if prune and max_missing >= 0.0:
+                    prune = (1.0 - total) + small <= max_missing
+                # keep, summarise, and reset the accumulator
+                n_cur = 0
+                kept = 0.0
+                mean = 0.0
+                second = 0.0
+                for d in range(walk_len + 1):
+                    layers[d] = 0.0
+                for d in range(9):
+                    M[d] = 0.0
+                for t in range(n_touch):
+                    k = touched[t]
+                    p = acc[k]
+                    acc[k] = 0.0
+                    if prune and p < tol:
+                        continue
+                    cur_idx[n_cur] = k
+                    cur_val[n_cur] = p
+                    n_cur += 1
+                    kept += p
+                    if p < small_p:
+                        q = p
+                        for d in range(1, 9):
+                            M[d] += q
+                            q *= p
+                    else:
+                        for i in range(m):
+                            x = np.float32(theta[i] * p)
+                            h = np.sin(np.float32(0.5) * x)
+                            out[r, col + i] += np.float32(-2.0) * h * h
+                            out[r, col + m + i] += np.sin(x)
+                    if shells:
+                        layers[dist[k]] += p
+                    if use_kappa:
+                        mean += p * kappa[k]
+                        second += p * kappa[k] * kappa[k]
+                for i in range(m):
+                    t2 = theta[i] * theta[i]
+                    out[r, col + i] += t2 * (-M[2] / 2 + t2 * (M[4] / 24 + t2 * (
+                        -M[6] / 720 + t2 * M[8] / 40320)))
+                    out[r, col + m + i] += theta[i] * (M[1] + t2 * (-M[3] / 6 + t2 * (
+                        M[5] / 120 - t2 * M[7] / 5040)))
+                if tol > 0.0:  # missing mass, to first order
+                    for i in range(m):
+                        out[r, col + m + i] += (1.0 - kept) * theta[i]
+                col += 2 * m
+                if shells:
+                    for d in range(w + 2):
+                        out[r, col + d] = scale * layers[d]
+                    col += w + 2
+                if use_kappa:
+                    out[r, col] = scale * mean
+                    out[r, col + 1] = scale * np.sqrt(max(second - mean * mean, 0.0))
+                    col += 2
+            for t in range(n_seen):
+                dist[seen[t]] = -1
+    return out
+
+
+if numba is not None:
+    _walk_rows_kernel = numba.njit(parallel=True, cache=True, fastmath=True)(_walk_rows_kernel)
+
+
+def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
+                            shells=False, curvature=None, max_missing=None,
+                            n_jobs=1):
+    """compute_embedding (aggregate="sum") with the fused Numba kernel:
+    a few times faster and with O(n) memory per thread. Layers use the
+    distance at which each node is first reached, which is what the
+    supports give, and stays nested beyond three steps."""
+    if numba is None:
+        raise ImportError("compute_embedding_fused needs numba")
+    H = H.tocsr()
+    rows = np.arange(H.shape[0]) if rows is None else np.asarray(rows, dtype=np.int64)
+    n_threads = max(1, min(n_jobs, len(rows)))
+    numba.set_num_threads(min(n_threads, numba.config.NUMBA_NUM_THREADS))
+    kappa = np.zeros(0) if curvature is None else np.asarray(curvature, dtype=np.float64)
+    return _walk_rows_kernel(
+        H.indptr.astype(np.int64), H.indices.astype(np.int64),
+        H.data.astype(np.float64), rows.astype(np.int64), walk_len,
+        np.asarray(theta, dtype=np.float64).ravel(), float(tol),
+        -1.0 if max_missing is None else float(max_missing), bool(shells),
+        kappa, n_threads)
+
+
+def _edge_triangles_kernel(indptr, indices, rank):
+    """Common neighbours of every edge (CSR positions of a symmetric
+    adjacency), by enumerating each triangle once from its lowest-ranked
+    node along edges oriented by rank: O(m sqrt(m))."""
+    n = len(indptr) - 1
+    count = np.zeros(len(indices), dtype=np.int64)
+    mark = np.full(n, -1, dtype=np.int64)  # mark[z] = position of edge v-z
+    for v in range(n):
+        for e in range(indptr[v], indptr[v + 1]):
+            if rank[indices[e]] > rank[v]:
+                mark[indices[e]] = e
+        for e in range(indptr[v], indptr[v + 1]):
+            w = indices[e]
+            if rank[w] <= rank[v]:
+                continue
+            for f in range(indptr[w], indptr[w + 1]):
+                z = indices[f]
+                if rank[z] > rank[w] and mark[z] >= 0:
+                    count[e] += 1  # v-w
+                    count[f] += 1  # w-z
+                    count[mark[z]] += 1  # v-z
+        for e in range(indptr[v], indptr[v + 1]):
+            mark[indices[e]] = -1
+    return count
+
+
+if numba is not None:
+    _edge_triangles_kernel = numba.njit(cache=True)(_edge_triangles_kernel)
+
+
 def node_curvature(A, nodes=None):
     """Mean curvature of the edges around each node.
 
@@ -149,14 +330,30 @@ def node_curvature(A, nodes=None):
 
     The two closed neighbourhoods are uniform and share the
     ``c(x, y) + 2`` nodes x, y and their common neighbours, so the overlap
-    is ``(c(x, y) + 2) / (max(d_x, d_y) + 1)``: one sparse product counts
-    the common neighbours of every edge.
+    is ``(c(x, y) + 2) / (max(d_x, d_y) + 1)``. Common neighbours come from
+    enumerating triangles along edges oriented by degree (with numba), or
+    from one sparse product (without numba, or for a subset of nodes).
     """
     n = A.shape[0]
     U = ((A + A.T) > 0).astype(np.float64).tocsr()
     U.setdiag(0)
     U.eliminate_zeros()
     deg = np.asarray(U.sum(axis=1)).ravel()
+    if numba is not None and nodes is None:
+        U.sort_indices()
+        order = np.lexsort((np.arange(n), deg))
+        rank = np.empty(n, dtype=np.int64)
+        rank[order] = np.arange(n)
+        count = _edge_triangles_kernel(U.indptr.astype(np.int64),
+                                       U.indices.astype(np.int64), rank)
+        # each triangle counted one edge direction: add the other one
+        C = csr_matrix((count.astype(np.float64), U.indices, U.indptr), shape=U.shape)
+        C = (C + C.T).tocsr()
+        C.sort_indices()
+        common = np.asarray(C.multiply(U).tocsr()[U.nonzero()]).ravel()
+        E = U.tocoo()  # same order as U.nonzero()
+        overlap = (common + 2) / (np.maximum(deg[E.row], deg[E.col]) + 1)
+        return np.bincount(E.row, overlap, minlength=n) / np.maximum(deg, 1)
     rows = U if nodes is None else U[nodes]
     common = (rows @ U).multiply(rows).tocoo()  # c(x, y) on the edges x-y
     E = rows.tocoo()  # edges with c = 0 are absent from ``common``
@@ -227,6 +424,9 @@ class RoleWalk:
         Budget of probability mass a row may lose to pruning. Without it,
         a hub's step-2 row can lose most of its mass, which returns to the
         hub at step 3. Keeping it costs more time around hubs.
+    n_jobs : int
+        Threads for the fused walk (with numba). Rows are independent, so
+        time scales down almost linearly.
     block_work : float
         Rows are embedded in blocks of about this many neighbour visits for
         the first two steps, which bounds memory on large graphs. Results do
@@ -251,7 +451,8 @@ class RoleWalk:
         self, walk_len=3, n_samples=10, bounds=None,
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
         aggregate="sum", tol=1e-4, shells=True, curvature=False,
-        role_names=None, max_missing=None, block_work=1e7, mixed=False
+        role_names=None, max_missing=None, block_work=1e7, mixed=False,
+        n_jobs=1
     ):
         if theta_scheme not in THETA_SCHEMES:
             raise ValueError(
@@ -275,6 +476,7 @@ class RoleWalk:
         self.curvature = curvature
         self.max_missing = max_missing
         self.mixed = mixed
+        self.n_jobs = n_jobs
         self.block_work = block_work
         self.embedding_dim = embedding_dim
 
@@ -358,7 +560,12 @@ class RoleWalk:
         return np.vstack(out)
 
     def _embed_blocks(self, H, rows, kappa):
-        """compute_embedding over blocks of rows of similar expansion work."""
+        """compute_embedding over blocks of rows of similar expansion work,
+        or the fused kernel when numba is available."""
+        if numba is not None and self.aggregate == "sum":
+            return compute_embedding_fused(
+                H, self.theta, self.walk_len, self.tol, rows, self.shells,
+                kappa, self.max_missing, self.n_jobs)
         return np.vstack([
             compute_embedding(H, self.theta, self.walk_len, self.aggregate,
                               self.tol, block, self.shells, kappa,
