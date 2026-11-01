@@ -82,7 +82,7 @@ DATASETS = {
 # methods that read edge directions; the others get the undirected graph
 DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree",
             "rwse_inout", "refex_directed", "rolewalk_mixed", "rolewalk_curvature_mixed",
-            "topk_layers", "local_stats"}
+            "topk_layers", "local_stats", "rolewalk_local"}
 
 
 def rolewalk(G: nx.Graph) -> np.ndarray:
@@ -177,6 +177,7 @@ METHODS: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
     "rolewalk_mixed": rolewalk_mixed,
     "topk_layers": topk_layers,
     "local_stats": local_stats,
+    "rolewalk_local": lambda G: np.hstack([rolewalk(G), local_stats(G)]),
     "rolewalk_curvature_mixed": rolewalk_curvature_mixed,
 }
 if GraphWave is not None:
@@ -194,7 +195,7 @@ else:  # pragma: no cover
 # be compared across networks
 INDUCTIVE = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse",
              "degree", "graphwave", "graphwave_centered", "heat_cf", "topk_layers",
-             "local_stats"}
+             "local_stats", "rolewalk_local"}
 # struc2vec took 6 minutes on 1,190 nodes and grows faster than linearly
 MAX_NODES = {"struc2vec": 3000, "graphwave": 10000, "graphwave_centered": 10000}  # graphwave: dense n x n
 K = (5, 10, 25, 50)

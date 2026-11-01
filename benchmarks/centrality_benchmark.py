@@ -102,6 +102,7 @@ if "graphwave" in rb.METHODS:
 FEATURES["heat_cf"] = rb.heat_cf
 FEATURES["topk_layers"] = topk_layers
 FEATURES["local_stats"] = local_stats
+FEATURES["rolewalk_local"] = lambda G: np.hstack([FEATURES["rolewalk"](G), local_stats(G)])
 SELECTED = list(FEATURES)
 
 
