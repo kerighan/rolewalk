@@ -576,8 +576,10 @@ left out.
 Spacing matters less than range (`theta_scheme.csv`): on $[1, 100]$,
 log-spaced frequencies score 0.323 against 0.316 for uniform ones, with the
 same airport accuracy (0.661 / 0.662) and transfer (0.488 / 0.485). A
-narrower range ($[1, 30]$) helps real networks and transfer (0.515) but loses
-on synthetic motifs (score 0.315). Log spacing is kept because probabilities
+narrower range helps real networks and transfer but loses on synthetic
+motifs, whatever the spacing: $[1, 30]$ gives transfer 0.515 (log or
+uniform) and score 0.312–0.315; log $[1, 50]$ gives 0.506 and 0.326, within
+noise of the default. Log spacing is kept because probabilities
 scale multiplicatively ($p approx 1 \/ d^w$): a change of degree rescales
 $p$, which shifts a log grid along itself, while a uniform grid puts 9 of its
 10 frequencies above 10.

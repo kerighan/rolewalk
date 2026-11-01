@@ -28,6 +28,9 @@ SCHEMES = {
     "linspace [0.001, 100]": ("linspace", (1e-3, 100)),
     "linspace [1, 30]": ("linspace", (1, 30)),
     "geomspace [0.3, 300]": ("geomspace", (0.3, 300)),
+    "geomspace [1, 30]": ("geomspace", (1, 30)),
+    "geomspace [1, 50]": ("geomspace", (1, 50)),
+    "geomspace [0.3, 30]": ("geomspace", (0.3, 30)),
 }
 AIRPORTS = ("brazil", "europe", "usa")
 
