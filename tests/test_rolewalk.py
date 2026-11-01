@@ -19,10 +19,10 @@ def test_transform_shapes():
         X = rw.transform(G)
         assert X.shape == (3, 2 * n_samples * walk_len + extra)
 
-        # Directed graph: out- and in-walks
+        # Directed graph: out- and in-walks, and the two mixed probes
         Gd = nx.DiGraph([(0, 1), (1, 2), (2, 0)])
         Xd = rw.transform(Gd)
-        assert Xd.shape == (3, 2 * (2 * n_samples * walk_len + extra))
+        assert Xd.shape == (3, 2 * (2 * n_samples * walk_len + extra) + 4 * n_samples)
 
 
 def test_fit_predict_fixed_number_of_roles():
@@ -281,11 +281,11 @@ def test_mixed_separates_shared_targets():
     one = nx.DiGraph([(0, 1), (0, 2)])
     k22 = nx.DiGraph([(0, 1), (0, 2), (3, 1), (3, 2)])
     for curvature in (False, True):
-        model = RoleWalk(tol=0, curvature=curvature)
+        model = RoleWalk(tol=0, curvature=curvature, mixed=False)
         np.testing.assert_allclose(model.transform(one)[0], model.transform(k22)[0], atol=1e-6)
-    model = RoleWalk(tol=0, mixed=True)
+    model = RoleWalk(tol=0)  # mixed probes are on by default
     X, Y = model.transform(one), model.transform(k22)
-    assert X.shape[1] == RoleWalk(tol=0).transform(one).shape[1] + 4 * 10
+    assert X.shape[1] == RoleWalk(tol=0, mixed=False).transform(one).shape[1] + 4 * 10
     assert np.abs(X[0] - Y[0]).max() > 1e-2
     # undirected graphs are unchanged
     G = nx.karate_club_graph()

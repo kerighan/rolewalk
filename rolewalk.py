@@ -433,7 +433,8 @@ class RoleWalk:
         :func:`node_curvature`), from tree-like (hyperbolic) to clique-like
         (spherical). Adds ``2 * walk_len`` features.
     mixed : bool
-        Directed graphs only: also describe the walks that take one step
+        Directed graphs only (default since 1.4.0): also describe the walks
+        that take one step
         forward then one back (``H_out H_in``: nodes sharing targets with the
         start) and the converse (shared sources), by their characteristic
         functions. Pure out- and in-walks miss these: a source pointing to
@@ -470,7 +471,7 @@ class RoleWalk:
         self, walk_len=3, n_samples=10, bounds=None,
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
         aggregate="sum", tol=1e-4, shells=True, curvature=False,
-        role_names=None, max_missing=None, block_work=1e7, mixed=False,
+        role_names=None, max_missing=None, block_work=1e7, mixed=True,
         n_jobs=1
     ):
         if theta_scheme not in THETA_SCHEMES:
@@ -704,6 +705,7 @@ class RoleWalk:
             params = json.loads(str(data["params"]))
             params.setdefault("shells", False)  # saved before 1.3.0
             params.setdefault("curvature", False)
+            params.setdefault("mixed", False)  # saved before 1.4.0
             model = cls(**params)
             model.theta = data["theta"]
             if "cluster_centers" in data:
