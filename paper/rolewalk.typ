@@ -32,11 +32,12 @@
 #v(0.8em)
 #block(inset: (x: 1.5cm))[
   *Abstract.* Structural roles group nodes by their position in a graph
-  rather than by proximity. RoleWalk describes each node by the
-  characteristic function of its random-walk transition
-  probabilities, sampled at a few frequencies, together with the
-  distribution of the walk's mass over distance layers and, optionally,
-  low-order moments of a probabilistic curvature. The embedding is local,
+  rather than by proximity. RoleWalk follows a short random walk from
+  each node and describes, at every step, two laws: that of the transition
+  probabilities, through its characteristic function sampled at a few
+  frequencies (how concentrated the walk is), and that of the walker's
+  distance to its start (how far it has gone); optionally, low-order
+  moments of a probabilistic curvature where it lands. The embedding is local,
   deterministic, reads directions and weights, and needs no training. We
   prove that it is invariant and local (hence transferable across graphs),
   that its curvature-free distances are maximum mean discrepancies, that its
@@ -95,11 +96,20 @@ grid $Theta = {theta_1, ..., theta_m}$ (log-spaced in $[1, 100]$, $m = 10$),
 $ phi^w_u (theta) = sum_(j in V) f_theta (p^w_(u j)), quad theta in Theta. $ <eq-phi>
 Since $f_theta (0) = 0$, the sum runs over the support of $p^w_u$ only.
 
-*Onion layers.* With $d(u, j)$ the length of the shortest walk from $u$ to $j$,
-$s^w_u (k) = sum_(j : d(u, j) = k) p^w_(u j)$ for $k = 0, ..., w$: the mass
-the walk keeps at each distance, which the multiset of probabilities
-ignores. Supports of earlier powers give the layers, so no extra walk is
+*Distance of the walker.* With $d(u, j)$ the length of the shortest walk
+from $u$ to $j$ and $X_w$ the walker's position after $w$ steps,
+$ s^w_u (k) = P(d(u, X_w) = k) = sum_(j : d(u, j) = k) p^w_(u j), quad k = 0, ..., w, $
+is the law of the walker's distance to its start, which the multiset of
+probabilities ignores: whether the walk stays near $u$ (loops, triangles)
+or moves out. It takes $w + 1$ values, so these $w + 1$ numbers describe it
+exactly. We call the sets of nodes at each distance _onion layers_.
+Supports of earlier powers give the distances, so no extra walk is
 computed.
+
+At each step, RoleWalk thus describes two laws of the same walk: how
+concentrated it is (the characteristic function of its probabilities) and
+how far it has gone (the law of its distance). Both are integrals over one
+measure, under one kernel (@prop-mmd).
 
 *Curvature (option).* For an edge $x y$ of the symmetrised unweighted graph,
 $kappa(x, y) = sum_z min(m_x (z), m_y (z))$ with $m_x$ the one-step lazy
@@ -122,10 +132,17 @@ $op("Im") phi^w_u$ and $norm(Theta) s^w_u$. With curvature the mark is
 $(d(u, j), kappa_j)$ and $Psi$ adds $norm(Theta) a (kappa, kappa^2)$; we report
 $norm(Theta) (mu^w_u, sigma^w_u)$, which carries the same information but,
 being nonlinear, is not an integral of $Psi$: kernel statements below are
-for the curvature-free embedding (or raw moments). In all, $2 m L + L (L + 3) \/ 2 (+ 2 L)$ = 69 (75) features. The
-probability block ignores the layer; the layer block is the first-order
-part of one characteristic function per layer, which is what fixes the
-factor $norm(Theta) = (sum_theta theta^2)^(1\/2)$ (@prop-mmd). Without it
+for the curvature-free embedding (or raw moments). In all,
+$2 m L + sum_(w <= L) (w + 1) (+ 2 L) = 60 + 9 (+ 6) = 69 (75)$ features: the
+characteristic function, then the law of the distance at each step. The
+probability block ignores the distance; the distance block is the
+first-order part of one characteristic function per layer, which is what
+fixes the factor $norm(Theta) = (sum_theta theta^2)^(1\/2)$ (@prop-mmd).
+Equivalently, the whole embedding samples the joint characteristic
+function $sum_j e^(i omega d(u, j)) (e^(i theta p_(u j)) - 1)$ of probabilities
+and distances: along $omega = 0$ at every $theta$, and, to first order in
+$theta$, at the $w + 1$ frequencies $omega = 2 pi k \/ (w + 1)$ that the law of
+the distance needs. Without it
 the layers carry 0.02% of the variance and do not change the roles found
 by $k$-means (@sec-scaling).
 
