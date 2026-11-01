@@ -358,7 +358,8 @@ while RoleWalk keeps its accuracy.
 
 All CPU timings on one core. Classification: logistic regression on
 standardised embeddings, 50 stratified 80/20 splits. Best in bold, second
-underlined. Code and CSV files in `benchmarks/`.
+underlined, among embeddings; the degree baseline (log-degree alone, which
+shows how far labels follow activity) is set apart and not ranked. Code and CSV files in `benchmarks/`.
 
 #figure(caption: [Properties. Checked against each paper; "\~" partial.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
@@ -377,15 +378,16 @@ underlined. Code and CSV files in `benchmarks/`.
 #figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. `roles.csv`, `struc2vec_runs.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film#super[\*]],
-    [*RoleWalk*], [0.743], [#underline[0.583]], [#underline[0.657]], [*0.860*], [*0.487*], [0.569],
+    [*RoleWalk*], [#underline[0.743]], [#underline[0.583]], [#underline[0.657]], [*0.860*], [*0.487*], [0.569],
     [*RoleWalk + curv.*], [0.741], [*0.596*], [*0.666*], [*0.860*], [#underline[0.485]], [#underline[0.581]],
     [struc2vec], [0.705 ± .022], [0.561 ± .020], [0.596 ± .004], [–], [–], [–],
-    [RESD], [0.728], [0.544], [0.653], [0.857], [0.476], [0.563],
+    [RESD], [0.728], [0.544], [0.653], [#underline[0.857]], [0.476], [0.563],
     [GraphWave], [*0.769*], [0.561], [0.587], [*0.860*], [0.481], [–],
     [ReFeX], [0.691], [0.576], [0.622], [0.851], [0.478], [0.579],
     [Role2Vec], [0.476], [0.366], [0.562], [0.844], [0.399], [*0.743*],
     [RWSE], [0.711], [0.572], [0.517], [0.855], [0.363], [0.450],
-    [Degree], [#underline[0.756]], [0.554], [0.567], [#underline[0.858]], [0.476], [0.478],
+    table.hline(stroke: 0.4pt),
+    [#emph[Degree (baseline)]], [#emph[0.756]], [#emph[0.554]], [#emph[0.567]], [#emph[0.858]], [#emph[0.476]], [#emph[0.478]],
   )
   #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory.]
 ] <tab-roles>
@@ -404,7 +406,8 @@ underlined. Code and CSV files in `benchmarks/`.
     [RESD], [0.114], [0.254],
     [ReFeX], [0.101], [0.299],
     [RWSE], [0.118], [0.297],
-    [Degree], [0.075], [0.296],
+    table.hline(stroke: 0.4pt),
+    [#emph[Degree (baseline)]], [#emph[0.075]], [#emph[0.296]],
   )
   #text(size: 8pt)[Mixed. Networks are distributed undirected. #todo[directed versions from SNAP; per-network table]]
 ] <tab-wiki>
@@ -447,7 +450,8 @@ underlined. Code and CSV files in `benchmarks/`.
     [RoleWalk (5 steps)], [*20*], [*3,181*], [*10*], [yes], [yes], [no],
     [RoleWalk, no layers], [#underline[16]], [#underline[3,180]], [#underline[6]], [yes], [yes], [no],
     [RWSE (16 steps)], [*20*], [#underline[3,180]], [*10*], [yes], [yes], [no],
-    [Degree (= 1-WL)], [0], [0], [1], [no], [no], [no],
+    table.hline(stroke: 0.4pt),
+    [#emph[Degree (baseline, = 1-WL)]], [#emph[0]], [#emph[0]], [#emph[1]], [#emph[no]], [#emph[no]], [#emph[no]],
   )
   #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook, beyond 3-WL; not separable by @prop-drg.]
 ] <tab-expr>
@@ -465,7 +469,7 @@ underlined. Code and CSV files in `benchmarks/`.
 
 #figure(caption: [Centrality transfer: a gradient-boosting regressor from embedding to centrality is fitted on one graph and evaluated (Spearman) on another graph of the same family and size (other seed) (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs). `centrality_transfer.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
-    [], [RoleWalk], [\+ curv.], [ReFeX#super[†]], [RWSE], [GraphWave], [Degree],
+    [], [RoleWalk], [\+ curv.], [ReFeX#super[†]], [RWSE], [GraphWave], [#emph[Degree (baseline)]],
     [Betweenness], [#underline[0.901]], [*0.905*], [0.844], [0.708], [0.723], [0.634],
     [Closeness], [*0.866*], [#underline[0.864]], [0.684], [0.732], [0.597], [0.428],
     [Clustering], [*0.873*], [#underline[0.870]], [0.852], [0.803], [0.392], [0.212],
@@ -480,8 +484,8 @@ underlined. Code and CSV files in `benchmarks/`.
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree. `role_transfer.csv`.])[
   #table(columns: 6, align: center,
-    [Degree], [RoleWalk], [\+ curv.], [RoleWalk, no layers], [RWSE], [GraphWave],
-    [0.542], [*0.488*], [#underline[0.470]], [0.445], [0.375], [0.249 (chance)],
+    [#emph[Degree (baseline)]], [RoleWalk], [\+ curv.], [RoleWalk, no layers], [RWSE], [GraphWave],
+    [#emph[0.542]], [*0.488*], [#underline[0.470]], [0.445], [0.375], [0.249 (chance)],
   )
 ] <tab-airport-transfer>
 
@@ -592,7 +596,7 @@ $p$, which shifts a log grid along itself, while a uniform grid puts 9 of its
     [Role2Vec], [*0.946*], [0.637],
     [RoleWalk + curv.], [0.740], [#underline[0.634]],
     [ReFeX], [#underline[0.745]], [0.627],
-    [Degree], [0.536], [0.623],
+    [#emph[Degree (baseline)]], [#emph[0.536]], [#emph[0.623]],
     [Majority class], [0.593], [0.623],
   )
 ]
