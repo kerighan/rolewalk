@@ -19,7 +19,6 @@
   align(left)[*#it.supplement #context it.counter.display(it.numbering)*#if it.caption != none [ (#it.caption.body)]*.* #emph(it.body)])
 #let prop(name: none, body) = statement("Proposition", name, body)
 #let lemma(name: none, body) = statement("Lemma", name, body)
-#let conj(name: none, body) = statement("Conjecture", name, body)
 #let proof(body) = block(above: 0.5em, below: 1em)[_Proof._ #body #h(1fr) $square$]
 #let todo(body) = text(fill: rgb("#b00020"))[[TODO: #body]]
 
@@ -40,11 +39,14 @@
   low-order moments of a probabilistic curvature. The embedding is local,
   deterministic, reads directions and weights, and needs no training. We
   prove that it is invariant and local (hence transferable across graphs),
-  that its distances are maximum mean discrepancies, that it is Lipschitz
-  in edge insertions, that it counts triangles, which places it beyond
-  1-WL, and that distance-regular graphs with equal intersection arrays are
-  its exact limit. Empirically it matches or beats struc2vec, GraphWave,
-  Role2Vec, RESD and ReFeX on role classification at 10–1,000× lower cost,
+  that its distances are maximum mean discrepancies, that its
+  characteristic-function block is Lipschitz in edge insertions, that it
+  recovers triangle counts on regular graphs, so that it separates graphs
+  1-WL cannot (and conversely: the two are incomparable), and that
+  distance-regular graphs with equal intersection arrays are a provable
+  failure class. Empirically it matches or beats struc2vec, GraphWave,
+  Role2Vec, RESD and ReFeX on role classification at a fraction of the cost
+  of every method but ReFeX,
   is best on directed roles and on transfer of centralities across graphs,
   and improves GPS on ZINC when combined with RWSE.
 ]
@@ -55,9 +57,9 @@ Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, deterministic, online, fast (@tab-props).
 + Accuracy at or above the state of the art on role classification at a fraction of the cost (@tab-roles, @fig-speed, @tab-scale).
-+ Only method that uses directions; best on synthetic and real directed roles (@tab-directed, @tab-rfa).
++ Reads edge directions natively; best on synthetic and real directed roles (@tab-directed, @tab-rfa).
 + Transfer: a model fitted on one graph applies to another (@tab-centrality, @tab-airport-transfer; @prop-local).
-+ Expressiveness beyond 1-WL with 3 walk steps, on par with 16-step RWSE; exact characterisation of a failure class (@sec-theory, @tab-expr).
++ Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
 + Useful as a structural encoding for graph transformers (@tab-zinc).
 
 = Related work
@@ -109,8 +111,9 @@ $ Psi(w, a, ell) = e_w ⊗ (psi(a) ⊕ norm(Theta) a e_ell), quad psi(a) = (f_th
 which gives, for each step $w = 1, ..., L$ ($L = 3$), $op("Re") phi^w_u$,
 $op("Im") phi^w_u$ and $norm(Theta) s^w_u$. With curvature the mark is
 $(d(u, j), kappa_j)$ and $Psi$ adds $norm(Theta) a (kappa, kappa^2)$; we report
-$norm(Theta) (mu^w_u, sigma^w_u)$, a fixed reparametrisation of these two
-moments. In all, $2 m L + L (L + 3) \/ 2 (+ 2 L)$ = 69 (75) features. The
+$norm(Theta) (mu^w_u, sigma^w_u)$, which carries the same information but,
+being nonlinear, is not an integral of $Psi$: kernel statements below are
+for the curvature-free embedding (or raw moments). In all, $2 m L + L (L + 3) \/ 2 (+ 2 L)$ = 69 (75) features. The
 probability block ignores the layer; the layer block is the first-order
 part of one characteristic function per layer, which is what fixes the
 factor $norm(Theta) = (sum_theta theta^2)^(1\/2)$ (@prop-mmd). Without it
@@ -119,8 +122,12 @@ by $k$-means (@sec-scaling).
 
 *Pruning.* After each product, entries below $"tol" = 10^(-4)$ are dropped;
 their mass is added back to $op("Im") phi$ to first order ($theta dot "mass"$),
-the same tangent approximation as the layer block.
-Results in @sec-theory are stated for $"tol" = 0$.
+the same tangent approximation as the layer block. The first step is
+never pruned. Pruning is not exact for later steps: mass dropped at step
+$w$ can return to a hub at step $w + 1$ (in a star with more than
+$10^4$ leaves, the leaf mass of step 2 is dropped although half of it
+returns to the centre), and layers are read from pruned supports. Results
+in @sec-theory are stated for $"tol" = 0$.
 
 *Roles.* Ward clustering with silhouette for the number of roles, or
 $k$-means with a given number; fitted centroids label nodes of any graph.
@@ -128,8 +135,10 @@ $k$-means with a given number; fitted centroids label nodes of any graph.
 = Properties <sec-theory>
 
 Throughout, $L$ is the number of steps, $B_r (u)$ the subgraph induced by
-nodes within distance $r$ of $u$ (out- and in-distance for directed graphs),
-and statements hold for $"tol" = 0$.
+nodes within distance $r$ of $u$ (out- and in-distance for directed graphs;
+with curvature, distance in the underlying undirected graph, on which
+$kappa$ is defined), graphs have no self-loops, and statements hold for
+$"tol" = 0$.
 
 #prop(name: "locality and invariance")[
   $X_u$ is determined by the isomorphism class of the rooted graph
@@ -176,8 +185,8 @@ qualitative: the separation margin, not its existence, motivates
 $m = 10$ frequencies across two decades.
 
 #prop(name: "one kernel on the footprint")[
-  $norm(X_u - X_v)^2 = "MMD"_K^2 (mu_u, mu_v)$ for the positive-definite
-  kernel on marked atoms
+  Without curvature, $norm(X_u - X_v)^2 = "MMD"_K^2 (mu_u, mu_v)$ (extended
+  to finite measures) for the positive-semidefinite kernel on marked atoms
   $ K((w, a, ell), (w', b, ell')) = delta_(w w') [k_Theta (a, b) + norm(Theta)^2 a b thin delta_(ell ell')], $
   $ k_Theta (a, b) = sum_(theta in Theta) [cos theta (a - b) - cos theta a - cos theta b + 1]. $
   The first term compares probabilities whatever their layer, the second
@@ -191,7 +200,7 @@ $m = 10$ frequencies across two decades.
 #proof[
   $X_u = sum Psi$ over the atoms of $mu_u$, so $X_u$ is the kernel mean
   embedding of $mu_u$ and $norm(X_u - X_v)^2$ is the MMD @gretton2012 for
-  $K = op("Re") ⟨ Psi, Psi' ⟩$, positive definite as an inner product. The
+  $K = op("Re") ⟨ Psi, Psi' ⟩$, positive semidefinite as an inner product. The
   blocks $e_w$ and $e_ell$ are orthonormal, which gives $delta_(w w')$ and
   $delta_(ell ell')$; expanding $op("Re") (e^(i theta a) - 1) overline((e^(i theta b) - 1))$
   gives $k_Theta$. Unreached nodes have $Psi = 0$ and do not count.
@@ -207,9 +216,10 @@ $m = 10$ frequencies across two decades.
 
 The concatenation is therefore a sum of kernels on one object: a mark-blind
 term on probabilities and a mark-aware term on masses. The first-order
-regime $t << 1$ holds for hubs, whose walks spread thin, but not for
-low-degree nodes ($max(Theta) = 100$): the linear layer kernel is a choice,
-$L (L + 3) \/ 2$ coordinates instead of $2 m (L + 1)$ per step, and the full
+regime $t << 1$ holds where walks spread thin, not for low-degree nodes
+nor for returns to a hub ($max(Theta) = 100$): the linear layer kernel is a
+choice, $L (L + 3) \/ 2 = 9$ coordinates instead of $m L (L + 3) = 180$ for
+one characteristic function per layer, and the full
 per-layer kernel is not better (@tab-geometry). Further marks enter the
 same way, as factors of the second term: curvature, or labels on the
 steps of each path.
@@ -232,10 +242,12 @@ steps of each path.
   reaches $a$ or $b$.
 ]
 
-Insertions at high-degree nodes barely move embeddings, and the effect is
-confined to the $(L - 1)$-ball. On 200 random insertions (powerlaw-cluster
-graphs, 60 nodes) the largest observed move is 0.52 of the bound
-(`theory_checks.py`).
+Insertions at high-degree nodes barely move the characteristic-function
+block, and the effect is confined to the $(L - 1)$-ball. On 200 random
+insertions (powerlaw-cluster graphs, 60 nodes) the largest observed move of
+this block is 0.52 of the bound (`theory_checks.py`). The bound does not
+extend to the layer block, which reads distances: in $K_(2, d)$, joining
+the two hubs $a, b$ moves $s^2_a (2)$ from $d \/ (3 (d + 1))$ to 0, whatever $d$.
 
 #prop(name: "degree and triangles")[
   $s^1_u (0) = 1 \/ (d_u + 1)$ in an unweighted graph. If $G$ is
@@ -262,11 +274,11 @@ graphs, 60 nodes) the largest observed move is 0.52 of the bound
   triangular system with nonzero diagonal $d^w \/ (d + 1)^w$.
 ]
 
-On irregular graphs the two walks differ and neither encoding contains
-the other; RoleWalk adds the other layers and the full distribution of
-transition probabilities.
+On irregular graphs the two walks differ, so the return probabilities do
+not translate into each other; RoleWalk adds the other layers and the
+full distribution of transition probabilities.
 
-#prop(name: "distance-regular graphs are the limit")[
+#prop(name: "a failure class: distance-regular graphs")[
   Let $G, G'$ be distance-regular graphs with the same intersection array.
   Then all nodes of $G$ and $G'$ get the same embedding, for every $L$,
   with or without curvature. This covers strongly regular graphs with equal
@@ -305,23 +317,34 @@ these graphs for the same reason, fails them too.
   rounds).
 ]
 
-*Empirical comparison with 1-WL at equal depth.* A walk of $L$ steps sees
-degrees up to distance $L - 1$, as does 1-WL after $L$ rounds from uniform
-colours. Over all 6,781 nodes of the 996 connected graphs with at most 7
-nodes, the partition induced by RoleWalk ($L = 3$) refines that of 3-round
-1-WL: no two nodes that 1-WL separates share an embedding, and RoleWalk
-splits 571 of the 1-WL classes (embeddings grouped at a sup-distance
-below $10^(-4)$ of the largest coordinate; `theory_checks.py`).
-
-#conj[
-  For every $L$, the partition of nodes (across all graphs) induced by
-  RoleWalk with $L$ steps and $Theta$ an interval refines the partition of
-  $L$-round 1-WL.
+#prop(name: "RoleWalk and 1-WL are incomparable")[
+  @prop-tri gives graphs that RoleWalk separates and 1-WL does not.
+  Conversely, without curvature, for $L in {2, 3}$ there are nodes that
+  $L$-round 1-WL (uniform initial colours) separates and RoleWalk with $L$
+  steps does not, for every set of frequencies.
+] <prop-wl>
+#proof[
+  Take a clique $K_5$ on ${r, a, b, c, d}$ and ten further nodes, adjacent
+  to $b, c, d$ in $G$, and five to $a, b$ and five to $c, d$ in $G'$. The
+  neighbour degrees of $r$ are ${4, 14, 14, 14}$ in $G$ and ${9, 9, 9, 9}$
+  in $G'$, so two rounds separate $r$. Walks from $r$ agree: at step 1 each
+  clique node has probability $1 \/ 5$; at step 2 each clique node has
+  $1 \/ 5 (1 \/ 5 + 2 \/ 5) = 3 \/ 25$ (the inverse augmented degrees of the
+  neighbours of $r$ sum to $1 \/ 5 + 3 \/ 15 = 2 \/ 5$ in $G$ and
+  $4 \/ 10 = 2 \/ 5$ in $G'$) and each outer node
+  $1 \/ 25 = 1 \/ 5 dot 3 \/ 15 = 1 \/ 5 dot 2 \/ 10$, with
+  the same layers. For $L = 3$, add a leaf $z$ at $r$ and root at $z$:
+  three rounds separate $z$, while the walk distributions and layers from
+  $z$ agree up to step 3 (`theory_checks.py`). With curvature, both pairs are
+  separated.
 ]
 
-Together with @prop-tri and the propositions above: at equal depth
-RoleWalk is strictly finer than 1-WL on all graphs up to 7 nodes, while
-being local, which 1-WL with unbounded rounds is not.
+On the 6,781 nodes of the 996 connected graphs with at most 7 nodes, no
+pair separated by 3-round 1-WL is confused by RoleWalk ($L = 3$), which
+splits 571 of the 1-WL classes (embeddings grouped at a sup-distance
+below $10^(-4)$ of the largest coordinate; `theory_checks.py`); the
+counterexamples above have 15 and 16 nodes. RoleWalk is also local, which
+1-WL with unbounded rounds is not.
 
 #prop(name: "relation to GraphWave")[
   GraphWave @donnat2018 embeds $u$ by
@@ -329,7 +352,7 @@ being local, which 1-WL with unbounded rounds is not.
   heat kernel at a scale $s$ chosen from the spectrum of each graph. Then
   $n (chi_u (t) - 1) = sum_j f_t (Psi_(j u))$: @eq-phi with the heat kernel in
   place of $H^w$. $chi_u$ depends on $n$ and on $s$, so the same rooted
-  neighbourhood gets different coordinates in graphs of different sizes or
+  neighbourhood can get different coordinates in graphs of different sizes or
   spectra.
 ] <prop-graphwave>
 #proof[
@@ -337,8 +360,9 @@ being local, which 1-WL with unbounded rounds is not.
   connected graph, so @prop-local fails; $1 \/ n$ and $s$ are graph-level.
 ]
 
-This is why GraphWave transfers at chance level (@tab-airport-transfer),
-while RoleWalk keeps its accuracy.
+This can explain why GraphWave transfers at chance level
+(@tab-airport-transfer), while RoleWalk keeps its accuracy; a GraphWave
+variant with fixed scales and no $1 \/ n$ would test it.
 
 #prop(name: "cost")[
   With pruning, each row of each power keeps at most $1 \/ "tol"$ entries,
@@ -451,9 +475,9 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [RoleWalk, no layers], [#underline[16]], [#underline[3,180]], [#underline[6]], [yes], [yes], [no],
     [RWSE (16 steps)], [*20*], [#underline[3,180]], [*10*], [yes], [yes], [no],
     table.hline(stroke: 0.4pt),
-    [#emph[Degree (baseline, = 1-WL)]], [#emph[0]], [#emph[0]], [#emph[1]], [#emph[no]], [#emph[no]], [#emph[no]],
+    [#emph[Degree (baseline)]], [#emph[0]], [#emph[0]], [#emph[1]], [#emph[no]], [#emph[no]], [#emph[no]],
   )
-  #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook, beyond 3-WL; not separable by @prop-drg.]
+  #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook: strongly regular with equal parameters, not separated by 2-FWL (classical 3-WL) nor by @prop-drg.]
 ] <tab-expr>
 
 #figure(caption: [BREC @wang2023 (400 pairs).])[
@@ -558,15 +582,18 @@ The probabilistic bound is kept over exact Ollivier-Ricci for cost
 (no optimal transport) at a small loss.
 
 Marks on the steps of a path rather than on its end were also tried: the
-parity of steps inside a layer (closing odd cycles), obtained for free from
-the signed walk $tilde(D)^(-1) (A - I)$ since
-$\#"intra" equiv \#"moves" - d(u, j) space (mod 2)$, its exact count, and
+parity of steps inside a layer (closing odd cycles), obtained from one
+extra signed walk $tilde(D)^(-1) (A - I)$ and the layer of arrival, since
+on undirected graphs $\#"intra" equiv \#"moves" - d(u, j) space (mod 2)$;
+its exact count; and
 the order of moves out and in, as products in the quaternion group $Q_8$.
 On the 6,781 nodes of connected graphs with at most 7 nodes, none
 separates a pair of nodes that $X$ does not, and none improves airport
-accuracy (`intra_layer_study.py`, `quaternion_study.py`): with commuting
-labels the product along a path only depends on its end layer, and short
-cycles already change the multiset of probabilities.
+accuracy (`intra_layer_study.py`, `quaternion_study.py`). With labels
+$g$ (out) and $g^(-1)$ (in) in an abelian group and trivial labels
+otherwise, the product along a path only depends on its end layer, which
+gives back the layers; short cycles already change the multiset of
+probabilities.
 
 == Kernel scaling <sec-scaling>
 
@@ -583,10 +610,12 @@ same airport accuracy (0.661 / 0.662) and transfer (0.488 / 0.485). A
 narrower range helps real networks and transfer but loses on synthetic
 motifs, whatever the spacing: $[1, 30]$ gives transfer 0.515 (log or
 uniform) and score 0.312–0.315; log $[1, 50]$ gives 0.506 and 0.326, within
-noise of the default. Log spacing is kept because probabilities
-scale multiplicatively ($p approx 1 \/ d^w$): a change of degree rescales
-$p$, which shifts a log grid along itself, while a uniform grid puts 9 of its
-10 frequencies above 10.
+noise of the default. Log spacing is kept as a heuristic: probabilities
+spread over several decades, which a log grid samples evenly, while a
+uniform grid puts 9 of its 10 frequencies above 10. Feature-wise
+standardisation, as in our classifiers, cancels any constant factor on a
+block: the scaling of the layers matters for raw distances ($k$-means,
+Ward, nearest neighbours), not for the classification tables.
 
 == Film is a node-type task <sec-film>
 
@@ -601,14 +630,17 @@ $p$, which shifts a log grid along itself, while a uniform grid puts 9 of its
   )
 ]
 
-Classes 0–2 are not predictable by any method; edge homophily is 0.28,
-below the 0.33 of random labels. Role2Vec's lead comes from walk
-co-occurrence, i.e. position, which an automorphism-invariant embedding
-cannot capture by @prop-local. Film should not rank role methods.
+No method predicts classes 0–2 clearly above the majority class; edge
+homophily is 0.28, below the 0.32 expected from random labels with the
+same (degree-weighted) class proportions. Role2Vec's lead on class 3 is
+consistent with walk co-occurrence, i.e. position, which an
+automorphism-invariant embedding cannot use; we read Film as a node-type
+task rather than a role benchmark.
 
 = Limitations
 
-- Walk statistics cannot separate distance-regular graphs with equal arrays (@prop-drg), CFI pairs, or graphs whose balls coincide (locality).
+- Walk statistics cannot separate distance-regular graphs with equal arrays (@prop-drg), most CFI pairs (3 of 100 with 5 steps), or graphs whose balls coincide (locality); without curvature, some nodes separated by 1-WL are confused (@prop-wl).
+- Pruning is a heuristic beyond the first step; its error is not bounded.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
 - One real labelled directed benchmark.

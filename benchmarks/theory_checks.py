@@ -8,9 +8,12 @@
 3. Distance-regular graphs (Prop. 6): graphs with the same intersection
    array give every node the same embedding (Shrikhande / 4x4 rook,
    Chang / T(8), Doob / Hamming H(3, 4)).
-4. RoleWalk vs 1-WL (Prop. 7): on all connected graphs up to 7 nodes,
-   nodes that RoleWalk confuses but 3-round colour refinement separates,
-   and the converse.
+4. RoleWalk vs 1-WL: on all connected graphs up to 7 nodes, nodes that
+   RoleWalk confuses but colour refinement at equal depth separates, and
+   the converse.
+5. RoleWalk and 1-WL are incomparable: two 15-node graphs (and 16 with a
+   leaf) whose roots 1-WL separates at depth 2 (3) while RoleWalk without
+   curvature gives them the same embedding.
 
     python theory_checks.py
 """
@@ -151,8 +154,31 @@ def check_wl(rounds=2):
             print(f"   {name}: node {t[1]} of graph with edges {sorted(G.edges())}")
 
 
+def wl_counterexample():
+    def build(split, leaf):
+        G = nx.complete_graph(["r", "a", "b", "c", "d"])
+        for i in range(10):
+            ends = (("a", "b") if i < 5 else ("c", "d")) if split else ("b", "c", "d")
+            G.add_edges_from((f"o{i}", x) for x in ends)
+        if leaf:
+            G.add_edge("z", "r")
+        return G
+
+    for leaf, root, L in ((False, "r", 2), (True, "z", 3)):
+        G, H = build(False, leaf), build(True, leaf)
+        # networkx WL starts from degrees: L - 1 iterations = L uniform rounds
+        same_wl = wl_colours(G, L - 1)[root] == wl_colours(H, L - 1)[root]
+        for curvature in (False, True):
+            model = RoleWalk(tol=0, walk_len=L, curvature=curvature)
+            gap = np.abs(model.transform(G)[list(G).index(root)]
+                         - model.transform(H)[list(H).index(root)]).max()
+            print(f"5. L={L}, curvature={curvature}: RoleWalk gap {gap:.1e}, "
+                  f"{L}-round 1-WL separates: {not same_wl}")
+
+
 if __name__ == "__main__":
     check_triangles()
     check_stability()
     check_distance_regular()
     check_wl()
+    wl_counterexample()
