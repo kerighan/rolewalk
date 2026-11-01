@@ -61,7 +61,7 @@ Claims, each backed by a result below:
 + Accuracy at or above the state of the art on role classification at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; best on real directed roles and on unsupervised synthetic ones (@tab-directed, @tab-rfa, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
-+ Transfer: a model fitted on one graph applies to another (@tab-centrality, @tab-airport-transfer; @prop-local).
++ Transfer: a regressor fitted on one graph predicts path-based centralities (betweenness, closeness, harmonic) of another better than every baseline (@tab-centrality; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
 + Useful as a structural encoding for graph transformers (@tab-zinc).
 
@@ -503,23 +503,25 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #super[c] Scale chosen from the spectrum and $1 \/ n$ factor (@prop-graphwave). "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder. #todo[verify RESD, ReFeX, RWSE rows]]
 ] <tab-props>
 
-#figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The random-walk heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: fixed scales and no $1 \/ n$, but a random-walk rather than GraphWave's spectral heat kernel. `roles.csv`, `roles_gw.csv`, `struc2vec_runs.csv`.])[
+#figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The random-walk heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: fixed scales and no $1 \/ n$, but a random-walk rather than GraphWave's spectral heat kernel. Top-$k$ + layers: the 20 largest probabilities at each step instead of the characteristic function, same layers, same dimension. Local statistics: see @tab-centrality. `roles.csv`, `roles_gw.csv`, `roles_matched.csv`, `struc2vec_runs.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film#super[\*]],
-    [*RoleWalk*], [0.743], [0.583], [#underline[0.657]], [*0.860*], [*0.487*], [0.569],
-    [*RoleWalk + curv.*], [0.741], [#underline[0.596]], [*0.666*], [*0.860*], [#underline[0.485]], [#underline[0.581]],
+    [*RoleWalk*], [0.743], [0.583], [#underline[0.657]], [#underline[0.860]], [*0.487*], [0.569],
+    [*RoleWalk + curv.*], [0.741], [#underline[0.596]], [*0.666*], [#underline[0.860]], [0.485], [#underline[0.581]],
     [struc2vec], [0.705 ± .022], [0.561 ± .020], [0.596 ± .004], [–], [–], [–],
     [RESD], [0.728], [0.544], [0.653], [0.857], [0.476], [0.563],
-    [GraphWave], [*0.769*], [0.561], [0.587], [*0.860*], [0.481], [–],
-    [GraphWave, no $1 \/ n$], [*0.769*], [0.560], [0.587], [*0.860*], [0.481], [–],
-    [Random-walk heat-kernel CF], [#underline[0.750]], [*0.598*], [0.633], [#underline[0.859]], [0.484], [#todo[…]],
+    [GraphWave], [*0.769*], [0.561], [0.587], [#underline[0.860]], [0.481], [–],
+    [GraphWave, no $1 \/ n$], [*0.769*], [0.560], [0.587], [#underline[0.860]], [0.481], [–],
+    [Random-walk heat-kernel CF], [#underline[0.750]], [*0.598*], [0.633], [0.859], [0.484], [0.549],
+    [Top-$k$ + layers], [0.672], [0.590], [0.625], [0.858], [0.482], [0.564],
+    [Local statistics], [0.716], [0.584], [0.616], [*0.862*], [#underline[0.486]], [0.517],
     [ReFeX], [0.691], [0.576], [0.622], [0.851], [0.478], [0.579],
     [Role2Vec], [0.476], [0.366], [0.562], [0.844], [0.399], [*0.743*],
     [RWSE], [0.711], [0.572], [0.517], [0.855], [0.363], [0.450],
     table.hline(stroke: 0.4pt),
     [#emph[Degree (baseline)]], [#emph[0.756]], [#emph[0.554]], [#emph[0.567]], [#emph[0.858]], [#emph[0.476]], [#emph[0.478]],
   )
-  #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory.]
+  #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory. Paired tests over the 50 splits (Nadeau–Bengio corrected intervals, `paired_tests.csv`): on USA, RoleWalk + curv. beats every other method significantly except RESD; on Brazil, Europe, Reality-call and Actor no difference is significant either way (intervals of ±0.05 on Brazil and Europe, 131 and 399 nodes); on Film, Role2Vec wins. Appending the local statistics to RoleWalk gives 0.752 / 0.595 / 0.659 / 0.861 / 0.486 / 0.598.]
 ] <tab-roles>
 
 #figure(
@@ -547,13 +549,15 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #figure(caption: [Directed roles on synthetic graphs (directed motifs hung from a directed cycle; several roles coincide once directions are dropped). 3 seeds; noise = share of edges rewired. Accuracy: logistic regression; ARI: $k$-means; mAP: retrieval. ReFeX, directed: in-, out- and mutual degrees and recursive features over out- and in-neighbours (450 one-hot features). `directed.csv`.])[
   #table(columns: 6, align: (left,) + (center,) * 5,
     [], [Acc. 0%], [Acc. 5%], [Acc. 10%], [ARI 5%], [mAP 5%],
-    [*RoleWalk + curv. + mixed*], [*1.000*], [#underline[0.732]], [#underline[0.595]], [*0.396*], [*0.629*],
+    [*RoleWalk + curv. + mixed*], [*1.000*], [#underline[0.732]], [#underline[0.595]], [#underline[0.396]], [*0.629*],
     [RoleWalk + mixed], [*1.000*], [0.728], [0.590], [0.373], [0.615],
-    [RoleWalk + curv.], [#underline[0.989]], [0.712], [0.547], [#underline[0.381]], [#underline[0.625]],
+    [RoleWalk + curv.], [#underline[0.989]], [0.712], [0.547], [0.381], [#underline[0.625]],
     [RoleWalk], [0.908], [0.680], [0.510], [0.366], [0.574],
     [RoleWalk, undirected], [0.767], [0.560], [0.420], [0.351], [0.479],
     [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [0.607],
     [RWSE, out + in], [0.357], [0.336], [0.336], [0.048], [0.179],
+    [Top-$k$ + layers], [0.908], [0.671], [0.516], [0.348], [0.568],
+    [Local statistics (in / out)], [0.863], [0.675], [0.584], [*0.409*], [0.607],
     [Role2Vec], [0.730], [0.451], [0.368], [0.148], [0.295],
     [ReFeX], [0.532], [0.429], [0.431], [0.342], [0.356],
     [GraphWave], [0.586], [0.388], [0.383], [0.317], [0.416],
@@ -577,6 +581,8 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
     [ReFeX, directed], [0.778], [0.930], [3 s],
+    [Top-$k$ + layers], [0.804], [0.936], [5 s],
+    [Local statistics (in / out)], [0.814], [0.941], [3 s],
     [RWSE (out-walk)], [0.690], [0.826], [51 s],
     [RWSE, out + in], [0.710], [0.836], [84 s],
     table.hline(stroke: 0.4pt),
@@ -609,29 +615,33 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked).]
 ] <tab-brec>
 
-#figure(caption: [Centrality transfer: a gradient-boosting regressor from embedding to centrality is fitted on one graph and evaluated (Spearman) on another graph of the same family and size (other seed) (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs). `centrality_transfer.csv`.])[
-  #table(columns: 7, align: (left,) + (center,) * 6,
-    [], [RoleWalk], [\+ curv.], [ReFeX#super[†]], [RWSE], [GraphWave], [#emph[Degree (baseline)]],
-    [Betweenness], [#underline[0.901]], [*0.905*], [0.844], [0.708], [0.723], [0.634],
-    [Closeness], [*0.866*], [#underline[0.864]], [0.684], [0.732], [0.597], [0.428],
-    [Clustering], [*0.873*], [#underline[0.870]], [0.852], [0.803], [0.392], [0.212],
-    [k-core], [0.747], [#underline[0.748]], [*0.935*], [0.660], [0.566], [0.692],
-    [Eigenvector], [*0.656*], [#underline[0.649]], [0.492], [0.531], [0.462], [0.428],
-    [Harmonic], [*0.918*], [#underline[0.916]], [0.782], [0.784], [0.699], [0.500],
-    [PageRank], [*0.990*], [*0.990*], [#underline[0.968]], [0.864], [0.857], [0.927],
-    [Mean], [*0.850*], [#underline[0.849]], [0.794], [0.726], [0.614], [0.546],
+#figure(caption: [Centrality transfer: a gradient-boosting regressor from features to centrality is fitted on one graph and evaluated (Spearman) on another graph of the same family and size (other seed), 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 2 seeds. Path-based centralities (top four rows) are where walks matter. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. Ablation: RoleWalk with the local statistics appended. `centrality_transfer.csv`.])[
+  #table(columns: 11, align: (left,) + (center,) * 10,
+    [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]], [#emph[RW + local]],
+    [Betweenness], [#underline[0.902]], [*0.905*], [0.884], [0.857], [0.858], [0.883], [0.708], [0.714], [#emph[0.634]], [#emph[0.910]],
+    [Closeness], [*0.872*], [#underline[0.868]], [0.817], [0.752], [0.766], [0.809], [0.732], [0.598], [#emph[0.428]], [#emph[0.875]],
+    [Harmonic], [*0.922*], [#underline[0.921]], [0.879], [0.820], [0.832], [0.874], [0.784], [0.695], [#emph[0.500]], [#emph[0.924]],
+    [PageRank], [*0.990*], [*0.990*], [#underline[0.989]], [0.984], [0.974], [0.986], [0.864], [0.857], [#emph[0.927]], [#emph[0.991]],
+    table.hline(stroke: 0.4pt),
+    [Clustering], [0.874], [0.871], [0.870], [*0.914*], [#underline[0.902]], [0.862], [0.803], [0.400], [#emph[0.212]], [#emph[0.912]],
+    [k-core], [0.746], [#underline[0.749]], [*0.750*], [0.748], [0.727], [0.742], [0.660], [0.707], [#emph[0.692]], [#emph[0.750]],
+    [Eigenvector], [0.654], [0.649], [#underline[0.655]], [0.647], [*0.693*], [0.575], [0.530], [0.463], [#emph[0.428]], [#emph[0.655]],
+    table.hline(stroke: 0.4pt),
+    [Mean], [*0.851*], [#underline[0.850]], [0.835], [0.817], [0.822], [0.819], [0.726], [0.633], [#emph[0.546]], [#emph[0.859]],
   )
-  #text(size: 8pt)[#super[†] Only where its number of features matches across graphs.]
+  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935: an artefact of the subset. RW heat CF: random-walk heat-kernel characteristic function. GraphWave with its $1 \/ n$ is within 0.006 of the no-$1 \/ n$ column.]
 ] <tab-centrality>
 
-#figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
-  #table(columns: 8, align: center,
-    [#emph[Degree (baseline)]], [RoleWalk], [\+ curv.], [RoleWalk, no layers], [RWSE], [GraphWave], [GraphWave, no $1 \/ n$], [Heat-kernel CF],
-    [#emph[0.542]], [*0.488*], [#underline[0.470]], [0.445], [0.375], [0.249 (chance)], [0.455], [0.425],
+#figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
+  #table(columns: 6, align: (left,) + (center,) * 5,
+    [RoleWalk], [\+ curv.], [RoleWalk, no layers], [Top-$k$ + layers], [Local statistics], [ReFeX (frozen)],
+    [0.488], [0.472], [0.445], [0.475], [*0.565*], [0.438],
+    [RWSE], [GraphWave], [GraphWave, no $1 \/ n$], [RW heat CF], [#emph[Degree (baseline)]], [],
+    [0.375], [0.249 (chance)], [0.455], [0.425], [#emph[0.542]], [],
   )
 ] <tab-airport-transfer>
 
-#figure(caption: [Structural encodings for GNNs on ZINC (test MAE at the best validation epoch). Top: GINE, 4 layers, ≈230k parameters, 300 epochs, 3 seeds. Bottom: GPS @rampasek2022 protocol, 10 layers, ≈470k parameters, 500 epochs, 3 seeds. `pe_zinc_v13.csv`, `pe_zinc_gps*.csv`.])[
+#figure(caption: [Structural encodings for GNNs on ZINC (test MAE at the best validation epoch). Top: GINE, 4 layers, ≈230k parameters, 300 epochs, 3 seeds. Bottom: GPS @rampasek2022 protocol, 10 layers, ≈470k parameters, 500 epochs, 4 seeds. `pe_zinc_v13.csv`, `pe_zinc_gps*.csv`.])[
   #table(columns: 3, align: (left, center, center),
     [GINE], [Test MAE], [],
     [none], [0.202 ± 0.010], [],
@@ -641,11 +651,11 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [*RoleWalk + curv. + RWSE*], [*0.095 ± 0.002*], [],
     table.hline(stroke: 0.6pt),
     [GPS], [Test MAE], [Val. MAE],
-    [RWSE (published: 0.070 ± 0.004)], [0.078 ± 0.004], [0.099 ± 0.008],
-    [RoleWalk + curv.], [#underline[0.075 ± 0.002]], [*0.091 ± 0.003*],
-    [*RoleWalk + curv. + RWSE*], [*0.072 ± 0.002*], [#underline[0.092 ± 0.006]],
+    [RWSE (published: 0.070 ± 0.004)], [0.076 ± 0.004], [0.099 ± 0.006],
+    [RoleWalk + curv.], [#underline[0.075 ± 0.002]], [*0.092 ± 0.004*],
+    [*RoleWalk + curv. + RWSE*], [*0.072 ± 0.002*], [#underline[0.094 ± 0.006]],
   )
-  #text(size: 8pt)[#todo[4th seed running (RWSE: 0.073); Peptides (LRGB)]]
+  #text(size: 8pt)[RoleWalk + curv. + RWSE is below RWSE on each of the 4 seeds (paired difference 0.004 ± 0.004; 0.0002 on the closest seed). #todo[5th seed running; Peptides (LRGB)]]
 ] <tab-zinc>
 
 #figure(caption: [Embedding time against size with the fused kernel, defaults (tol $10^(-4)$, 3 steps, layers), including the conversion of the networkx graph. `scalability.csv`.])[
@@ -728,15 +738,19 @@ against 0.486) and loses on directed motifs (ARI 0.295–0.314 against 0.366)
 
 == Pruning <sec-pruning>
 
-On the real networks, pruning at $10^(-4)$ changes accuracy by at most
-0.005 and the characteristic-function block by a median relative error
-below $10^(-4)$; layers move by up to 16% on wiki-RfA and 18% on Actor
-(`pruning.csv`). The error concentrates on hubs: for the centre of a star
-with 20,000 leaves and the largest hub of a 100k-node Barabási-Albert
-graph, the embedding is off by 49% and 27%. A budget $delta = 0.05$
-makes both exact (no row drops anything that comes back), certifies every
-other row by @prop-prune, and costs $2.2 times$ the time on the
-Barabási-Albert graph, where hub rows are kept whole.
+On the six real networks, pruning at the default tol $10^(-4)$ changes
+accuracy by at most 0.005 (0.002 with a budget), and by at most 0.012 at
+tol $10^(-3)$ (`pruning.csv`). Without a budget, the characteristic-function block
+keeps a median relative error below $10^(-4)$ at tol $10^(-4)$, but layers
+move by up to 16% (73% at tol $10^(-3)$). The error concentrates on hubs:
+for the centre of a star with 20,000 leaves and the largest hub of a
+100k-node Barabási-Albert graph, the embedding is off by 49% and 27%. A
+budget $delta$ caps the worst layer error at $delta$ (0.009, 0.047, 0.096
+for $delta = 0.01, 0.05, 0.10$) and makes both hubs exact; the observed
+error is at most 0.51 of the certificate of @prop-prune everywhere. On the
+real networks the budget costs nothing measurable (3.3 s against 3.1 s in
+total); on the hub-heavy Barabási-Albert graph it doubles the time, as
+hub rows are kept whole.
 
 == Kernel scaling <sec-scaling>
 
@@ -788,6 +802,6 @@ node-type task rather than a role benchmark.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
 - One real labelled directed benchmark.
-- GPS on ZINC: 3 seeds; our RWSE reproduction (0.078) is weaker than the published 0.070, and the gain of RoleWalk + curvature + RWSE (0.072) is of the size of the seed noise.
+- GPS on ZINC: 4 seeds; our RWSE reproduction (0.076) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, by a margin of the size of the seed noise.
 
 #bibliography("refs.bib", style: "ieee")
