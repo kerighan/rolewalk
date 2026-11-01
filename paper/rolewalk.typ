@@ -473,7 +473,7 @@ underlined. Code and CSV files in `benchmarks/`.
     [Watts-Strogatz ($k = 6$)], ..sizes.map(n => cell("watts_strogatz", n, "False")),
     [  \+ curvature], ..sizes.map(n => cell("watts_strogatz", n, "True")),
   )
-  #text(size: 8pt)[Peak memory 3.7 GB at 300k nodes (blocks of 50k rows). For comparison, at 1,190 nodes (USA airports): struc2vec 564 s, GraphWave 18 s, Role2Vec 10 s, RESD 8 s; struc2vec and GraphWave do not run on wiki-RfA (11k nodes).]
+  #text(size: 8pt)[Peak memory 6.6 GB at a million nodes (blocks of 50k rows). For comparison, at 1,190 nodes (USA airports): struc2vec 564 s, GraphWave 18 s, Role2Vec 10 s, RESD 8 s; struc2vec and GraphWave do not run on wiki-RfA (11k nodes).]
 ] <tab-scale>
 
 = Analysis
