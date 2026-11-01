@@ -251,7 +251,7 @@ class RoleWalk:
         self, walk_len=3, n_samples=10, bounds=None,
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
         aggregate="sum", tol=1e-4, shells=True, curvature=False,
-        role_names=None, max_missing=None, block_work=5e7, mixed=False
+        role_names=None, max_missing=None, block_work=1e7, mixed=False
     ):
         if theta_scheme not in THETA_SCHEMES:
             raise ValueError(

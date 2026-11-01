@@ -5,7 +5,8 @@ against the exact one (tol = 0), per block (characteristic function,
 layers), and accuracy of the usual classifier (50 splits). Stress test: the
 centre of a star with many leaves, whose step-2 leaf mass is dropped although
 half of it returns to the centre at step 3; and a hub in a Barabasi-Albert
-graph.
+graph. Each threshold is also run with a 5% budget of missing mass per row
+(``max_missing``).
 
     python pruning_study.py
 """
@@ -25,6 +26,8 @@ from datasets import load_airports, load_rone, load_wiki_rfa
 from role_benchmark import within
 
 TOLS = (0.0, 1e-5, 1e-4, 1e-3)
+# (tol, max_missing): threshold pruning, then with a 5% mass budget
+CONFIGS = [(t, None) for t in TOLS] + [(1e-4, 0.05), (1e-3, 0.05)]
 
 
 def blocks(model):
@@ -58,8 +61,8 @@ def main():
     rows = []
     for name, G, y in datasets():
         exact = None
-        for tol in TOLS:
-            model = RoleWalk(walk_len=3, tol=tol)
+        for tol, budget in CONFIGS:
+            model = RoleWalk(walk_len=3, tol=tol, max_missing=budget)
             t = time.perf_counter()
             X = model.transform(G)
             dt = time.perf_counter() - t
@@ -71,7 +74,8 @@ def main():
                 cf, layers = np.r_[cf, cf + half], np.r_[layers, layers + half]
             keep = y >= 0
             rows.append({
-                "dataset": name, "n_nodes": len(G), "tol": tol, "time": dt,
+                "dataset": name, "n_nodes": len(G), "tol": tol,
+                "max_missing": budget, "time": dt,
                 "err_cf_median": rel_error(X[:, cf], exact[:, cf])[0],
                 "err_cf_max": rel_error(X[:, cf], exact[:, cf])[1],
                 "err_layers_median": rel_error(X[:, layers], exact[:, layers])[0],
@@ -86,11 +90,12 @@ def main():
         if hub is None:
             hub = max(G.degree, key=lambda x: x[1])[0]
         exact = RoleWalk(walk_len=3, tol=0).transform(G, nodes=[hub])
-        for tol in TOLS[1:]:
-            model = RoleWalk(walk_len=3, tol=tol)
+        for tol, budget in CONFIGS[1:]:
+            model = RoleWalk(walk_len=3, tol=tol, max_missing=budget)
             X = model.transform(G, nodes=[hub])
             cf, layers = blocks(model)
             rows.append({"dataset": name, "n_nodes": len(G), "tol": tol,
+                         "max_missing": budget,
                          "err_cf_max": rel_error(X[:, cf], exact[:, cf])[1],
                          "err_layers_max": rel_error(X[:, layers], exact[:, layers])[1]})
             print(rows[-1], flush=True)
