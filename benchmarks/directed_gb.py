@@ -12,6 +12,9 @@ import os
 for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_var, "1")
 
+import argparse
+import time
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
@@ -41,22 +44,33 @@ CLASSIFIERS = {
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--methods", nargs="*", default=list(METHODS), choices=list(METHODS))
+    parser.add_argument("--output", default="directed_gb.csv")
+    args = parser.parse_args()
+    total = 3 * 3 * len(args.methods)
+    done, start = 0, time.perf_counter()
     rows = []
     for seed in range(3):
         G, y = generate_directed_shapes(5, seed=seed)
         for noise in (0.0, 0.05, 0.1):
             H = add_noise(G, noise, np.random.default_rng(seed))
             splits = list(StratifiedShuffleSplit(10, test_size=0.5, random_state=seed).split(H, y))
-            for method, f in METHODS.items():
-                X = f(H)
+            for method in args.methods:
+                X = METHODS[method](H)
                 for name, make in CLASSIFIERS.items():
                     acc = [accuracy_score(y[te], make().fit(X[tr], y[tr]).predict(X[te]))
                            for tr, te in splits]
                     rows.append({"seed": seed, "noise": noise, "method": method,
                                  "classifier": name, "accuracy": np.mean(acc)})
-        print(f"seed {seed} done", flush=True)
+                done += 1
+                elapsed = time.perf_counter() - start
+                print(f"[{done}/{total}] seed {seed} noise {noise} {method}  "
+                      f"{elapsed / 60:.1f} min  ETA {elapsed / done * (total - done) / 60:.1f} min",
+                      flush=True)
+                pd.DataFrame(rows).to_csv(args.output, index=False)
     df = pd.DataFrame(rows)
-    df.to_csv("directed_gb.csv", index=False)
+    df.to_csv(args.output, index=False)
     with pd.option_context("display.width", 200):
         print(df.groupby(["classifier", "method", "noise"]).accuracy.mean()
               .unstack("noise").round(3))

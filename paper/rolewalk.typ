@@ -564,7 +564,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.516]], [#emph[0.466]], [#emph[0.405]], [#emph[0.310]], [#emph[0.349]],
   )
-  #text(size: 8pt)[Ablations. Without the mixed probes: RoleWalk + curv. 0.989 / 0.717 / 0.547 / 0.381 / 0.625, RoleWalk 0.908 / 0.682 / 0.510 / 0.366 / 0.580 (never better on any seed and noise level for RoleWalk; within noise for RoleWalk + curv.). On the symmetrised graph: RoleWalk 0.767 / 0.560 / 0.420 / 0.351 / 0.474.]
+  #text(size: 8pt)[Ablations. Without the mixed probes: RoleWalk + curv. 0.989 / 0.717 / 0.547 / 0.381 / 0.625, RoleWalk 0.908 / 0.682 / 0.510 / 0.366 / 0.580 (never better on any seed and noise level for RoleWalk; within noise for RoleWalk + curv.). On the symmetrised graph: RoleWalk 0.767 / 0.560 / 0.420 / 0.351 / 0.474. Classifier: over 10 splits per graph, with gradient boosting instead of logistic regression, RoleWalk + curv. reaches 1.000 / 0.744 / 0.586 and directed ReFeX 1.000 / 0.739 / 0.578 (logistic: 1.000 / 0.741 / 0.585 against 1.000 / 0.753 / 0.610), so the two are comparable on these motifs; no other method changes rank (`directed_gb*.csv`).]
 ] <tab-directed>
 
 #figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate; signs dropped, repeated votes merged, unweighted). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa*.csv`.])[
