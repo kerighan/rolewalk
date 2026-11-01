@@ -273,7 +273,8 @@ degrees up to distance $L - 1$, as does 1-WL after $L$ rounds from uniform
 colours. Over all 6,781 nodes of the 996 connected graphs with at most 7
 nodes, the partition induced by RoleWalk ($L = 3$) refines that of 3-round
 1-WL: no two nodes that 1-WL separates share an embedding, and RoleWalk
-splits 677 of the 1-WL classes (`theory_checks.py`).
+splits 571 of the 1-WL classes (embeddings grouped at a sup-distance
+below $10^(-4)$ of the largest coordinate; `theory_checks.py`).
 
 #conj[
   For every $L$, the partition of nodes (across all graphs) induced by

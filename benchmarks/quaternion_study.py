@@ -30,6 +30,7 @@ import time
 import networkx as nx
 import numpy as np
 import pandas as pd
+from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.sparse import csr_matrix, identity
 from sklearn.preprocessing import normalize
 
@@ -136,9 +137,10 @@ def encodings(theta):
     }
 
 
-def n_classes(X):
+def n_classes(X, eps=1e-4):
+    """Classes of rows equal up to float noise (rounding splits at random)."""
     X = X / max(np.abs(X).max(), 1e-12)
-    return len({row.tobytes() for row in np.round(X, 6)})
+    return len(set(fcluster(linkage(X, "single", metric="chebyshev"), eps, "distance")))
 
 
 def small_graphs():

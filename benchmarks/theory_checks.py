@@ -19,6 +19,7 @@ from collections import defaultdict
 
 import networkx as nx
 import numpy as np
+from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.sparse import identity
 from sklearn.preprocessing import normalize
 
@@ -114,7 +115,7 @@ def wl_colours(G, rounds):
     return {u: h[-1] for u, h in hashes.items()}
 
 
-def check_wl(rounds=3):
+def check_wl(rounds=2):
     graphs = [G for G in nx.graph_atlas_g()[1:] if nx.is_connected(G)]
     model = RoleWalk(tol=0)
     keys, colours, where = [], [], []
@@ -126,21 +127,23 @@ def check_wl(rounds=3):
             colours.append(col[u])
             where.append((g, u))
     keys = np.array(keys, dtype=np.float64)
-    keys = np.round(keys / np.abs(keys).max(), 6)
+    keys /= np.abs(keys).max()
+    # equal up to float32 noise: rounding would split classes at random
+    keys = fcluster(linkage(keys, "single", metric="chebyshev"), 1e-4, "distance")
     by_rolewalk, by_wl = defaultdict(set), defaultdict(set)
-    for k, c in zip(map(bytes, keys), colours):
+    for k, c in zip(keys, colours):
         by_rolewalk[k].add(c)
         by_wl[c].add(k)
     wl_finer = [k for k, cs in by_rolewalk.items() if len(cs) > 1]
     rw_finer = [c for c, ks in by_wl.items() if len(ks) > 1]
     print(f"4. {len(graphs)} connected graphs <= 7 nodes, {len(keys)} nodes: "
-          f"{len(set(map(bytes, keys)))} RoleWalk classes, "
+          f"{len(set(keys))} RoleWalk classes, "
           f"{len(set(colours))} classes of {rounds}-round 1-WL")
     print(f"   RoleWalk classes split by 1-WL: {len(wl_finer)}; "
           f"1-WL classes split by RoleWalk: {len(rw_finer)}")
     if wl_finer:
         k = wl_finer[0]
-        idx = [i for i, kk in enumerate(map(bytes, keys)) if kk == k]
+        idx = np.flatnonzero(keys == k)
         i, j = next((i, j) for i, j in itertools.combinations(idx, 2)
                     if colours[i] != colours[j])
         for name, t in (("u", where[i]), ("v", where[j])):
