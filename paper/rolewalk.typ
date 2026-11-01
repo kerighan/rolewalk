@@ -72,7 +72,9 @@ Feature-based roles: ReFeX @henderson2011, RolX @henderson2012. Walks
 and word2vec: struc2vec @ribeiro2017, Role2Vec @ahmed2018; directed and
 weighted extensions of struc2vec @steenfatt2018 #todo[compare if code is
 available]. Diffusion: GraphWave @donnat2018, closest to RoleWalk
-(@prop-graphwave). Deep role embeddings: RESD and the RONE benchmark
+(@prop-graphwave), and Digraphwave @ceylan2022, its extension to directed
+and weighted graphs (heat diffusion on the out- and in-graph, timescales
+read from each graph, characteristic functions aggregated over neighbours). Deep role embeddings: RESD and the RONE benchmark
 @rone #todo[exact references]. Structural encodings for GNNs: RWSE
 @dwivedi2022, used by GPS @rampasek2022. Expressiveness: 1-WL @weisfeiler1968 @xu2019 @morris2019,
 CSL @murphy2019, BREC @wang2023. Curvature: Ollivier-Ricci @ollivier2009 @jost2014.
@@ -516,6 +518,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [Role2Vec], P, note(Y, "b"), N, N, P, N, [10 s],
     [RESD], N, N, N, N, N, N, [8 s],
     [ReFeX], P, P, P, Y, P, Y, [0.1 s],
+    [Digraphwave], P, Y, Y, Y, P, Y, [1.1 s],
     [RWSE], Y, P, Y, Y, Y, Y, [1.7 s],
   )
   #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #super[c] Scale chosen from the spectrum and $1 \/ n$ factor (@prop-graphwave). "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder. #todo[verify RESD, ReFeX, RWSE rows]]
@@ -524,15 +527,16 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The random-walk heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: fixed scales and no $1 \/ n$, but a random-walk rather than GraphWave's spectral heat kernel. Top-$k$ + layers: the 20 largest probabilities at each step instead of the characteristic function, same layers, same dimension. Local statistics: see @tab-centrality. `roles.csv`, `roles_gw.csv`, `roles_matched.csv`, `struc2vec_runs.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film#super[\*]],
-    [*RoleWalk*], [0.743], [0.583], [#underline[0.657]], [#underline[0.860]], [*0.487*], [0.569],
-    [*RoleWalk + curv.*], [0.741], [#underline[0.596]], [*0.666*], [#underline[0.860]], [0.485], [#underline[0.581]],
+    [*RoleWalk*], [0.743], [0.583], [#underline[0.657]], [#underline[0.860]], [#underline[0.487]], [0.569],
+    [*RoleWalk + curv.*], [0.741], [#underline[0.596]], [*0.666*], [#underline[0.860]], [0.485], [0.581],
     [struc2vec], [0.705 ± .022], [0.561 ± .020], [0.596 ± .004], [–], [–], [–],
     [RESD], [0.728], [0.544], [0.653], [0.857], [0.476], [0.563],
     [GraphWave], [*0.769*], [0.561], [0.587], [#underline[0.860]], [0.481], [–],
     [GraphWave, no $1 \/ n$], [*0.769*], [0.560], [0.587], [#underline[0.860]], [0.481], [–],
     [Random-walk heat-kernel CF], [#underline[0.750]], [*0.598*], [0.633], [0.859], [0.484], [0.549],
+    [Digraphwave], [0.724], [0.593], [0.641], [0.859], [*0.488*], [#underline[0.606]],
     [Top-$k$ + layers], [0.672], [0.590], [0.625], [0.858], [0.482], [0.564],
-    [Local statistics], [0.716], [0.584], [0.616], [*0.862*], [#underline[0.486]], [0.517],
+    [Local statistics], [0.716], [0.584], [0.616], [*0.862*], [0.486], [0.517],
     [ReFeX], [0.691], [0.576], [0.622], [0.851], [0.478], [0.579],
     [Role2Vec], [0.476], [0.366], [0.562], [0.844], [0.399], [*0.743*],
     [RWSE], [0.711], [0.572], [0.517], [0.855], [0.363], [0.450],
@@ -570,6 +574,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [*RoleWalk + curv.*], [*1.000*], [#underline[0.730]], [#underline[0.593]], [#underline[0.396]], [*0.629*],
     [*RoleWalk*], [*1.000*], [0.728], [0.588], [0.373], [#underline[0.615]],
     [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [0.607],
+    [Digraphwave], [*1.000*], [0.717], [0.575], [0.292], [0.539],
     [Local statistics (in / out)], [0.863], [0.675], [0.584], [*0.409*], [0.609],
     [Top-$k$ + layers], [#underline[0.908]], [0.671], [0.516], [0.348], [0.568],
     [RWSE, out + in], [0.357], [0.336], [0.336], [0.048], [0.179],
@@ -593,6 +598,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
     [ReFeX, directed], [0.778], [0.930], [3 s],
+    [Digraphwave], [0.807], [0.939], [360 s],
     [Top-$k$ + layers], [0.804], [0.936], [5 s],
     [Local statistics (in / out)], [#underline[0.814]], [#underline[0.941]], [3 s],
     [RWSE, out + in], [0.710], [0.836], [84 s],
