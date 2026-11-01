@@ -736,6 +736,30 @@ on airports (0.664–0.666 against 0.662), but transfers worse (0.454–0.471
 against 0.486) and loses on directed motifs (ARI 0.295–0.314 against 0.366)
 (`trajectory.csv`): hard layers are a better use of a few dimensions.
 
+== An observation: betweenness from one small graph <sec-betweenness>
+
+A regressor fitted once on a single 2,000-node graph (exact betweenness,
+about a second of training) predicts the betweenness ranking of new graphs
+of the same family up to 25 times larger, from RoleWalk alone, without
+computing any shortest path on them (@tab-betweenness).
+
+#figure(caption: [Spearman correlation with exact betweenness, and time on one core (embedding and prediction), for a regressor fitted on one 2,000-node graph and applied to new graphs of the same family; mean of 3 seeds (1 at 50k). `betweenness.csv`.])[
+  #table(columns: 4, align: (left,) + (center,) * 3,
+    [Test graph], [5,000 nodes], [20,000 nodes], [50,000 nodes],
+    [Barabási-Albert], [0.953 (0.7 s)], [0.937 (3.7 s)], [0.925 (11.7 s)],
+    [Powerlaw-cluster], [0.926 (0.7 s)], [0.907 (3.5 s)], [0.896 (11.4 s)],
+    [Watts-Strogatz], [0.960 (0.2 s)], [0.963 (1.1 s)], [0.962 (2.8 s)],
+  )
+] <tab-betweenness>
+
+The ranking degrades slowly with size on hub-dominated families and not at
+all on Watts-Strogatz. This is not a substitute for dedicated algorithms:
+exact Brandes (NetworKit) takes 163 s at 20,000 nodes on one core, but
+source sampling reaches similar correlations at similar cost, and adding
+local statistics to RoleWalk brings it to the same level (0.936–0.964 at
+50k). What it shows is that a few walk statistics, read the same way in
+every graph, carry most of a global, path-based quantity across sizes.
+
 == Pruning <sec-pruning>
 
 On the six real networks, pruning at the default tol $10^(-4)$ changes
