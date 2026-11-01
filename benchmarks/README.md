@@ -223,8 +223,20 @@ the same GINE network (4 layers, ~230k parameters, 300 epochs) on ZINC
 | RoleWalk + RWSE | 0.104 ± 0.006 |
 | RoleWalk (`curvature=True`) + RWSE | **0.095 ± 0.002** |
 
-This is a relative comparison on a small model: published graph
-transformers reach about 0.07 with much longer training.
+This is a relative comparison on a small model. With the full GPS protocol
+(`--model gps`: 10 GPS layers, ~470k parameters, 500 epochs, 2 seeds,
+`pe_zinc_gps.csv`, about 1h40 per run on an RTX 2070):
+
+| Encoding | Test MAE | Val MAE |
+|---|---|---|
+| RWSE (published GPS: 0.070 ± 0.004) | 0.077 ± 0.006 | 0.103 ± 0.000 |
+| RoleWalk (`curvature=True`) | 0.076 ± 0.001 | 0.092 ± 0.003 |
+| RoleWalk (`curvature=True`) + RWSE | **0.073 ± 0.001** | **0.089 ± 0.005** |
+
+```bash
+python pe_benchmark.py --model gps --epochs 500 --seeds 2 \
+    --encodings rwse curvature+rwse curvature --output pe_zinc_gps.csv
+```
 
 ## Kernel grid
 

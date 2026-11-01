@@ -240,8 +240,16 @@ best among structural embeddings.*
 | RoleWalk + RWSE | 0.104 ± 0.006 |
 | **RoleWalk + curvature + RWSE** | **0.095 ± 0.002** |
 
-*TODO: full GPS protocol (published ~0.07), Peptides (LRGB), CSL/BREC for
-expressiveness.*
+### Table 7b — Full GPS protocol (ZINC, GPS 10 layers, ~470k params, 500 epochs, 2 seeds)
+
+| Encoding | Test MAE | Val MAE |
+|---|---|---|
+| RWSE (published GPS: 0.070 ± 0.004) | 0.077 ± 0.006 | 0.103 ± 0.000 |
+| RoleWalk + curvature (no RWSE) | 0.076 ± 0.001 | 0.092 ± 0.003 |
+| **RoleWalk + curvature + RWSE** | **0.073 ± 0.001** | **0.089 ± 0.005** |
+
+*RoleWalk alone (3 steps) matches RWSE (16 steps); combined, best and
+4x less seed variance. TODO: more seeds (≥4), Peptides (LRGB).*
 
 ### Fig. 4 — Scalability: time vs nodes up to 10^6 (TODO), RoleWalk vs baselines that run
 
@@ -306,7 +314,7 @@ to compare role methods.*
   (resampled data, method variants) next to the role.*
 - *Degree-like labels (airports) favour trivial baselines.*
 - *One real directed labelled benchmark (wiki-RfA); more would help.*
-- *ZINC on a small model only.*
+- *GPS/ZINC on 2 seeds only; gains are within published seed noise on test, clearer on validation.*
 
 ## Appendix
 
