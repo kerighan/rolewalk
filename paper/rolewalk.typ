@@ -354,7 +354,7 @@ underlined. Code and CSV files in `benchmarks/`.
 
 #figure(
   image("fig_speed.svg", width: 100%),
-  caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. RoleWalk is the only method in the top-left corner of every panel. `speed_figure.py`.],
+  caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. Hollow marker: degree, a trivial baseline rather than an embedding. RoleWalk is the only method in the top-left corner of every panel. `speed_figure.py`.],
 ) <fig-speed>
 
 #figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over networks. `roles.csv`.])[

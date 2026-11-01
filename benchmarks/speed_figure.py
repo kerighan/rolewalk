@@ -19,7 +19,7 @@ MUTED = "#52514e"
 NAMES = {
     "rolewalk": "RoleWalk", "rolewalk_curvature": "RoleWalk + curv.",
     "struc2vec": "struc2vec", "graphwave": "GraphWave", "role2vec": "Role2Vec",
-    "resd": "RESD", "refex": "ReFeX", "rwse": "RWSE", "degree": "Degree",
+    "resd": "RESD", "refex": "ReFeX", "rwse": "RWSE", "degree": "Degree (baseline)",
 }
 
 
@@ -52,8 +52,8 @@ PANELS = [
 
 # label offsets in points, to avoid collisions (method -> (dx, dy, ha))
 OFFSETS = {
-    0: {"degree": (0, -12, "center"), "rwse": (6, -3, "left"), "rolewalk": (-7, -8, "right"),
-        "rolewalk_curvature": (-7, 1, "right"), "refex": (0, -12, "center"),
+    0: {"degree": (-4, -12, "left"), "rwse": (6, -3, "left"), "rolewalk": (-7, -8, "right"),
+        "rolewalk_curvature": (-7, 1, "right"), "refex": (6, -3, "left"),
         "resd": (0, 6, "center"), "graphwave": (6, -3, "left")},
     1: {"refex": (6, -9, "left"), "rolewalk": (6, -9, "left"), "rolewalk_curvature": (6, 3, "left"),
         "degree": (6, 4, "left"), "role2vec": (6, 4, "left"), "resd": (6, -4, "left"),
@@ -72,15 +72,20 @@ def main():
         data = load()
         for method, row in data.iterrows():
             ours = method.startswith("rolewalk")
-            ax.scatter(row.time, row.score, s=36 if ours else 22,
-                       marker="D" if method == "rolewalk_curvature" else "o",
-                       color=ACCENT if ours else OTHER, zorder=3,
-                       edgecolor="white", linewidth=1)
+            if method == "degree":  # trivial baseline, not an embedding
+                ax.scatter(row.time, row.score, s=22, marker="o", facecolor="white",
+                           edgecolor=OTHER, linewidth=1.2, zorder=3)
+            else:
+                ax.scatter(row.time, row.score, s=36 if ours else 22,
+                           marker="D" if method == "rolewalk_curvature" else "o",
+                           color=ACCENT if ours else OTHER, zorder=3,
+                           edgecolor="white", linewidth=1)
             dx, dy, ha = OFFSETS.get(k, {}).get(method, (6, -3, "left"))
             ax.annotate(NAMES[method], (row.time, row.score), xytext=(dx, dy),
                         textcoords="offset points", ha=ha, fontsize=7,
                         color=INK if ours else MUTED,
-                        fontweight="bold" if ours else "normal")
+                        fontweight="bold" if ours else "normal",
+                        fontstyle="italic" if method == "degree" else "normal")
         ax.set_xscale("log")
         ax.set_title(title, fontsize=8, color=INK)
         ax.set_xlabel("embedding time (s, log)")
