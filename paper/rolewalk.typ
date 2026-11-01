@@ -57,7 +57,7 @@
 
 Claims, each backed by a result below:
 
-+ All of: inductive, directed, weighted, deterministic, online, fast (@tab-props).
++ All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
 + Accuracy at or above the state of the art on role classification at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; best on real directed roles and on unsupervised synthetic ones (@tab-directed, @tab-rfa, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
@@ -453,18 +453,22 @@ standardised embeddings, 50 stratified 80/20 splits. Best in bold, second
 underlined, among embeddings; the degree baseline (log-degree alone, which
 shows how far labels follow activity) is set apart and not ranked. Code and CSV files in `benchmarks/`.
 
-#figure(caption: [Properties. Checked against each paper; "\~" partial.])[
-  #table(columns: 7, align: (left,) + (center,) * 6,
-    [], [Transfer], [Directed], [Weighted], [Time (USA)], [Online], [Deterministic],
-    [*RoleWalk*], [yes], [yes], [yes], [0.2 s], [yes], [yes],
-    [struc2vec], [no], [no#super[a]], [no#super[a]], [564 s], [no], [no],
-    [GraphWave], [no (P. #ref(<prop-graphwave>, supplement: none))], [\~], [yes], [18 s], [no], [yes],
-    [Role2Vec], [\~], [yes#super[b]], [no], [10 s], [\~], [no],
-    [RESD], [no], [no], [no], [8 s], [no], [no],
-    [ReFeX], [\~], [\~], [\~], [0.1 s], [\~], [yes],
-    [RWSE], [yes], [\~], [yes], [1.7 s], [yes], [yes],
+#let mark(c, g) = text(font: "DejaVu Sans Mono", fill: rgb(c), weight: "bold")[#g]
+#let Y = mark("#1a7f37", "✓")
+#let N = mark("#c62828", "✗")
+#let P = mark("#b26a00", "∼")
+#figure(caption: [Properties, checked against each paper: #Y yes, #N no, #P partial.])[
+  #table(columns: 8, align: (left,) + (center,) * 7,
+    [], [Transfer], [Directed], [Weighted], [No training], [Online], [Deterministic], [Time (USA)],
+    [*RoleWalk*], Y, Y, Y, Y, Y, Y, [0.2 s],
+    [struc2vec], N, [#N#super[a]], [#N#super[a]], N, N, N, [564 s],
+    [GraphWave], [#N #text(size: 7pt)[(P. #ref(<prop-graphwave>, supplement: none))]], P, Y, Y, N, Y, [18 s],
+    [Role2Vec], P, [#Y#super[b]], N, N, P, N, [10 s],
+    [RESD], N, N, N, N, N, N, [8 s],
+    [ReFeX], P, P, P, Y, P, Y, [0.1 s],
+    [RWSE], Y, P, Y, Y, Y, Y, [1.7 s],
   )
-  #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #todo[verify RESD, ReFeX, RWSE rows]]
+  #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder. #todo[verify RESD, ReFeX, RWSE rows]]
 ] <tab-props>
 
 #figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: GraphWave with fixed scales and no $1 \/ n$. `roles.csv`, `roles_gw.csv`, `struc2vec_runs.csv`.])[
