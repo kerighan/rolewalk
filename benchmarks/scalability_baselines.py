@@ -19,7 +19,7 @@ for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_var, "1")
 
 SIZES = (10_000, 100_000, 1_000_000)
-METHODS = ("rolewalk", "refex", "rwse", "heat_cf", "resd", "role2vec")
+METHODS = ("rolewalk", "refex", "rwse", "heat_cf", "resd", "role2vec", "digraphwave")
 
 
 def run(method, n, queue, memory_gb):
@@ -34,6 +34,8 @@ def run(method, n, queue, memory_gb):
     start = time.perf_counter()
     rb.METHODS[method](G)
     elapsed = time.perf_counter() - start
+    if method == "digraphwave":  # compute time, without starting its environment
+        elapsed = rb.digraphwave.last_time
     rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 2**20
     queue.put((elapsed, rss))
 

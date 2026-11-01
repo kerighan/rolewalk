@@ -45,6 +45,7 @@ DIRECTED = {
     "rolewalk_mixed": rb.rolewalk_mixed,
     "rolewalk_curvature_mixed": rb.rolewalk_curvature_mixed,
     "topk_layers": rb.topk_layers,
+    "digraphwave": rb.digraphwave,
     "local_stats": rb.local_stats,
     "rolewalk_local": rb.METHODS["rolewalk_local"],
     "rolewalk_curvature_mixed_local": lambda G: np.hstack([rb.rolewalk_curvature_mixed(G),

@@ -102,6 +102,7 @@ if "graphwave" in rb.METHODS:
 FEATURES["heat_cf"] = rb.heat_cf
 FEATURES["topk_layers"] = topk_layers
 FEATURES["local_stats"] = local_stats
+FEATURES["digraphwave"] = rb.digraphwave
 FEATURES["rolewalk_local"] = lambda G: np.hstack([FEATURES["rolewalk"](G), local_stats(G)])
 SELECTED = list(FEATURES)
 
@@ -110,11 +111,18 @@ def features(G: nx.Graph) -> Dict[str, np.ndarray]:
     return {name: FEATURES[name](G) for name in SELECTED}
 
 
-def targets(G: nx.Graph) -> Dict[str, np.ndarray]:
+def targets(G: nx.Graph, cache: str = None) -> Dict[str, np.ndarray]:
+    """Exact centralities, cached on disk under ``cache`` (slow on 8k nodes)."""
+    path = os.path.join("data", "centrality_targets", f"{cache}.npz") if cache else None
+    if path and os.path.exists(path):
+        return dict(np.load(path))
     out = {}
     for name, f in CENTRALITIES.items():
         values = f(G)
         out[name] = np.array([values[v] for v in G], dtype=float)
+    if path:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        np.savez(path, **out)
     return out
 
 
@@ -143,9 +151,10 @@ def within_graph(name: str, G: nx.Graph, seed: int):
     return rows
 
 
-def transfer(name: str, G_train: nx.Graph, G_test: nx.Graph, seed: int):
+def transfer(name: str, G_train: nx.Graph, G_test: nx.Graph, seed: int, scale: int = 1):
     f_train, f_test = features(G_train), features(G_test)
-    y_train, y_test = targets(G_train), targets(G_test)
+    y_train = targets(G_train, f"{name}_{seed}_x1")
+    y_test = targets(G_test, f"{name}_{seed + 100}_x{scale}")
     if "refex" in SELECTED:
         # ReFeX with its feature schema fitted on the training graph
         schema = RefexSchema().fit(G_train)
@@ -182,7 +191,7 @@ def main():
             G = largest_component(make(seed))
             if args.transfer:
                 rows += transfer(name, G, largest_component(make(seed + 100, args.test_scale)),
-                                 seed)
+                                 seed, args.test_scale)
             else:
                 rows += within_graph(name, G, seed)
             print(f"{name} seed={seed} done", flush=True)

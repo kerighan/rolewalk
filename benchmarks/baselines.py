@@ -10,6 +10,8 @@ which the RESD authors maintain, with its default parameters:
   autoencoder of the ReFeX features whose embedding must also predict the
   log-degree.
 """
+import os
+
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -328,3 +330,25 @@ class RefexSchema:
             b = np.digitize(c, e)
             out.append(np.eye(len(e) + 1)[b])
         return np.hstack(out).astype(np.float32)
+
+
+def digraphwave(G: nx.Graph, R: int = 3, k_emb: int = 128) -> np.ndarray:
+    """Digraphwave (Ceylan, Ghoorchian and Kragic 2022), with the settings
+    of the authors' experiments: radius 3, 128 dimensions, transposed and
+    neighbour-aggregated embeddings, no arctan-log transform. Runs the
+    authors' code in the environment named by $DGW_PYTHON."""
+    import subprocess
+    import tempfile
+    python = os.environ.get("DGW_PYTHON")
+    if not python:
+        raise RuntimeError("set DGW_PYTHON to the python of the Digraphwave environment")
+    A = nx.to_scipy_sparse_array(G, nodelist=range(len(G)), format="csr", dtype=np.float64)
+    A.setdiag(0)
+    A.eliminate_zeros()
+    with tempfile.TemporaryDirectory() as tmp:
+        sp.save_npz(f"{tmp}/adj.npz", sp.csr_matrix(A))
+        subprocess.run([python, os.path.join(os.path.dirname(__file__), "dgw_runner.py"),
+                        f"{tmp}/adj.npz", f"{tmp}/emb.npy", str(R), str(k_emb)], check=True)
+        with open(f"{tmp}/emb.npy.time") as f:
+            digraphwave.last_time = float(f.read())  # compute time only
+        return np.load(f"{tmp}/emb.npy")

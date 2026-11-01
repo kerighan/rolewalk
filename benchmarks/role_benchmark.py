@@ -53,8 +53,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from rolewalk import RoleWalk
-from baselines import (RefexSchema, heat_cf, local_stats, refex, refex_directed,
-                       resd, topk_layers)
+from baselines import (RefexSchema, digraphwave, heat_cf, local_stats, refex,
+                       refex_directed, resd, topk_layers)
 from datasets import DATA_DIR, load_airports, load_rone, load_wiki_rfa
 
 try:
@@ -82,7 +82,7 @@ DATASETS = {
 # methods that read edge directions; the others get the undirected graph
 DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree",
             "rwse_inout", "refex_directed", "rolewalk_mixed", "rolewalk_curvature_mixed",
-            "topk_layers", "local_stats", "rolewalk_local"}
+            "topk_layers", "local_stats", "rolewalk_local", "digraphwave"}
 
 
 def rolewalk(G: nx.Graph) -> np.ndarray:
@@ -176,6 +176,7 @@ METHODS: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
     "refex_directed": refex_directed,
     "rolewalk_mixed": rolewalk_mixed,
     "topk_layers": topk_layers,
+    "digraphwave": digraphwave,
     "local_stats": local_stats,
     "rolewalk_local": lambda G: np.hstack([rolewalk(G), local_stats(G)]),
     "rolewalk_curvature_mixed": rolewalk_curvature_mixed,
@@ -195,7 +196,7 @@ else:  # pragma: no cover
 # be compared across networks
 INDUCTIVE = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse",
              "degree", "graphwave", "graphwave_centered", "heat_cf", "topk_layers",
-             "local_stats", "rolewalk_local"}
+             "local_stats", "rolewalk_local", "digraphwave"}
 # struc2vec took 6 minutes on 1,190 nodes and grows faster than linearly
 MAX_NODES = {"struc2vec": 3000, "graphwave": 10000, "graphwave_centered": 10000}  # graphwave: dense n x n
 K = (5, 10, 25, 50)

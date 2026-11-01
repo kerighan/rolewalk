@@ -1,0 +1,13 @@
+method,n_nodes,time,peak_rss_gb,status
+rolewalk,10000,1.19,0.46,ok
+rolewalk,100000,16.36,3.19,ok
+rolewalk,1000000,,,failed (exit 1; 16 GB cap)
+refex,10000,0.11,0.17,ok
+refex,100000,1.77,0.47,ok
+refex,1000000,30.98,3.48,ok
+rwse,10000,67.86,2.39,ok
+rwse,100000,,,failed (exit 1; 16 GB cap)
+heat_cf,10000,186.41,1.08,ok
+heat_cf,100000,,,timeout 3600s
+resd,10000,62.25,0.47,ok
+resd,100000,631.08,0.71,ok
