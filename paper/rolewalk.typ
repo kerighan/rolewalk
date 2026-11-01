@@ -61,7 +61,7 @@ Claims, each backed by a result below:
 + Accuracy at or above the state of the art on role classification at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; best on real directed roles and on unsupervised synthetic ones (@tab-directed, @tab-rfa, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
-+ Transfer: a regressor fitted on one graph predicts path-based centralities (betweenness, closeness, harmonic) of another better than every baseline (@tab-centrality; @prop-local).
++ Transfer: a regressor fitted on one graph predicts path-based centralities (betweenness, closeness, harmonic) of another, including one four times larger, better than every baseline (@tab-centrality, @tab-centrality-x4; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
 + Useful as a structural encoding for graph transformers (@tab-zinc).
 
@@ -631,6 +631,23 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   )
   #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935: an artefact of the subset. RW heat CF: random-walk heat-kernel characteristic function. GraphWave with its $1 \/ n$ is within 0.006 of the no-$1 \/ n$ column.]
 ] <tab-centrality>
+
+#figure(caption: [Centrality transfer to larger graphs: the regressor is fitted on a 2,000-node graph and evaluated on a 8,000-node graph of the same family, at the same mean degree (other seed). Same features and families as @tab-centrality. `centrality_transfer_x4.csv`.])[
+  #table(columns: 11, align: (left,) + (center,) * 10,
+    [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]], [#emph[RW + local]],
+    [Betweenness], [*0.865*], [*0.865*], [#underline[0.858]], [0.852], [0.845], [0.851], [0.438], [0.629], [#emph[0.622]], [#emph[0.875]],
+    [Closeness], [*0.776*], [#underline[0.767]], [0.738], [0.691], [0.695], [0.717], [0.452], [0.510], [#emph[0.384]], [#emph[0.780]],
+    [Harmonic], [*0.860*], [#underline[0.856]], [0.818], [0.772], [0.777], [0.803], [0.522], [0.595], [#emph[0.451]], [#emph[0.863]],
+    [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.983], [0.973], [0.987], [0.741], [0.643], [#emph[0.929]], [#emph[0.990]],
+    table.hline(stroke: 0.4pt),
+    [Clustering], [0.806], [0.802], [0.803], [*0.840*], [#underline[0.809]], [0.790], [0.722], [0.352], [#emph[0.205]], [#emph[0.838]],
+    [k-core], [0.652], [*0.658*], [#underline[0.655]], [0.652], [0.635], [0.652], [0.509], [0.622], [#emph[0.618]], [#emph[0.657]],
+    [Eigenvector], [0.645], [0.648], [#underline[0.663]], [0.652], [*0.695*], [0.568], [0.347], [0.405], [#emph[0.450]], [#emph[0.654]],
+    table.hline(stroke: 0.4pt),
+    [Mean], [*0.799*], [#underline[0.798]], [0.789], [0.778], [0.776], [0.767], [0.533], [0.537], [#emph[0.523]], [#emph[0.808]],
+  )
+  #text(size: 8pt)[From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10: their coordinates depend on the graph, RoleWalk's on the neighbourhood only (@prop-local).]
+] <tab-centrality-x4>
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
   #table(columns: 6, align: (left,) + (center,) * 5,
