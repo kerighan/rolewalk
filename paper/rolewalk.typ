@@ -529,7 +529,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. Hollow marker: degree, a trivial baseline rather than an embedding. RoleWalk is the only method in the top-left corner of every panel. `speed_figure.py`.],
 ) <fig-speed>
 
-#figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over the 6 networks, and over the 3 smallest (446–2,101 nodes), the only ones struc2vec runs on. `roles.csv`.])[
+#figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over the 6 networks, and over the 3 smallest (446–2,101 nodes), the only ones struc2vec runs on; only two of these have admins (8 and 16), so the "Admins (3)" column rests on 24 queries. `roles.csv`.])[
   #table(columns: 5, align: (left,) + (center,) * 4,
     [], [Bots (6)], [Admins (6)], [Bots (3)], [Admins (3)],
     [RoleWalk], [*0.129*], [*0.324*], [*0.179*], [0.356],
@@ -543,7 +543,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[Degree (baseline)]], [#emph[0.075]], [#emph[0.296]], [#emph[0.121]], [#emph[0.341]],
   )
-  #text(size: 8pt)[Mixed: RoleWalk leads on bots and on admins over all networks, struc2vec on admins where it runs. Networks are distributed undirected. #todo[directed versions from SNAP]]
+  #text(size: 8pt)[RoleWalk leads on bots and on admins over all networks. Where struc2vec runs, its lead on admins comes from br-wiki (8 admins; per-query paired Wilcoxon $p = 0.06$ against RoleWalk, $p = 0.04$ for ReFeX, uncorrected); exact walks, a mass budget, other walk lengths, wider frequency ranges, local statistics or whitened distances do not change it. Admins differ from other hubs by low clustering and low neighbour degree: they write to many newcomers who do not write to each other. Networks are distributed undirected. #todo[directed versions from SNAP]]
 ] <tab-wiki>
 
 #figure(caption: [Directed roles on synthetic graphs (directed motifs hung from a directed cycle; several roles coincide once directions are dropped). 3 seeds; noise = share of edges rewired. Accuracy: logistic regression; ARI: $k$-means; mAP: retrieval. ReFeX, directed: in-, out- and mutual degrees and recursive features over out- and in-neighbours (450 one-hot features). `directed.csv`.])[
