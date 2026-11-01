@@ -33,13 +33,13 @@
 #block(inset: (x: 1.5cm))[
   *Abstract.* Structural roles group nodes by their position in a graph
   rather than by proximity. RoleWalk describes each node by the
-  characteristic function of its lazy random-walk transition
+  characteristic function of its random-walk transition
   probabilities, sampled at a few frequencies, together with the
   distribution of the walk's mass over distance layers and, optionally,
   low-order moments of a probabilistic curvature. The embedding is local,
   deterministic, reads directions and weights, and needs no training. We
   prove that it is invariant and local (hence transferable across graphs),
-  that its distances are maximum mean discrepancies, that its
+  that its curvature-free distances are maximum mean discrepancies, that its
   characteristic-function block is Lipschitz in edge insertions, that it
   recovers triangle counts on regular graphs, so that it separates graphs
   1-WL cannot (and conversely: the two are incomparable), and that
@@ -50,7 +50,7 @@
   classification at a fraction of the cost of every method but ReFeX, is
   best on real directed roles and on transfer of centralities across
   graphs, embeds a million nodes in 20 s to 2.5 min on one core, and
-  improves GPS on ZINC when combined with RWSE.
+  shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
 
 = Introduction
@@ -80,7 +80,7 @@ Kernel mean embeddings and MMD: @gretton2012.
 = Method <sec-method>
 
 *Walk.* $G = (V, E)$ with non-negative weights $A$ (directed or not),
-$tilde(D) = op("diag")((I + A) bold(1))$ and the lazy walk
+$tilde(D) = op("diag")((I + A) bold(1))$ and the self-loop-augmented walk
 $H = tilde(D)^(-1) (I + A)$. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
 is the distribution of the walk after $w$ steps. Directed graphs use the
 out-walk $H_+$ ($A$) and the in-walk $H_-$ ($A^top$) and concatenate both
@@ -112,7 +112,8 @@ an upper bound of Ollivier-Ricci curvature $1 - W_1$, made of probabilities.
 marked by its step and its layer, which gives the _footprint_ of the walks
 from $u$:
 $ mu_u = sum_(w = 1)^L sum_(j : p^w_(u j) > 0) delta_((w, p^w_(u j), d(u, j))). $
-The embedding is the mean of a single feature map over the footprint,
+The embedding is the integral of a single feature map over the footprint
+(a finite measure, not normalised),
 $X_u = integral Psi thin d mu_u$, with
 $ Psi(w, a, ell) = e_w ⊗ (psi(a) ⊕ norm(Theta) a e_ell), quad psi(a) = (f_theta (a))_(theta in Theta), $ <eq-psi>
 which gives, for each step $w = 1, ..., L$ ($L = 3$), $op("Re") phi^w_u$,
@@ -135,7 +136,9 @@ leaves, the leaf mass of step 2 falls below tol although half of it returns
 to the centre at step 3. With a budget $delta$ (`max_missing`), a row drops
 its small entries only while its missing mass $r^w_u = 1 - norm(q^w_u)_1$
 stays below $delta$, which bounds the error (@prop-prune). Distances are
-read from supports before pruning, so layers are exact for $L <= 3$.
+read from supports before pruning: for $L <= 3$ every retained entry gets
+its exact distance, while layer masses still lose what pruning drops. A
+row whose small entries would exceed the budget keeps all of them.
 Results in @sec-theory are otherwise stated for $"tol" = 0$.
 
 *Implementation.* For each root, one pass propagates a sparse row with a
@@ -144,7 +147,9 @@ layers from the step at which each node is first reached, curvature
 moments) without storing the powers: $O(n)$ memory per thread, and rows
 are independent. Below $p = 10^(-3)$ every angle $theta p$ is under 0.1,
 and the characteristic function comes from the power sums $sum p^k$,
-$k <= 8$ (error below $10^(-12)$) instead of $2 m$ sines.
+$k <= 8$ instead of $2 m$ sines (truncation error below
+$theta^9 p_max^8 \/ 9! < 3 dot 10^(-12)$ per coordinate and row in exact
+arithmetic; outputs are float32).
 
 *Roles.* Ward clustering with silhouette for the number of roles, or
 $k$-means with a given number; fitted centroids label nodes of any graph.
@@ -153,9 +158,13 @@ $k$-means with a given number; fitted centroids label nodes of any graph.
 
 Throughout, $L$ is the number of steps, $B_r (u)$ the subgraph induced by
 nodes within distance $r$ of $u$ (out- and in-distance for directed graphs;
-with curvature, distance in the underlying undirected graph, on which
-$kappa$ is defined), graphs have no self-loops, and statements hold for
-$"tol" = 0$.
+with curvature or mixed probes, distance in the underlying undirected
+graph, which contains everything these read), graphs have finite
+non-negative weights and no self-loops, distances are taken in the graph
+of positive-weight edges, $m_x$ and $kappa$ are defined on the simple
+unweighted symmetrisation ($kappa = 0$ at isolated nodes), and statements
+hold for $"tol" = 0$, in exact arithmetic. Mixed probes read the
+undirected 2-ball, so with them the locality radius is $max(L, 2)$.
 
 #prop(name: "locality and invariance")[
   $X_u$ is determined by the isomorphism class of the rooted graph
@@ -242,7 +251,7 @@ same way, as factors of the second term: curvature, or labels on the
 steps of each path.
 
 #prop(name: "stability")[
-  Let $G'$ be $G$ plus an unweighted edge $a b$, with $d = min(d_a, d_b)$
+  Let $G$ be simple, undirected and unweighted, and $G'$ be $G$ plus an edge $a b$, with $d = min(d_a, d_b)$
   the smaller endpoint degree in $G$. For every node $u$ and step $w$,
   $ norm(phi^w_u (G') - phi^w_u (G))_2 <= w norm(Theta)_2 dot 2 / (d + 2), $
   and the left side is 0 if $u$ is at distance $>= w$ from both $a$ and $b$.
@@ -267,8 +276,8 @@ extend to the layer block, which reads distances: in $K_(2, d)$, joining
 the two hubs $a, b$ moves $s^2_a (2)$ from $d \/ (3 (d + 1))$ to 0, whatever $d$.
 
 #prop(name: "degree and triangles")[
-  $s^1_u (0) = 1 \/ (d_u + 1)$ in an unweighted graph. If $G$ is
-  $d$-regular, $s^3_u (0) = (H^3)_(u u) = (1 + 3 d + 2 t_u) \/ (d + 1)^3$, with $t_u$
+  Let $G$ be simple, undirected and unweighted. Then
+  $s^1_u (0) = 1 \/ (d_u + 1)$, and if $G$ is $d$-regular ($d > 0$), $s^3_u (0) = (H^3)_(u u) = (1 + 3 d + 2 t_u) \/ (d + 1)^3$, with $t_u$
   the number of triangles at $u$. Hence RoleWalk with $L >= 3$ separates
   1-WL-equivalent graphs, e.g. two triangles and a hexagon, or any two
   $d$-regular graphs with different triangle counts.
@@ -291,8 +300,7 @@ the two hubs $a, b$ moves $s^2_a (2)$ from $d \/ (3 (d + 1))$ to 0, whatever $d$
   triangular system with nonzero diagonal $d^w \/ (d + 1)^w$.
 ]
 
-On irregular graphs the two walks differ, so the return probabilities do
-not translate into each other; RoleWalk adds the other layers and the
+On irregular graphs the binomial transformation above does not apply; RoleWalk adds the other layers and the
 full distribution of transition probabilities.
 
 #prop(name: "a failure class: distance-regular graphs")[
@@ -324,14 +332,19 @@ these graphs for the same reason, fails them too.
   Let $A$ and $B$ be a 40-cycle with pendant nodes attached at cycle
   positions ${0, 15}$ and ${0, 20}$. They are not isomorphic and 1-WL
   separates them, but RoleWalk with $L = 3$ (with curvature) does not.
-]
+] <prop-locality-graph>
 #proof[
   The pendants are more than $2(L + 2)$ apart in both graphs, so every
   rooted ball $B_(L+2) (u)$ contains at most one pendant and is fixed by
   $u$'s distance to it; both graphs have the same multiset of balls.
-  Conclude by @prop-local. Colour refinement propagates along the cycle
-  and eventually sees the distance between pendants (checked with 40
-  rounds).
+  Conclude by @prop-local. For 1-WL, let $h$ mark the two degree-3 nodes,
+  which round 1 identifies; round $t + 1$ colours determine $(A^t h)_v$,
+  the number of $t$-step walks from $v$ to a marked node. Both graphs are
+  bipartite (an even cycle with pendant trees). In $A$, the only 15-step
+  walk from node 0 to node 15 is the short arc, and no odd walk returns
+  to 0, so $(A^(15) h)_0 = 1$; in $B$, nodes 0 and 20 are on the same
+  side, so $(A^(15) h)_0 = 0$. After 16 rounds the marked nodes have
+  different colours.
 ]
 
 #prop(name: "RoleWalk and 1-WL are incomparable")[
@@ -351,9 +364,13 @@ these graphs for the same reason, fails them too.
   $4 \/ 10 = 2 \/ 5$ in $G'$) and each outer node
   $1 \/ 25 = 1 \/ 5 dot 3 \/ 15 = 1 \/ 5 dot 2 \/ 10$, with
   the same layers. For $L = 3$, add a leaf $z$ at $r$ and root at $z$:
-  three rounds separate $z$, while the walk distributions and layers from
-  $z$ agree up to step 3 (`theory_checks.py`). With curvature, both pairs are
-  separated.
+  three rounds separate $z$. From $z$, step 1 puts $1 \/ 2$ on $z$ and $r$;
+  step 2 puts $1 \/ 3$ on $z$ and $r$ and $1 \/ 12$ on each of $a, b, c, d$;
+  step 3 puts $2 \/ 9$ on $z$, $23 \/ 90$ on $r$, $4 \/ 45$ on each of
+  $a, b, c, d$ and $1 \/ 60$ on each outer node, in both graphs, with layers
+  $(2 \/ 9, 23 \/ 90, 16 \/ 45, 1 \/ 6)$ (exact rational computation,
+  `theory_checks.py`). With curvature, both pairs are separated. These
+  are node-level collisions; @prop-locality-graph gives a graph-level one.
 ]
 
 On the 6,781 nodes of the 996 connected graphs with at most 7 nodes, no
@@ -368,7 +385,8 @@ counterexamples above have 15 and 16 nodes. RoleWalk is also local, which
   sources of a directed $K_(2, 2)$ ($G'$). For every $L$, with or without
   curvature, $u$ gets the same out- and in-walk embedding in $G$ and $G'$;
   but $e_u^top H_+ H_-$ has values $(2 \/ 3, 1 \/ 6, 1 \/ 6)$ in $G$ and
-  $(5 \/ 9, 2 \/ 9, 1 \/ 9, 1 \/ 9)$ in $G'$, so the mixed probes separate them.
+  $(5 \/ 9, 2 \/ 9, 1 \/ 9, 1 \/ 9)$ in $G'$; at $theta = 1$ (in the default
+  grid) $op("Re") phi$ is $-0.2418$ and $-0.1873$, so the mixed probes separate them.
 ] <prop-mixed>
 #proof[
   Out-walk: $u$ keeps $1 \/ 3$ and sends $1 \/ 3$ to each sink, where it
@@ -405,8 +423,9 @@ its $1 \/ n$, it reaches 0.455 on airport transfer, against 0.488 for
 RoleWalk (@tab-airport-transfer).
 
 #prop(name: "cost")[
-  With pruning, each row of each power keeps at most $1 \/ "tol"$ entries,
-  so step $w$ costs $O(sum_u sum_(j in "supp" p^(w-1)_u) (d_j + 1))$ with
+  With threshold pruning (no budget), each row of each power after the
+  first keeps at most $1 \/ "tol"$ entries (the first step keeps all
+  $d_u + 1$; a budget can keep any number), so step $w$ costs $O(sum_u sum_(j in "supp" p^(w-1)_u) (d_j + 1))$ with
   $|"supp" p^(w-1)_u| <= min(|B_(w-1) (u)|, 1 \/ "tol")$; the
   characteristic function adds $O(m dot "nnz")$, the layers $O("nnz")$. As
   $kappa(x, y) = (c_(x y) + 2) \/ (max(d_x, d_y) + 1)$ with $c_(x y)$ the
@@ -425,10 +444,14 @@ RoleWalk (@tab-airport-transfer).
 
 
 #prop(name: "certified pruning")[
-  Without curvature and for $L <= 3$, let $hat(X)_u$ be computed with
-  pruning and $r^w_u$ the mass row $u$ misses at step $w$. Then
+  For one walk direction, without curvature or mixed probes, $L <= 3$ and
+  in exact arithmetic, let $hat(X)_u$ be computed with pruning and $r^w_u$
+  the mass row $u$ misses at step $w$. Then
   $ norm(X_u - hat(X)_u)_2 <= sqrt(5) norm(Theta)_2 (sum_(w <= L) (r^w_u)^2)^(1\/2), $
-  so with a budget $delta$, $norm(X_u - hat(X)_u)_2 <= sqrt(5 L) norm(Theta)_2 delta$.
+  so with a budget $delta$, $norm(X_u - hat(X)_u)_2 <= sqrt(5 L) norm(Theta)_2 delta$
+  ($sqrt(10 L) norm(Theta)_2 delta$ for the two directions of a directed
+  graph). Mixed probes with missing masses $r_beta$ add
+  $4 norm(Theta)_2^2 sum_beta r_beta^2$ to the squared bound.
 ] <prop-prune>
 #proof[
   Propagation and deletion keep entries non-negative, so the pruned row
@@ -444,7 +467,15 @@ RoleWalk (@tab-airport-transfer).
   squares over blocks and steps gives the bound; a budget enforces
   $r^w_u <= delta$, since propagation by a stochastic matrix keeps the
   missing mass and a row only drops entries while it stays below $delta$.
+  Directions are orthogonal blocks; a mixed probe is a characteristic
+  function without layers, hence $2 norm(Theta)_2 r_beta$.
 ]
+
+The bound is a posteriori without a budget ($r^w_u <= 1$) and a priori with
+one; it is absolute in feature space ($norm(Theta)_2 approx 125$, so about
+24 at $delta = 0.05$, $L = 3$), not a guarantee on downstream accuracy.
+Floating-point evaluation adds its own error.
+
 
 = Experiments
 
@@ -460,7 +491,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #let note(m, k) = [#m#box(width: 0pt)[#super[#k]]]
 #figure(caption: [Properties, checked against each paper: #Y yes, #N no, #P partial.])[
   #table(columns: 8, align: (left,) + (center,) * 7,
-    [], [Transfer], [Directed], [Weighted], [No training], [Online], [Deterministic], [Time (USA)],
+    [], [Local, fixed coords], [Directed], [Weighted], [No training], [Online], [Deterministic], [Time (USA)],
     [*RoleWalk*], Y, Y, Y, Y, Y, Y, [0.2 s],
     [struc2vec], N, note(N, "a"), note(N, "a"), N, N, N, [564 s],
     [GraphWave], note(N, "c"), P, Y, Y, N, Y, [18 s],
@@ -472,7 +503,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #super[c] Scale chosen from the spectrum and $1 \/ n$ factor (@prop-graphwave). "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder. #todo[verify RESD, ReFeX, RWSE rows]]
 ] <tab-props>
 
-#figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: GraphWave with fixed scales and no $1 \/ n$. `roles.csv`, `roles_gw.csv`, `struc2vec_runs.csv`.])[
+#figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The random-walk heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: fixed scales and no $1 \/ n$, but a random-walk rather than GraphWave's spectral heat kernel. `roles.csv`, `roles_gw.csv`, `struc2vec_runs.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film#super[\*]],
     [*RoleWalk*], [0.743], [0.583], [#underline[0.657]], [*0.860*], [*0.487*], [0.569],
@@ -481,7 +512,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [RESD], [0.728], [0.544], [0.653], [0.857], [0.476], [0.563],
     [GraphWave], [*0.769*], [0.561], [0.587], [*0.860*], [0.481], [–],
     [GraphWave, no $1 \/ n$], [*0.769*], [0.560], [0.587], [*0.860*], [0.481], [–],
-    [Heat-kernel CF, fixed scales], [#underline[0.750]], [*0.598*], [0.633], [#underline[0.859]], [0.484], [#todo[…]],
+    [Random-walk heat-kernel CF], [#underline[0.750]], [*0.598*], [0.633], [#underline[0.859]], [0.484], [#todo[…]],
     [ReFeX], [0.691], [0.576], [0.622], [0.851], [0.478], [0.579],
     [Role2Vec], [0.476], [0.366], [0.562], [0.844], [0.399], [*0.743*],
     [RWSE], [0.711], [0.572], [0.517], [0.855], [0.363], [0.450],
@@ -499,12 +530,12 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over the 6 networks, and over the 3 smallest (446–2,101 nodes), the only ones struc2vec runs on. `roles.csv`.])[
   #table(columns: 5, align: (left,) + (center,) * 4,
     [], [Bots (6)], [Admins (6)], [Bots (3)], [Admins (3)],
-    [RoleWalk], [*0.129*], [*0.324*], [*0.179*], [#underline[0.356]],
-    [RoleWalk + curv.], [#underline[0.121]], [#underline[0.322]], [0.162], [#underline[0.356]],
+    [RoleWalk], [*0.129*], [*0.324*], [*0.179*], [0.356],
+    [RoleWalk + curv.], [#underline[0.121]], [#underline[0.322]], [0.162], [0.356],
     [struc2vec], [–], [–], [0.146], [*0.391*],
     [GraphWave], [0.115], [0.298], [0.163], [0.341],
     [RESD], [0.114], [0.254], [0.158], [0.334],
-    [ReFeX], [0.101], [0.299], [0.161], [0.375],
+    [ReFeX], [0.101], [0.299], [0.161], [#underline[0.375]],
     [Role2Vec], [0.119], [0.016], [0.158], [0.041],
     [RWSE], [0.118], [0.297], [#underline[0.178]], [0.309],
     table.hline(stroke: 0.4pt),
@@ -533,7 +564,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   )
 ] <tab-directed>
 
-#figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa.csv`, `roles_rfa_new.csv`, `roles_rfa_mixed.csv`.])[
+#figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate; signs dropped, repeated votes merged, unweighted). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa.csv`, `roles_rfa_new.csv`, `roles_rfa_mixed.csv`.])[
   #table(columns: 4, align: (left, center, center, center),
     [], [A: elected], [B: 3 classes], [Time],
     [*RoleWalk + curv. + mixed*], [*0.827*], [*0.944*], [7 s],
@@ -541,7 +572,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [RoleWalk + curv.], [#underline[0.823]], [#underline[0.943]], [5 s],
     [RoleWalk], [0.808], [0.938], [4 s],
     [RoleWalk, undirected], [0.791], [0.863], [],
-    [RoleWalk + curv., undirected], [#underline[0.814]], [0.900], [],
+    [RoleWalk + curv., undirected], [0.814], [0.900], [],
     [RESD], [0.798], [0.843], [68 s],
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
@@ -554,7 +585,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[struc2vec and GraphWave do not run at this size.]
 ] <tab-rfa>
 
-#figure(caption: [Expressiveness: pairs told apart. Every set is 1-WL-indistinguishable. No false difference on random relabellings. `expressiveness.csv`.])[
+#figure(caption: [Expressiveness: pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Atlas ≤ 7 (20)], [Regular (3,181)], [CSL (10 cl.)], [Decalin / bicyc.], [$2 C_3$ / $C_6$], [SRG pair#super[\*]],
     [*RoleWalk (3 steps)*], [*20*], [*3,181*], [#underline[6]], [yes], [yes], [no],
@@ -653,7 +684,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 
 == Geometry: moments rather than integrated characteristic functions
 
-#figure(caption: [Ways to add local geometry. Anything that depends on graph size (degree marks, counting bounds) hurts transfer.])[
+#figure(caption: [Ways to add local geometry (ablation runs: may differ from the main tables in the third decimal). Here, degree marks and counting bounds hurt transfer.])[
   #table(columns: 5, align: (left,) + (center,) * 4,
     [], [Airports], [Transfer], [Motifs (varied / houses)], [Directed acc.],
     [No geometry], [0.656], [0.445], [0.744 / 0.733], [0.678],
@@ -661,7 +692,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [\+ layers, one CF per layer], [0.654], [0.424], [#underline[0.751] / 0.742], [0.695],
     [\+ degree marks (joint CF)], [0.65–0.67], [0.34–0.36], [–], [–],
     [\+ curvature, counting bound], [#underline[0.667]], [0.388], [*0.754* / *0.767*], [#underline[0.721]],
-    [\+ curvature, probabilistic (moments)], [*0.669*], [0.470], [0.725 / 0.742], [0.712],
+    [\+ curvature, probabilistic (moments)], [*0.668*], [0.470], [0.725 / 0.742], [0.712],
     [\+ curvature, exact Ollivier-Ricci], [0.662], [*0.494*], [0.746 / 0.750], [*0.743*],
     [\+ curvature, integrated CF], [0.663], [0.400], [#underline[0.751] / 0.750], [0.697],
   )
@@ -745,14 +776,14 @@ Ward, nearest neighbours), not for the classification tables.
 No method predicts classes 0–2 clearly above the majority class; edge
 homophily is 0.28, below the 0.32 expected from random labels with the
 same (degree-weighted) class proportions. Role2Vec's lead on class 3 is
-consistent with walk co-occurrence, i.e. position, which an
-automorphism-invariant embedding cannot use; we read Film as a node-type
-task rather than a role benchmark.
+consistent with walk co-occurrence, i.e. position, a hypothesis we have
+not tested (a node-ID permutation check would); we read Film as a
+node-type task rather than a role benchmark.
 
 = Limitations
 
 - Walk statistics cannot separate distance-regular graphs with equal arrays (@prop-drg), most CFI pairs (3 of 100 with 5 steps), or graphs whose balls coincide (locality); without curvature, some nodes separated by 1-WL are confused (@prop-wl).
-- Without a mass budget, pruning error is not bounded on hubs (@sec-pruning); the budget costs time on hub-heavy graphs.
+- Without a mass budget, the pruning certificate is only a posteriori and large on hubs (@sec-pruning); the budget costs time on hub-heavy graphs, and has no support cap.
 - ReFeX is faster (5× at a million nodes) and wins on noisy synthetic directed motifs in supervised accuracy and on $k$-core transfer; a fixed-scale heat-kernel CF matches RoleWalk on two of three airport networks.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.

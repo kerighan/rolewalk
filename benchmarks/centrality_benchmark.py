@@ -45,6 +45,7 @@ from sklearn.model_selection import KFold
 from rolewalk import RoleWalk
 from datasets import generate_varied
 import role_benchmark as rb
+from baselines import RefexSchema, local_stats, topk_layers
 
 warnings.filterwarnings("ignore")
 
@@ -99,6 +100,8 @@ if "graphwave" in rb.METHODS:
     FEATURES["graphwave"] = rb.graphwave
     FEATURES["graphwave_centered"] = rb.graphwave_centered
 FEATURES["heat_cf"] = rb.heat_cf
+FEATURES["topk_layers"] = topk_layers
+FEATURES["local_stats"] = local_stats
 SELECTED = list(FEATURES)
 
 
@@ -142,6 +145,11 @@ def within_graph(name: str, G: nx.Graph, seed: int):
 def transfer(name: str, G_train: nx.Graph, G_test: nx.Graph, seed: int):
     f_train, f_test = features(G_train), features(G_test)
     y_train, y_test = targets(G_train), targets(G_test)
+    if "refex" in SELECTED:
+        # ReFeX with its feature schema fitted on the training graph
+        schema = RefexSchema().fit(G_train)
+        f_train["refex_frozen"] = schema.transform(G_train)
+        f_test["refex_frozen"] = schema.transform(G_test)
     rows = []
     for target in CENTRALITIES:
         y = y_train[target]

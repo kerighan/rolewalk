@@ -199,3 +199,132 @@ def refex_directed(G: nx.DiGraph, iterations: int = 3, pruning: float = 0.5,
             continue
         onehot.append(pd.get_dummies(q).values)
     return np.hstack(onehot).astype(np.float32)
+
+
+def _walk_layers(G: nx.Graph, walk_len: int = 3):
+    """RoleWalk's layer block (scaled), out- then in-walk if directed."""
+    from rolewalk import RoleWalk
+    model = RoleWalk(walk_len=walk_len)
+    X = model.transform(G)
+    m = model.theta.shape[1]
+    cols, start = [], 0
+    for w in range(1, walk_len + 1):
+        start += 2 * m
+        cols += range(start, start + w + 1)
+        start += w + 1
+    cols = np.array(cols)
+    if G.is_directed():
+        cols = np.r_[cols, cols + X.shape[1] // 2]
+    return X[:, cols]
+
+
+def topk_layers(G: nx.Graph, k: int = 20, walk_len: int = 3, tol: float = 1e-4) -> np.ndarray:
+    """The k largest transition probabilities at each step (zero-padded)
+    instead of the characteristic function, with the same layers: the same
+    number of features as RoleWalk (3 x 20 + 9)."""
+    from sklearn.preprocessing import normalize
+    n = len(G)
+    A = nx.to_scipy_sparse_array(G, nodelist=list(G), format="csr", dtype=np.float64)
+    walks = [A, A.T.tocsr()] if G.is_directed() else [A]
+    feats = []
+    for M in walks:
+        H = normalize(sp.identity(n) + M, norm="l1").tocsr()
+        T = H
+        for w in range(walk_len):
+            if w:
+                T = (T @ H).tocsr()
+                T.data[T.data < tol] = 0
+                T.eliminate_zeros()
+            top = np.zeros((n, k))
+            for i in range(n):
+                row = T.data[T.indptr[i]:T.indptr[i + 1]]
+                if len(row) > k:
+                    row = np.partition(row, -k)[-k:]
+                row = np.sort(row)[::-1]
+                top[i, :len(row)] = row
+            feats.append(top)
+    return np.hstack(feats + [_walk_layers(G, walk_len)])
+
+
+def local_stats(G: nx.Graph) -> np.ndarray:
+    """Compact local statistics, with fixed meaning across graphs: degree,
+    moments of neighbour degrees, triangles, egonet boundary, clustering and
+    return probabilities of the lazy walk at steps 2 and 3 (for each
+    direction if directed)."""
+    from sklearn.preprocessing import normalize
+    n = len(G)
+    A = nx.to_scipy_sparse_array(G, nodelist=list(G), format="csr", dtype=np.float64)
+    A.setdiag(0)
+    A.eliminate_zeros()
+    A.data[:] = 1
+    feats = []
+    for M in ([A, A.T.tocsr()] if G.is_directed() else [A]):
+        deg = np.asarray(M.sum(axis=1)).ravel()
+        logdeg = np.log1p(deg)
+        nbr = M @ logdeg / np.maximum(deg, 1)
+        nbr2 = M @ logdeg ** 2 / np.maximum(deg, 1)
+        nbr_max = np.zeros(n)
+        for i in range(n):
+            js = M.indices[M.indptr[i]:M.indptr[i + 1]]
+            if len(js):
+                nbr_max[i] = logdeg[js].max()
+        H = normalize(sp.identity(n) + M, norm="l1").tocsr()
+        H2 = (H @ H).tocsr()
+        ret2 = np.asarray(H.multiply(H.T).sum(axis=1)).ravel()
+        ret3 = np.asarray(H2.multiply(H.T).sum(axis=1)).ravel()
+        feats += [logdeg, nbr, np.sqrt(np.maximum(nbr2 - nbr ** 2, 0)), nbr_max, ret2, ret3]
+    U, base = _base_features(nx.Graph(G.to_undirected()) if G.is_directed() else G)
+    within, total, ratio, _, deg, clustering = base.T
+    triangles = within - deg
+    boundary = total - deg - 2 * within + deg  # degrees in the egonet minus inner edges twice
+    feats += [np.log1p(triangles), np.log1p(np.maximum(boundary, 0)), clustering, ratio]
+    return np.column_stack(feats)
+
+
+class RefexSchema:
+    """ReFeX whose recursive feature selection, scaling and quantile bins
+    are fitted on one graph and frozen, so that another graph gets the same
+    features with the same meaning (needed to transfer a model)."""
+
+    def __init__(self, iterations: int = 3, pruning: float = 0.5, bins: int = 4):
+        self.iterations, self.pruning, self.bins = iterations, pruning, bins
+
+    def _rounds(self, G, keeps=None):
+        A, features = _base_features(G)
+        deg = np.asarray(A.sum(axis=1)).ravel()
+        rounds, chosen = [features], []
+        for r in range(self.iterations):
+            old = rounds[-1]
+            total = A @ old
+            mean = total / np.maximum(deg, 1)[:, None]
+            new = np.column_stack([c for pair in zip(total.T, mean.T) for c in pair])
+            if keeps is None:
+                with np.errstate(divide="ignore", invalid="ignore"):
+                    corr = np.corrcoef(old.T, new.T)[:old.shape[1], old.shape[1]:]
+                keep = ~(np.abs(np.nan_to_num(corr)) > self.pruning).any(axis=0)
+                if not keep.any():
+                    break
+                chosen.append(keep)
+            else:
+                if r >= len(keeps):
+                    break
+                keep = keeps[r]
+            rounds.append(new[:, keep])
+        return np.hstack(rounds), chosen
+
+    def fit(self, G):
+        X, self.keeps_ = self._rounds(G)
+        self.lo_, self.hi_ = X.min(), X.max()
+        X = (X - self.lo_) / (self.hi_ - self.lo_)
+        self.edges_ = [np.unique(np.quantile(c, np.linspace(0, 1, self.bins + 1)[1:-1]))
+                       for c in X.T]
+        return self
+
+    def transform(self, G):
+        X, _ = self._rounds(G, self.keeps_)
+        X = (X - self.lo_) / (self.hi_ - self.lo_)
+        out = []
+        for c, e in zip(X.T, self.edges_):
+            b = np.digitize(c, e)
+            out.append(np.eye(len(e) + 1)[b])
+        return np.hstack(out).astype(np.float32)

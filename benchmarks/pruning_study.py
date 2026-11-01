@@ -5,8 +5,8 @@ against the exact one (tol = 0), per block (characteristic function,
 layers), and accuracy of the usual classifier (50 splits). Stress test: the
 centre of a star with many leaves, whose step-2 leaf mass is dropped although
 half of it returns to the centre at step 3; and a hub in a Barabasi-Albert
-graph. Each threshold is also run with a 5% budget of missing mass per row
-(``max_missing``).
+graph. Thresholds 1e-4 and 1e-3 are also run with budgets of 1%, 5% and
+10% of missing mass per row (``max_missing``).
 
     python pruning_study.py
 """
@@ -27,7 +27,7 @@ from role_benchmark import within
 
 TOLS = (0.0, 1e-5, 1e-4, 1e-3)
 # (tol, max_missing): threshold pruning, then with a 5% mass budget
-CONFIGS = [(t, None) for t in TOLS] + [(1e-4, 0.05), (1e-3, 0.05)]
+CONFIGS = [(t, None) for t in TOLS] + [(t, b) for t in (1e-4, 1e-3) for b in (0.01, 0.05, 0.1)]
 
 
 def blocks(model):
@@ -73,7 +73,22 @@ def main():
                 half = X.shape[1] // 2
                 cf, layers = np.r_[cf, cf + half], np.r_[layers, layers + half]
             keep = y >= 0
+            # certificate: missing mass of each step, read from the layers
+            norm = np.linalg.norm(model.theta)
+            r2 = np.zeros(len(X))
+            for half in ([0, X.shape[1] // 2] if G.is_directed() else [0]):
+                start = half
+                for w in range(1, model.walk_len + 1):
+                    start += 2 * model.theta.shape[1]
+                    r = 1 - X[:, start:start + w + 1].sum(axis=1) / norm
+                    r2 += np.maximum(r, 0) ** 2
+                    start += w + 1
+            cert = np.sqrt(5 * r2) * norm
+            err = np.linalg.norm(X - exact, axis=1)
+            ratio = np.where(cert > 1e-6, err / np.maximum(cert, 1e-12), 0)
             rows.append({
+                "max_missing_mass": float(np.sqrt(r2).max()),
+                "max_err_over_certificate": float(ratio.max()),
                 "dataset": name, "n_nodes": len(G), "tol": tol,
                 "max_missing": budget, "time": dt,
                 "err_cf_median": rel_error(X[:, cf], exact[:, cf])[0],

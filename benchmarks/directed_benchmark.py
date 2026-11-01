@@ -44,6 +44,8 @@ DIRECTED = {
     "refex_directed": rb.refex_directed,
     "rolewalk_mixed": rb.rolewalk_mixed,
     "rolewalk_curvature_mixed": rb.rolewalk_curvature_mixed,
+    "topk_layers": rb.topk_layers,
+    "local_stats": rb.local_stats,
     "degree": degree_in_out,
 }
 UNDIRECTED = {

@@ -22,8 +22,10 @@ from role_benchmark import DATASETS, embed, within
 
 REFERENCES = ("rolewalk", "rolewalk_curvature")
 OTHERS = ("graphwave", "graphwave_centered", "heat_cf", "resd", "refex",
-          "role2vec", "rwse", "degree")
-NAMES = ("brazil", "europe", "usa", "reality-call", "actor", "rfa-candidates")
+          "refex_directed", "role2vec", "rwse", "topk_layers", "local_stats",
+          "rolewalk_mixed", "rolewalk_curvature_mixed", "degree")
+NAMES = ("brazil", "europe", "usa", "reality-call", "actor", "film",
+         "rfa-candidates", "wiki-rfa")
 SPLITS = 50
 
 

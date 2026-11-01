@@ -53,7 +53,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from rolewalk import RoleWalk
-from baselines import heat_cf, refex, refex_directed, resd
+from baselines import (RefexSchema, heat_cf, local_stats, refex, refex_directed,
+                       resd, topk_layers)
 from datasets import DATA_DIR, load_airports, load_rone, load_wiki_rfa
 
 try:
@@ -80,7 +81,8 @@ DATASETS = {
 }
 # methods that read edge directions; the others get the undirected graph
 DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree",
-            "rwse_inout", "refex_directed", "rolewalk_mixed", "rolewalk_curvature_mixed"}
+            "rwse_inout", "refex_directed", "rolewalk_mixed", "rolewalk_curvature_mixed",
+            "topk_layers", "local_stats"}
 
 
 def rolewalk(G: nx.Graph) -> np.ndarray:
@@ -173,6 +175,8 @@ METHODS: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
     "rwse_inout": rwse_inout,
     "refex_directed": refex_directed,
     "rolewalk_mixed": rolewalk_mixed,
+    "topk_layers": topk_layers,
+    "local_stats": local_stats,
     "rolewalk_curvature_mixed": rolewalk_curvature_mixed,
 }
 if GraphWave is not None:
@@ -189,7 +193,8 @@ else:  # pragma: no cover
 # embeddings defined graph by graph (word2vec spaces, arbitrary axes) cannot
 # be compared across networks
 INDUCTIVE = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse",
-             "degree", "graphwave", "graphwave_centered", "heat_cf"}
+             "degree", "graphwave", "graphwave_centered", "heat_cf", "topk_layers",
+             "local_stats"}
 # struc2vec took 6 minutes on 1,190 nodes and grows faster than linearly
 MAX_NODES = {"struc2vec": 3000, "graphwave": 10000, "graphwave_centered": 10000}  # graphwave: dense n x n
 K = (5, 10, 25, 50)
@@ -287,6 +292,20 @@ def main():
 
     if args.transfer:
         names = [n for n in args.datasets if DATASETS[n][1] == "clf"]
+        # ReFeX with its feature schema fitted on the source graph
+        for source in names:
+            G, y = graphs[source]
+            schema = RefexSchema().fit(G)
+            clf = classifier().fit(schema.transform(G)[y >= 0], y[y >= 0])
+            for target in names:
+                if target == source:
+                    continue
+                Gt, yt = graphs[target]
+                y_hat = clf.predict(schema.transform(Gt)[yt >= 0])
+                yt = yt[yt >= 0]
+                rows.append({"method": "refex_frozen", "train": source, "test": target,
+                             "accuracy": accuracy_score(yt, y_hat),
+                             "macro_f1": f1_score(yt, y_hat, average="macro")})
         for method in args.methods:
             if method not in INDUCTIVE:
                 continue
