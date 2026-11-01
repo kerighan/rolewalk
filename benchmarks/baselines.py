@@ -120,3 +120,82 @@ def resd(G: nx.Graph, dims=(128, 64), epochs: int = 100, batch_size: int = 32,
     with torch.no_grad():
         # the RESD code returns a sample of the posterior, not its mean
         return encode(X).numpy()
+
+
+def heat_cf(G: nx.Graph, times=(1.0, 2.0, 3.0), theta=None,
+            block: int = 512) -> np.ndarray:
+    """GraphWave with fixed scales: the characteristic function of RoleWalk
+    (centred, summed over nodes, same frequencies) applied to the rows of the
+    continuous-time random walk exp(s (P - I)) instead of lazy-walk powers.
+
+    No 1 / n and no scale read from the spectrum, so coordinates do not
+    depend on the size or spectrum of the graph; but the heat kernel has full
+    support, so the embedding is not local. ``s`` is the expected number of
+    jumps, matching the walk steps of RoleWalk.
+    """
+    from scipy.sparse.linalg import expm_multiply
+
+    if theta is None:
+        from rolewalk import RoleWalk
+        theta = RoleWalk().theta
+    theta = np.asarray(theta, dtype=np.float64).ravel()
+    n = len(G)
+    A = nx.to_scipy_sparse_array(G, nodelist=range(n), format="csr", dtype=np.float64)
+    deg = np.asarray(A.sum(axis=1)).ravel()
+    P = sp.diags(1 / np.maximum(deg, 1)) @ A + sp.diags((deg == 0).astype(float))
+    QT = (P - sp.identity(n)).T.tocsr()
+    out = np.zeros((n, len(times) * 2 * len(theta)), dtype=np.float32)
+    for start in range(0, n, block):
+        stop = min(start + block, n)
+        E = sp.identity(n, format="csc")[:, start:stop].toarray()
+        feats = []
+        for s in times:
+            V = expm_multiply(s * QT, E)  # column u = row u of exp(s (P - I))
+            V[V < 0] = 0  # round-off
+            angles = V[:, :, None] * theta
+            feats += [(np.cos(angles) - 1).sum(0), np.sin(angles).sum(0)]
+        out[start:stop] = np.hstack(feats)
+    return out
+
+
+def refex_directed(G: nx.DiGraph, iterations: int = 3, pruning: float = 0.5,
+                   bins: int = 4) -> np.ndarray:
+    """ReFeX with directions: in-, out- and mutual degrees next to the
+    egonet features of the symmetrised graph, then recursive sums and means
+    over out-neighbours and over in-neighbours (same pruning and binning)."""
+    n = len(G)
+    A = nx.to_scipy_sparse_array(G, nodelist=range(n), format="csr")
+    A.setdiag(0)
+    A.eliminate_zeros()
+    A.data[:] = 1
+    out_deg = np.asarray(A.sum(axis=1)).ravel()
+    in_deg = np.asarray(A.sum(axis=0)).ravel()
+    mutual = np.asarray(A.multiply(A.T).sum(axis=1)).ravel()
+    _, undirected = _base_features(nx.Graph(G.to_undirected()))
+    features = np.column_stack([in_deg, out_deg, mutual, undirected])
+    AT = A.T.tocsr()
+    rounds = [features]
+    for _ in range(iterations):
+        old = rounds[-1]
+        new = []
+        for M, deg in ((A, out_deg), (AT, in_deg)):
+            total = M @ old
+            mean = total / np.maximum(deg, 1)[:, None]
+            new += [c for pair in zip(total.T, mean.T) for c in pair]
+        new = np.column_stack(new)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            corr = np.corrcoef(old.T, new.T)[:old.shape[1], old.shape[1]:]
+        keep = ~(np.abs(np.nan_to_num(corr)) > pruning).any(axis=0)
+        if not keep.any():
+            break
+        rounds.append(new[:, keep])
+    X = np.hstack(rounds)
+    X = X / (X.max() - X.min())
+    onehot = []
+    for column in X.T:
+        try:
+            q = pd.qcut(column, bins, labels=False, duplicates="drop")
+        except ValueError:
+            continue
+        onehot.append(pd.get_dummies(q).values)
+    return np.hstack(onehot).astype(np.float32)

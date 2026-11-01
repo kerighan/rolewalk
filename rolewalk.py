@@ -31,9 +31,11 @@ def compute_iter(T, theta, aggregate="sum", chunk_size=2**20):
         stop = min(max(stop, start + 1), n)
         a, b = indptr[start], indptr[stop]
         angles = T.data[a:b, None].astype(np.float32) * theta
-        cos = np.cos(angles)
         if aggregate == "sum":
-            cos -= 1
+            # cos x - 1, without cancellation for small angles
+            cos = -2 * np.sin(angles / 2) ** 2
+        else:
+            cos = np.cos(angles)
         # sums each row's block of nonzeros
         rows = csr_matrix(
             (np.ones(b - a, dtype=np.float32), np.arange(b - a),
@@ -47,8 +49,24 @@ def compute_iter(T, theta, aggregate="sum", chunk_size=2**20):
     return out
 
 
+def _prune(T, tol, max_missing=None):
+    """Drop entries below ``tol``; with ``max_missing``, only in rows whose
+    missing mass (from earlier pruning, plus these entries) stays below it."""
+    small = T.data < tol
+    if max_missing is not None:
+        n_rows = T.shape[0]
+        row = np.repeat(np.arange(n_rows), np.diff(T.indptr))
+        dropped = np.bincount(row, T.data * small, minlength=n_rows)
+        missing = 1 - np.bincount(row, T.data, minlength=n_rows) + dropped
+        small &= (missing <= max_missing)[row]
+    T.data[small] = 0
+    T.eliminate_zeros()
+    return T
+
+
 def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
-                      rows=None, shells=False, curvature=None):
+                      rows=None, shells=False, curvature=None,
+                      max_missing=None):
     """Stack ``compute_iter`` over the first ``walk_len`` powers of ``H``.
 
     With ``rows``, only those rows of the powers are computed, which only
@@ -57,14 +75,18 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     Probabilities below ``tol`` are dropped after each power, which keeps
     the powers sparse around hubs. Their mass is exactly what a row is
     missing from 1, and since ``exp(i theta p) - 1 ~ i theta p`` for small
-    p, the "sum" features add it back to first order.
+    p, the "sum" features add it back to first order. Dropped mass can
+    gather again at the next step (around a hub, many small probabilities
+    lead back to it): with ``max_missing``, a row only drops entries while
+    its missing mass stays below that budget, and keeps them otherwise.
 
     With ``shells``, each step also gives the probability mass of every
     "onion layer": nodes at distance 0, 1, ..., w of the start after w steps.
     Mass that stays in inner layers reveals walks that loop back, which the
     characteristic function alone cannot place. A node lies within k steps
     when it is in the support of the k-th power, so the layers come from the
-    powers already computed. Layer masses are multiplied by ``||theta||``:
+    powers already computed, read before pruning, so that layers are exact
+    up to three steps. Layer masses are multiplied by ``||theta||``:
     for a small probability, the characteristic function is about
     ``i theta p``, so this puts a unit of mass on the same scale as in the
     characteristic function. Unscaled, they weigh ~0.02% of the variance and
@@ -85,9 +107,12 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
         if w > 0:
             # the densest power, so never compute one past the last step
             T = T @ H
-            if tol:
-                T.data[T.data < tol] = 0
-                T.eliminate_zeros()
+        if shells and w < walk_len - 1:
+            # support before pruning: nodes within w + 1 steps
+            S = T.copy()
+            S.data[:] = 1
+        if w > 0 and tol:
+            T = _prune(T, tol, max_missing)
         phi = compute_iter(T, theta, aggregate)
         if tol and aggregate == "sum":
             pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
@@ -100,8 +125,6 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
             layers = np.diff(np.column_stack(within), prepend=0, axis=1)
             features.append(scale * layers.astype(np.float32))
             if w < walk_len - 1:
-                S = T.copy()
-                S.data[:] = 1
                 supports.append(S)
         if curvature is not None:
             mean = T @ curvature
@@ -123,17 +146,25 @@ def node_curvature(A, nodes=None):
 
     Directions are ignored. With ``nodes`` (indices), only those nodes get a
     curvature; the others are 0.
+
+    The two closed neighbourhoods are uniform and share the
+    ``c(x, y) + 2`` nodes x, y and their common neighbours, so the overlap
+    is ``(c(x, y) + 2) / (max(d_x, d_y) + 1)``: one sparse product counts
+    the common neighbours of every edge.
     """
     n = A.shape[0]
     U = ((A + A.T) > 0).astype(np.float64).tocsr()
     U.setdiag(0)
     U.eliminate_zeros()
-    H = normalize(identity(n) + U, norm="l1").tocsr()
-    E = (U if nodes is None else U[nodes]).tocoo()
-    x = E.row if nodes is None else np.asarray(nodes)[E.row]
-    overlap = np.asarray(H[x].minimum(H[E.col]).sum(axis=1)).ravel()
     deg = np.asarray(U.sum(axis=1)).ravel()
-    kappa = np.bincount(x, overlap, minlength=n)
+    rows = U if nodes is None else U[nodes]
+    common = (rows @ U).multiply(rows).tocoo()  # c(x, y) on the edges x-y
+    E = rows.tocoo()  # edges with c = 0 are absent from ``common``
+    x = E.row if nodes is None else np.asarray(nodes)[E.row]
+    overlap = 2 / (np.maximum(deg[x], deg[E.col]) + 1)
+    cx = common.row if nodes is None else np.asarray(nodes)[common.row]
+    extra = common.data / (np.maximum(deg[cx], deg[common.col]) + 1)
+    kappa = np.bincount(x, overlap, minlength=n) + np.bincount(cx, extra, minlength=n)
     return kappa / np.maximum(deg, 1)
 
 
@@ -185,6 +216,21 @@ class RoleWalk:
         at each step, of the curvature of the nodes it lands on (see
         :func:`node_curvature`), from tree-like (hyperbolic) to clique-like
         (spherical). Adds ``2 * walk_len`` features.
+    mixed : bool
+        Directed graphs only: also describe the walks that take one step
+        forward then one back (``H_out H_in``: nodes sharing targets with the
+        start) and the converse (shared sources), by their characteristic
+        functions. Pure out- and in-walks miss these: a source pointing to
+        two sinks and a source of a directed K(2, 2) have the same out- and
+        in-walks. Adds ``4 * n_samples`` features.
+    max_missing : float, optional
+        Budget of probability mass a row may lose to pruning. Without it,
+        a hub's step-2 row can lose most of its mass, which returns to the
+        hub at step 3. Keeping it costs more time around hubs.
+    block_work : float
+        Rows are embedded in blocks of about this many neighbour visits for
+        the first two steps, which bounds memory on large graphs. Results do
+        not depend on it.
     embedding_dim : int, optional
         If set, randomly project the embedding to this many dimensions. Low
         values lose role information: keep None except for plotting.
@@ -205,7 +251,7 @@ class RoleWalk:
         self, walk_len=3, n_samples=10, bounds=None,
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
         aggregate="sum", tol=1e-4, shells=True, curvature=False,
-        role_names=None
+        role_names=None, max_missing=None, block_work=5e7, mixed=False
     ):
         if theta_scheme not in THETA_SCHEMES:
             raise ValueError(
@@ -227,6 +273,9 @@ class RoleWalk:
         self.tol = tol
         self.shells = shells
         self.curvature = curvature
+        self.max_missing = max_missing
+        self.mixed = mixed
+        self.block_work = block_work
         self.embedding_dim = embedding_dim
 
         # timesteps
@@ -264,12 +313,14 @@ class RoleWalk:
                     reach |= np.asarray(U.T @ reach).ravel() > 0
                 near = np.flatnonzero(reach)
             kappa = node_curvature(A, near)
-        args = (self.theta, self.walk_len, self.aggregate, self.tol, rows,
-                self.shells, kappa)
-        X = compute_embedding(H, *args)
+        walks = [H]
         if nx.is_directed(G):
-            H_T = normalize(identity(n) + A.T, norm="l1").tocsr()
-            X = np.hstack([X, compute_embedding(H_T, *args)])
+            walks.append(normalize(identity(n) + A.T, norm="l1").tocsr())
+        X = np.hstack([self._embed_blocks(W, rows, kappa) for W in walks])
+        if self.mixed and len(walks) == 2:
+            H_out, H_in = walks
+            X = np.hstack([X, self._mixed_blocks(H_out, H_in, rows),
+                           self._mixed_blocks(H_in, H_out, rows)])
 
         # random projection
         if self.embedding_dim is not None:
@@ -279,6 +330,40 @@ class RoleWalk:
             Q, _ = np.linalg.qr(U)
             X = X @ Q
         return X
+
+    def _row_blocks(self, H, rows):
+        """Blocks of rows with about ``block_work`` neighbour visits for the
+        first two steps each."""
+        if rows is None:
+            rows = np.arange(H.shape[0])
+        B = H.copy()
+        B.data[:] = 1
+        work = (B @ np.diff(H.indptr).astype(np.float64))[rows]
+        cuts = np.searchsorted(np.cumsum(work),
+                               np.arange(self.block_work, work.sum(), self.block_work))
+        return np.split(rows, np.unique(cuts[(cuts > 0) & (cuts < len(rows))]))
+
+    def _mixed_blocks(self, first, second, rows):
+        """Characteristic function of the rows of ``first @ second``."""
+        out = []
+        for block in self._row_blocks(first, rows):
+            T = (first[block] @ second).tocsr()
+            if self.tol:
+                T = _prune(T, self.tol, self.max_missing)
+            phi = compute_iter(T, self.theta, self.aggregate)
+            if self.tol and self.aggregate == "sum":
+                pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
+                phi[:, self.theta.shape[1]:] += pruned[:, None] * self.theta
+            out.append(phi)
+        return np.vstack(out)
+
+    def _embed_blocks(self, H, rows, kappa):
+        """compute_embedding over blocks of rows of similar expansion work."""
+        return np.vstack([
+            compute_embedding(H, self.theta, self.walk_len, self.aggregate,
+                              self.tol, block, self.shells, kappa,
+                              self.max_missing)
+            for block in self._row_blocks(H, rows)])
 
     def fit(
         self, G, n_roles=None, max_n_roles=40, tolerance=0.05,
@@ -374,7 +459,8 @@ class RoleWalk:
             "random_state": self.random_state,
             "theta_scheme": self.theta_scheme, "aggregate": self.aggregate,
             "tol": self.tol, "shells": self.shells,
-            "curvature": self.curvature,
+            "curvature": self.curvature, "max_missing": self.max_missing,
+            "mixed": self.mixed,
             "role_names": self.role_names,
         }
         arrays = {"theta": self.theta}

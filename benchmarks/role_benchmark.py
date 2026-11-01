@@ -53,7 +53,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from rolewalk import RoleWalk
-from baselines import refex, resd
+from baselines import heat_cf, refex, refex_directed, resd
 from datasets import DATA_DIR, load_airports, load_rone, load_wiki_rfa
 
 try:
@@ -79,7 +79,8 @@ DATASETS = {
                        "clf"),
 }
 # methods that read edge directions; the others get the undirected graph
-DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree"}
+DIRECTED = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse", "degree",
+            "rwse_inout", "refex_directed", "rolewalk_mixed", "rolewalk_curvature_mixed"}
 
 
 def rolewalk(G: nx.Graph) -> np.ndarray:
@@ -88,6 +89,14 @@ def rolewalk(G: nx.Graph) -> np.ndarray:
 
 def rolewalk_curvature(G: nx.Graph) -> np.ndarray:
     return RoleWalk(walk_len=3, curvature=True).transform(G)
+
+
+def rolewalk_mixed(G: nx.Graph) -> np.ndarray:
+    return RoleWalk(walk_len=3, mixed=True).transform(G)
+
+
+def rolewalk_curvature_mixed(G: nx.Graph) -> np.ndarray:
+    return RoleWalk(walk_len=3, curvature=True, mixed=True).transform(G)
 
 
 def rolewalk_noshells(G: nx.Graph) -> np.ndarray:
@@ -108,6 +117,13 @@ def rwse(G: nx.Graph, k: int = 16) -> np.ndarray:
     return np.column_stack(features)
 
 
+def rwse_inout(G: nx.Graph, k: int = 16) -> np.ndarray:
+    """RWSE on the out-walk and on the in-walk (the same twice if undirected)."""
+    if not G.is_directed():
+        return rwse(G, k)
+    return np.hstack([rwse(G, k), rwse(G.reverse(copy=True), k)])
+
+
 def degree(G: nx.Graph) -> np.ndarray:
     if G.is_directed():
         return np.log1p([[G.in_degree(v), G.out_degree(v)] for v in range(len(G))])
@@ -118,6 +134,13 @@ def graphwave(G: nx.Graph) -> np.ndarray:
     model = GraphWave()
     model.fit(G.copy())  # fit() adds self-loops in place
     return model.get_embedding()
+
+
+def graphwave_centered(G: nx.Graph) -> np.ndarray:
+    """GraphWave without its 1 / n: n (chi - 1), the sum form of RoleWalk."""
+    X = graphwave(G)
+    half = X.shape[1] // 2
+    return np.hstack([len(G) * (X[:, :half] - 1), len(G) * X[:, half:]])
 
 
 def role2vec(G: nx.Graph) -> np.ndarray:
@@ -146,9 +169,15 @@ METHODS: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
     "degree": degree,
     "refex": refex,
     "resd": resd,
+    "heat_cf": heat_cf,
+    "rwse_inout": rwse_inout,
+    "refex_directed": refex_directed,
+    "rolewalk_mixed": rolewalk_mixed,
+    "rolewalk_curvature_mixed": rolewalk_curvature_mixed,
 }
 if GraphWave is not None:
     METHODS["graphwave"] = graphwave
+    METHODS["graphwave_centered"] = graphwave_centered
     METHODS["role2vec"] = role2vec
 else:  # pragma: no cover
     warnings.warn("karateclub is unavailable; skipping GraphWave and Role2Vec.")
@@ -160,9 +189,9 @@ else:  # pragma: no cover
 # embeddings defined graph by graph (word2vec spaces, arbitrary axes) cannot
 # be compared across networks
 INDUCTIVE = {"rolewalk", "rolewalk_noshells", "rolewalk_curvature", "rwse",
-             "degree", "graphwave"}
+             "degree", "graphwave", "graphwave_centered", "heat_cf"}
 # struc2vec took 6 minutes on 1,190 nodes and grows faster than linearly
-MAX_NODES = {"struc2vec": 3000, "graphwave": 10000}  # graphwave: dense n x n
+MAX_NODES = {"struc2vec": 3000, "graphwave": 10000, "graphwave_centered": 10000}  # graphwave: dense n x n
 K = (5, 10, 25, 50)
 
 

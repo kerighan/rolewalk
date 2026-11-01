@@ -230,3 +230,63 @@ def test_node_curvature():
     rw = RoleWalk(walk_len=2, n_samples=3)
     np.testing.assert_allclose(X[:, -2] / np.linalg.norm(rw.theta), 1,
                                atol=1e-6)  # mean at step 2
+
+
+def test_node_curvature_matches_overlap():
+    G = nx.powerlaw_cluster_graph(200, 3, 0.4, seed=0)
+    A = nx.to_scipy_sparse_array(G, format="csr")
+    H = normalize(np.eye(len(G)) + A.toarray(), norm="l1")
+    brute = np.zeros(len(G))
+    for x, y in G.edges():
+        overlap = np.minimum(H[x], H[y]).sum()
+        brute[x] += overlap
+        brute[y] += overlap
+    brute /= np.array([G.degree(v) for v in G])
+    np.testing.assert_allclose(node_curvature(A), brute, atol=1e-12)
+    np.testing.assert_allclose(node_curvature(A, [3, 7])[[3, 7]], brute[[3, 7]], atol=1e-12)
+
+
+def test_blocks_do_not_change_embeddings():
+    G = nx.barabasi_albert_graph(500, 3, seed=0)
+    X = RoleWalk(curvature=True).transform(G)
+    Y = RoleWalk(curvature=True, block_work=200).transform(G)
+    np.testing.assert_array_equal(X, Y)
+
+
+def test_max_missing_keeps_hub_rows():
+    # at step 2 every leaf of a large star is below tol, but half the mass
+    # returns to the centre at step 3
+    G = nx.star_graph(20000)
+    exact = RoleWalk(tol=0).transform(G, nodes=[0])
+    pruned = RoleWalk(tol=1e-4).transform(G, nodes=[0])
+    kept = RoleWalk(tol=1e-4, max_missing=0.05).transform(G, nodes=[0])
+    assert np.linalg.norm(pruned - exact) > 0.1 * np.linalg.norm(exact)
+    np.testing.assert_allclose(kept, exact, rtol=1e-4, atol=1e-4)
+
+
+def test_layers_are_nonnegative_with_pruning():
+    G = nx.barabasi_albert_graph(3000, 2, seed=1)
+    model = RoleWalk(walk_len=3)
+    X = model.transform(G)
+    m = model.theta.shape[1]
+    start, layers = 0, []
+    for w in range(1, 4):
+        start += 2 * m
+        layers.append(X[:, start:start + w + 1])
+        start += w + 1
+    assert min(block.min() for block in layers) >= -1e-6
+
+
+def test_mixed_separates_shared_targets():
+    one = nx.DiGraph([(0, 1), (0, 2)])
+    k22 = nx.DiGraph([(0, 1), (0, 2), (3, 1), (3, 2)])
+    for curvature in (False, True):
+        model = RoleWalk(tol=0, curvature=curvature)
+        np.testing.assert_allclose(model.transform(one)[0], model.transform(k22)[0], atol=1e-6)
+    model = RoleWalk(tol=0, mixed=True)
+    X, Y = model.transform(one), model.transform(k22)
+    assert X.shape[1] == RoleWalk(tol=0).transform(one).shape[1] + 4 * 10
+    assert np.abs(X[0] - Y[0]).max() > 1e-2
+    # undirected graphs are unchanged
+    G = nx.karate_club_graph()
+    np.testing.assert_array_equal(RoleWalk(mixed=True).transform(G), RoleWalk().transform(G))

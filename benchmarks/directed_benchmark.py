@@ -40,6 +40,10 @@ DIRECTED = {
     "rolewalk_curvature": rb.rolewalk_curvature,
     "rolewalk_noshells": rb.rolewalk_noshells,
     "rwse": rb.rwse,
+    "rwse_inout": rb.rwse_inout,
+    "refex_directed": rb.refex_directed,
+    "rolewalk_mixed": rb.rolewalk_mixed,
+    "rolewalk_curvature_mixed": rb.rolewalk_curvature_mixed,
     "degree": degree_in_out,
 }
 UNDIRECTED = {

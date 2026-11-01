@@ -19,7 +19,8 @@ Les Misérables...) there are too few nodes to train a regressor on.
 
 With ``--transfer``, the regressor is instead trained on one graph and tested
 on another graph of the same family (different seed), which only works if the
-embedding describes structure the same way across graphs.
+embedding describes structure the same way across graphs; ``--test-scale k``
+makes the test graphs k times larger, at the same mean degree.
 
     python centrality_benchmark.py
     python centrality_benchmark.py --transfer
@@ -47,15 +48,17 @@ import role_benchmark as rb
 
 warnings.filterwarnings("ignore")
 
-GRAPHS: Dict[str, Callable[[int], nx.Graph]] = {
-    "barabasi_albert": lambda s: nx.barabasi_albert_graph(2000, 3, seed=s),
-    "powerlaw_cluster": lambda s: nx.powerlaw_cluster_graph(2000, 3, 0.3, seed=s),
-    "watts_strogatz": lambda s: nx.connected_watts_strogatz_graph(2000, 6, 0.1, seed=s),
-    "sbm": lambda s: nx.stochastic_block_model(
-        [400, 400, 400, 200, 100], np.full((5, 5), 0.0005) + np.diag([0.02, 0.02, 0.02, 0.04, 0.08]),
+# graph families of 2,000 nodes; ``k`` scales the size at fixed mean degree
+GRAPHS: Dict[str, Callable[..., nx.Graph]] = {
+    "barabasi_albert": lambda s, k=1: nx.barabasi_albert_graph(2000 * k, 3, seed=s),
+    "powerlaw_cluster": lambda s, k=1: nx.powerlaw_cluster_graph(2000 * k, 3, 0.3, seed=s),
+    "watts_strogatz": lambda s, k=1: nx.connected_watts_strogatz_graph(2000 * k, 6, 0.1, seed=s),
+    "sbm": lambda s, k=1: nx.stochastic_block_model(
+        [400 * k, 400 * k, 400 * k, 200 * k, 100 * k],
+        (np.full((5, 5), 0.0005) + np.diag([0.02, 0.02, 0.02, 0.04, 0.08])) / k,
         seed=s),
-    "random_geometric": lambda s: nx.random_geometric_graph(2000, 0.04, seed=s),
-    "shapes": lambda s: generate_varied(n_per_shape=20, seed=s)[0],
+    "random_geometric": lambda s, k=1: nx.random_geometric_graph(2000 * k, 0.04 / np.sqrt(k), seed=s),
+    "shapes": lambda s, k=1: generate_varied(n_per_shape=20 * k, seed=s)[0],
 }
 
 def eigenvector(G: nx.Graph) -> dict:
@@ -94,6 +97,8 @@ FEATURES: Dict[str, Callable[[nx.Graph], np.ndarray]] = {
 }
 if "graphwave" in rb.METHODS:
     FEATURES["graphwave"] = rb.graphwave
+    FEATURES["graphwave_centered"] = rb.graphwave_centered
+FEATURES["heat_cf"] = rb.heat_cf
 SELECTED = list(FEATURES)
 
 
@@ -154,6 +159,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--transfer", action="store_true")
     parser.add_argument("--seeds", type=int, default=2)
+    parser.add_argument("--test-scale", type=int, default=1,
+                        help="with --transfer, test graphs are this many times larger")
     parser.add_argument("--features", nargs="*", default=list(FEATURES),
                         choices=list(FEATURES))
     parser.add_argument("--output", default=None)
@@ -165,7 +172,8 @@ def main():
         for seed in range(args.seeds):
             G = largest_component(make(seed))
             if args.transfer:
-                rows += transfer(name, G, largest_component(make(seed + 100)), seed)
+                rows += transfer(name, G, largest_component(make(seed + 100, args.test_scale)),
+                                 seed)
             else:
                 rows += within_graph(name, G, seed)
             print(f"{name} seed={seed} done", flush=True)
