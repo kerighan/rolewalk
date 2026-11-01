@@ -54,7 +54,7 @@
 Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, deterministic, online, fast (@tab-props).
-+ Accuracy at or above the state of the art on role classification at a fraction of the cost (@tab-roles, @tab-scale).
++ Accuracy at or above the state of the art on role classification at a fraction of the cost (@tab-roles, @fig-speed, @tab-scale).
 + Only method that uses directions; best on synthetic and real directed roles (@tab-directed, @tab-rfa).
 + Transfer: a model fitted on one graph applies to another (@tab-centrality, @tab-airport-transfer; @prop-local).
 + Expressiveness beyond 1-WL with 3 walk steps, on par with 16-step RWSE; exact characterisation of a failure class (@sec-theory, @tab-expr).
@@ -351,6 +351,11 @@ underlined. Code and CSV files in `benchmarks/`.
   )
   #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory.]
 ] <tab-roles>
+
+#figure(
+  image("fig_speed.svg", width: 100%),
+  caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. RoleWalk is the only method in the top-left corner of every panel. `speed_figure.py`.],
+) <fig-speed>
 
 #figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over networks. `roles.csv`.])[
   #table(columns: 3, align: (left, center, center),
