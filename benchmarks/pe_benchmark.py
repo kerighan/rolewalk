@@ -180,6 +180,7 @@ def main():
                         choices=ENCODINGS)
     parser.add_argument("--epochs", type=int, default=300)
     parser.add_argument("--seeds", type=int, default=3)
+    parser.add_argument("--first-seed", type=int, default=0)
     parser.add_argument("--model", default="gine", choices=["gine", "gps"])
     parser.add_argument("--output", default="pe_zinc.csv")
     args = parser.parse_args()
@@ -202,7 +203,7 @@ def main():
           flush=True)
 
     rows = []
-    for seed in range(args.seeds):
+    for seed in range(args.first_seed, args.first_seed + args.seeds):
         for encoding in args.encodings:
             start = time.perf_counter()
             result = run(encoding, splits, pe_dims, args.epochs, seed, device,
