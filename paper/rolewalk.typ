@@ -549,15 +549,12 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #figure(caption: [Directed roles on synthetic graphs (directed motifs hung from a directed cycle; several roles coincide once directions are dropped). 3 seeds; noise = share of edges rewired. Accuracy: logistic regression; ARI: $k$-means; mAP: retrieval. ReFeX, directed: in-, out- and mutual degrees and recursive features over out- and in-neighbours (450 one-hot features). `directed.csv`.])[
   #table(columns: 6, align: (left,) + (center,) * 5,
     [], [Acc. 0%], [Acc. 5%], [Acc. 10%], [ARI 5%], [mAP 5%],
-    [*RoleWalk + curv. + mixed*], [*1.000*], [#underline[0.732]], [#underline[0.595]], [#underline[0.396]], [*0.629*],
-    [RoleWalk + mixed], [*1.000*], [0.728], [0.590], [0.373], [0.615],
-    [RoleWalk + curv.], [#underline[0.989]], [0.712], [0.547], [0.381], [#underline[0.625]],
-    [RoleWalk], [0.908], [0.680], [0.510], [0.366], [0.574],
-    [RoleWalk, undirected], [0.767], [0.560], [0.420], [0.351], [0.479],
-    [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [0.607],
-    [RWSE, out + in], [0.357], [0.336], [0.336], [0.048], [0.179],
+    [*RoleWalk + curv.*], [#underline[0.989]], [#underline[0.712]], [0.547], [#underline[0.381]], [*0.625*],
+    [*RoleWalk*], [0.908], [0.680], [0.510], [0.366], [0.574],
+    [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [#underline[0.607]],
+    [Local statistics (in / out)], [0.863], [0.675], [#underline[0.584]], [*0.409*], [#underline[0.607]],
     [Top-$k$ + layers], [0.908], [0.671], [0.516], [0.348], [0.568],
-    [Local statistics (in / out)], [0.863], [0.675], [0.584], [*0.409*], [0.607],
+    [RWSE, out + in], [0.357], [0.336], [0.336], [0.048], [0.179],
     [Role2Vec], [0.730], [0.451], [0.368], [0.148], [0.295],
     [ReFeX], [0.532], [0.429], [0.431], [0.342], [0.356],
     [GraphWave], [0.586], [0.388], [0.383], [0.317], [0.416],
@@ -566,29 +563,25 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.516]], [#emph[0.466]], [#emph[0.405]], [#emph[0.310]], [#emph[0.349]],
   )
+  #text(size: 8pt)[Ablations of RoleWalk + curv.: with the mixed probes of @prop-mixed, 1.000 / 0.732 / 0.595 / 0.396 / 0.629; on the symmetrised graph, RoleWalk drops to 0.767 / 0.560 / 0.420 / 0.351 / 0.479.]
 ] <tab-directed>
 
-#figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate; signs dropped, repeated votes merged, unweighted). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa.csv`, `roles_rfa_new.csv`, `roles_rfa_mixed.csv`.])[
+#figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate; signs dropped, repeated votes merged, unweighted). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa*.csv`.])[
   #table(columns: 4, align: (left, center, center, center),
     [], [A: elected], [B: 3 classes], [Time],
-    [*RoleWalk + curv. + mixed*], [*0.827*], [*0.944*], [7 s],
-    [RoleWalk + mixed], [0.814], [0.940], [7 s],
-    [RoleWalk + curv.], [#underline[0.823]], [#underline[0.943]], [5 s],
-    [RoleWalk], [0.808], [0.938], [4 s],
-    [RoleWalk, undirected], [0.791], [0.863], [],
-    [RoleWalk + curv., undirected], [0.814], [0.900], [],
+    [*RoleWalk + curv.*], [*0.823*], [*0.943*], [5 s],
+    [*RoleWalk*], [0.808], [0.938], [4 s],
     [RESD], [0.798], [0.843], [68 s],
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
     [ReFeX, directed], [0.778], [0.930], [3 s],
     [Top-$k$ + layers], [0.804], [0.936], [5 s],
-    [Local statistics (in / out)], [0.814], [0.941], [3 s],
-    [RWSE (out-walk)], [0.690], [0.826], [51 s],
+    [Local statistics (in / out)], [#underline[0.814]], [#underline[0.941]], [3 s],
     [RWSE, out + in], [0.710], [0.836], [84 s],
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.755]], [#emph[0.922]], [#emph[0 s]],
   )
-  #text(size: 8pt)[struc2vec and GraphWave do not run at this size.]
+  #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations of RoleWalk + curv.: mixed probes 0.827 / 0.944; symmetrised graph 0.814 / 0.900 (RoleWalk: 0.791 / 0.863). RWSE on the out-walk only: 0.690 / 0.826.]
 ] <tab-rfa>
 
 #figure(caption: [Expressiveness: pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
@@ -596,12 +589,12 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [], [Atlas ≤ 7 (20)], [Regular (3,181)], [CSL (10 cl.)], [Decalin / bicyc.], [$2 C_3$ / $C_6$], [SRG pair#super[\*]],
     [*RoleWalk (3 steps)*], [*20*], [*3,181*], [#underline[6]], [yes], [yes], [no],
     [RoleWalk (5 steps)], [*20*], [*3,181*], [*10*], [yes], [yes], [no],
-    [RoleWalk, no layers], [#underline[16]], [#underline[3,180]], [#underline[6]], [yes], [yes], [no],
+
     [RWSE (16 steps)], [*20*], [#underline[3,180]], [*10*], [yes], [yes], [no],
     table.hline(stroke: 0.4pt),
     [#emph[Degree (baseline)]], [#emph[0]], [#emph[0]], [#emph[1]], [#emph[no]], [#emph[no]], [#emph[no]],
   )
-  #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook: strongly regular with equal parameters, not separated by 2-FWL (classical 3-WL) nor by @prop-drg.]
+  #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook: strongly regular with equal parameters, not separated by 2-FWL (classical 3-WL) nor by @prop-drg. Without layers, RoleWalk (3 steps) separates 16 / 3,180 / 6.]
 ] <tab-expr>
 
 #figure(caption: [BREC @wang2023 (400 pairs).])[
@@ -609,35 +602,35 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [], [Basic (60)], [Regular (100)], [Extension (100)], [CFI (100)], [4-vertex (20)], [Dist.-reg. (20)], [Total],
     [RoleWalk (3 steps)], [60], [50], [97], [0], [0], [0], [207],
     [RoleWalk (5 steps)], [60], [50], [100], [3], [0], [0], [#underline[213]],
-    [RoleWalk, no layers], [58], [48], [97], [0], [0], [0], [203],
+
     [RWSE (16 steps)], [60], [50], [100], [4], [0], [0], [*214*],
   )
-  #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked).]
+  #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked). Without layers, RoleWalk (3 steps) separates 203 pairs.]
 ] <tab-brec>
 
-#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 2 seeds. Path-based centralities (top four rows) are where walks matter. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. Ablation: RoleWalk with the local statistics appended. `centrality_transfer_x4.csv`.])[
-  #table(columns: 11, align: (left,) + (center,) * 10,
-    [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]], [#emph[RW + local]],
-    [Betweenness], [*0.865*], [*0.865*], [#underline[0.858]], [0.852], [0.845], [0.851], [0.438], [0.629], [#emph[0.622]], [#emph[0.875]],
-    [Closeness], [*0.776*], [#underline[0.767]], [0.738], [0.691], [0.695], [0.717], [0.452], [0.510], [#emph[0.384]], [#emph[0.780]],
-    [Harmonic], [*0.860*], [#underline[0.856]], [0.818], [0.772], [0.777], [0.803], [0.522], [0.595], [#emph[0.451]], [#emph[0.863]],
-    [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.983], [0.973], [0.987], [0.741], [0.643], [#emph[0.929]], [#emph[0.990]],
+#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 2 seeds. Path-based centralities (top four rows) are where walks matter. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen.  `centrality_transfer_x4.csv`.])[
+  #table(columns: 10, align: (left,) + (center,) * 9,
+    [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]],
+    [Betweenness], [*0.865*], [*0.865*], [#underline[0.858]], [0.852], [0.845], [0.851], [0.438], [0.629], [#emph[0.622]],
+    [Closeness], [*0.776*], [#underline[0.767]], [0.738], [0.691], [0.695], [0.717], [0.452], [0.510], [#emph[0.384]],
+    [Harmonic], [*0.860*], [#underline[0.856]], [0.818], [0.772], [0.777], [0.803], [0.522], [0.595], [#emph[0.451]],
+    [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.983], [0.973], [0.987], [0.741], [0.643], [#emph[0.929]],
     table.hline(stroke: 0.4pt),
-    [Clustering], [0.806], [0.802], [0.803], [*0.840*], [#underline[0.809]], [0.790], [0.722], [0.352], [#emph[0.205]], [#emph[0.838]],
-    [k-core], [0.652], [*0.658*], [#underline[0.655]], [0.652], [0.635], [0.652], [0.509], [0.622], [#emph[0.618]], [#emph[0.657]],
-    [Eigenvector], [0.645], [0.648], [#underline[0.663]], [0.652], [*0.695*], [0.568], [0.347], [0.405], [#emph[0.450]], [#emph[0.654]],
+    [Clustering], [0.806], [0.802], [0.803], [*0.840*], [#underline[0.809]], [0.790], [0.722], [0.352], [#emph[0.205]],
+    [k-core], [0.652], [*0.658*], [#underline[0.655]], [0.652], [0.635], [0.652], [0.509], [0.622], [#emph[0.618]],
+    [Eigenvector], [0.645], [0.648], [#underline[0.663]], [0.652], [*0.695*], [0.568], [0.347], [0.405], [#emph[0.450]],
     table.hline(stroke: 0.4pt),
-    [Mean], [*0.799*], [#underline[0.798]], [0.789], [0.778], [0.776], [0.767], [0.533], [0.537], [#emph[0.523]], [#emph[0.808]],
+    [Mean], [*0.799*], [#underline[0.798]], [0.789], [0.778], [0.776], [0.767], [0.533], [0.537], [#emph[0.523]],
   )
-  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Test graphs of the training size give the same ranking (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`). From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10: their coordinates depend on the graph, RoleWalk's on the neighbourhood only (@prop-local). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
+  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Test graphs of the training size give the same ranking (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`). From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10: their coordinates depend on the graph, RoleWalk's on the neighbourhood only (@prop-local). Appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
 ] <tab-centrality>
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
-  #table(columns: 6, align: (left,) + (center,) * 5,
-    [RoleWalk], [\+ curv.], [RoleWalk, no layers], [Top-$k$ + layers], [Local statistics], [ReFeX (frozen)],
-    [0.488], [0.472], [0.445], [0.475], [*0.565*], [0.438],
-    [RWSE], [GraphWave], [GraphWave, no $1 \/ n$], [RW heat CF], [#emph[Degree (baseline)]], [],
-    [0.375], [0.249 (chance)], [0.455], [0.425], [#emph[0.542]], [],
+  #table(columns: 5, align: center,
+    [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local statistics], [ReFeX (frozen)],
+    [#underline[0.488]], [0.472], [0.475], [*0.565*], [0.438],
+    [RWSE], [GraphWave], [GraphWave, no $1 \/ n$], [RW heat CF], [#emph[Degree (baseline)]],
+    [0.375], [0.249 (chance)], [0.455], [0.425], [#emph[0.542]],
   )
 ] <tab-airport-transfer>
 
