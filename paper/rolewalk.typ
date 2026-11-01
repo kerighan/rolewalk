@@ -83,11 +83,12 @@ Kernel mean embeddings and MMD: @gretton2012.
 $tilde(D) = op("diag")((I + A) bold(1))$ and the self-loop-augmented walk
 $H = tilde(D)^(-1) (I + A)$. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
 is the distribution of the walk after $w$ steps. Directed graphs use the
-out-walk $H_+$ ($A$) and the in-walk $H_-$ ($A^top$) and concatenate both
-embeddings (138 features, 150 with curvature). As an option, the
-characteristic functions of the rows of $H_+ H_-$ (one step forward, one
-back: nodes sharing targets with $u$) and $H_- H_+$ (shared sources) add
-$4 m = 40$ features (@prop-mixed).
+out-walk $H_+$ ($A$) and the in-walk $H_-$ ($A^top$), concatenate both
+embeddings, and add the characteristic functions of the rows of
+$H_+ H_-$ (one step forward, one back: nodes sharing targets with $u$) and
+$H_- H_+$ (shared sources), the _mixed probes_ (@prop-mixed): 178 features,
+190 with curvature. On undirected graphs $H_+ = H_-$ and the probes would
+repeat $H^2$, so they are left out.
 
 *Characteristic function.* With $f_theta (x) = e^(i theta x) - 1$ and a
 grid $Theta = {theta_1, ..., theta_m}$ (log-spaced in $[1, 100]$, $m = 10$),
@@ -158,13 +159,13 @@ $k$-means with a given number; fitted centroids label nodes of any graph.
 
 Throughout, $L$ is the number of steps, $B_r (u)$ the subgraph induced by
 nodes within distance $r$ of $u$ (out- and in-distance for directed graphs;
-with curvature or mixed probes, distance in the underlying undirected
+with curvature, or on directed graphs, distance in the underlying undirected
 graph, which contains everything these read), graphs have finite
 non-negative weights and no self-loops, distances are taken in the graph
 of positive-weight edges, $m_x$ and $kappa$ are defined on the simple
 unweighted symmetrisation ($kappa = 0$ at isolated nodes), and statements
-hold for $"tol" = 0$, in exact arithmetic. Mixed probes read the
-undirected 2-ball, so with them the locality radius is $max(L, 2)$.
+hold for $"tol" = 0$, in exact arithmetic. On directed graphs the mixed
+probes read the undirected 2-ball, so the locality radius is $max(L, 2)$.
 
 #prop(name: "locality and invariance")[
   $X_u$ is determined by the isomorphism class of the rooted graph
@@ -526,7 +527,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 
 #figure(
   image("fig_speed.svg", width: 100%),
-  caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. Hollow marker: degree, a trivial baseline rather than an embedding. RoleWalk is the only method in the top-left corner of every panel. `speed_figure.py`.],
+  caption: [Accuracy against embedding time (one core, log scale), every method that runs on each benchmark. Airports: mean over Brazil, Europe and USA (struc2vec: mean of 5 runs). Directed motifs: 5% rewired edges, mean of 3 seeds. wiki-RfA: task A of @tab-rfa. Hollow marker: degree, a trivial baseline rather than an embedding. On directed graphs RoleWalk includes the mixed probes. RoleWalk is alone in the top-left corner on airports and wiki-RfA; on directed motifs, directed ReFeX is more accurate and 40 times slower. `speed_figure.py`.],
 ) <fig-speed>
 
 #figure(caption: [Wikipedia talk networks (RONE): precision\@10 for bots and admins, mean over the 6 networks, and over the 3 smallest (446–2,101 nodes), the only ones struc2vec runs on; only two of these have admins (8 and 16), so the "Admins (3)" column rests on 24 queries. `roles.csv`.])[
@@ -549,13 +550,13 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
 #figure(caption: [Directed roles on synthetic graphs (directed motifs hung from a directed cycle; several roles coincide once directions are dropped). 3 seeds; noise = share of edges rewired. Accuracy: logistic regression; ARI: $k$-means; mAP: retrieval. ReFeX, directed: in-, out- and mutual degrees and recursive features over out- and in-neighbours (450 one-hot features). `directed.csv`.])[
   #table(columns: 6, align: (left,) + (center,) * 5,
     [], [Acc. 0%], [Acc. 5%], [Acc. 10%], [ARI 5%], [mAP 5%],
-    [*RoleWalk + curv.*], [#underline[0.989]], [#underline[0.712]], [0.547], [#underline[0.381]], [*0.625*],
-    [*RoleWalk*], [0.908], [0.680], [0.510], [0.366], [0.574],
-    [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [#underline[0.607]],
-    [Local statistics (in / out)], [0.863], [0.675], [#underline[0.584]], [*0.409*], [#underline[0.607]],
-    [Top-$k$ + layers], [0.908], [0.671], [0.516], [0.348], [0.568],
+    [*RoleWalk + curv.*], [*1.000*], [#underline[0.730]], [#underline[0.593]], [#underline[0.396]], [*0.629*],
+    [*RoleWalk*], [*1.000*], [0.728], [0.588], [0.373], [#underline[0.615]],
+    [ReFeX, directed], [*1.000*], [*0.756*], [*0.638*], [0.355], [0.607],
+    [Local statistics (in / out)], [0.863], [0.675], [0.584], [*0.409*], [0.609],
+    [Top-$k$ + layers], [#underline[0.908]], [0.671], [0.516], [0.348], [0.568],
     [RWSE, out + in], [0.357], [0.336], [0.336], [0.048], [0.179],
-    [Role2Vec], [0.730], [0.451], [0.368], [0.148], [0.295],
+    [Role2Vec], [0.732], [0.440], [0.373], [0.153], [0.296],
     [ReFeX], [0.532], [0.429], [0.431], [0.342], [0.356],
     [GraphWave], [0.586], [0.388], [0.383], [0.317], [0.416],
     [RESD], [0.547], [0.420], [0.423], [0.253], [0.348],
@@ -563,14 +564,14 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.516]], [#emph[0.466]], [#emph[0.405]], [#emph[0.310]], [#emph[0.349]],
   )
-  #text(size: 8pt)[Ablations of RoleWalk + curv.: with the mixed probes of @prop-mixed, 1.000 / 0.732 / 0.595 / 0.396 / 0.629; on the symmetrised graph, RoleWalk drops to 0.767 / 0.560 / 0.420 / 0.351 / 0.479.]
+  #text(size: 8pt)[Ablations. Without the mixed probes: RoleWalk + curv. 0.989 / 0.717 / 0.547 / 0.381 / 0.625, RoleWalk 0.908 / 0.682 / 0.510 / 0.366 / 0.580 (never better on any seed and noise level for RoleWalk; within noise for RoleWalk + curv.). On the symmetrised graph: RoleWalk 0.767 / 0.560 / 0.420 / 0.351 / 0.474.]
 ] <tab-directed>
 
 #figure(caption: [Real directed roles: Wikipedia requests for adminship @west2014 (11,377 users, 188k votes voter → candidate; signs dropped, repeated votes merged, unweighted). A: elected among the 3,494 candidates. B: voter / failed candidate / admin. `roles_rfa*.csv`.])[
   #table(columns: 4, align: (left, center, center, center),
     [], [A: elected], [B: 3 classes], [Time],
-    [*RoleWalk + curv.*], [*0.823*], [*0.943*], [5 s],
-    [*RoleWalk*], [0.808], [0.938], [4 s],
+    [*RoleWalk + curv.*], [*0.827*], [*0.944*], [7 s],
+    [*RoleWalk*], [#underline[0.814]], [0.940], [7 s],
     [RESD], [0.798], [0.843], [68 s],
     [Role2Vec], [0.798], [0.857], [82 s],
     [ReFeX], [0.794], [0.847], [1 s],
@@ -581,7 +582,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.755]], [#emph[0.922]], [#emph[0 s]],
   )
-  #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations of RoleWalk + curv.: mixed probes 0.827 / 0.944; symmetrised graph 0.814 / 0.900 (RoleWalk: 0.791 / 0.863). RWSE on the out-walk only: 0.690 / 0.826.]
+  #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826.]
 ] <tab-rfa>
 
 #figure(caption: [Expressiveness: pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[

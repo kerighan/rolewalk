@@ -19,7 +19,8 @@ MUTED = "#52514e"
 NAMES = {
     "rolewalk": "RoleWalk", "rolewalk_curvature": "RoleWalk + curv.",
     "struc2vec": "struc2vec", "graphwave": "GraphWave", "role2vec": "Role2Vec",
-    "resd": "RESD", "refex": "ReFeX", "rwse": "RWSE", "degree": "Degree (baseline)",
+    "resd": "RESD", "refex": "ReFeX", "refex_directed": "ReFeX (directed)",
+    "rwse": "RWSE", "degree": "Degree (baseline)",
 }
 
 
@@ -32,14 +33,25 @@ def airports():
     return out.rename(columns={"accuracy_mean": "score"})
 
 
+# on directed graphs RoleWalk includes the mixed probes
+MIXED = {"rolewalk_mixed": "rolewalk", "rolewalk_curvature_mixed": "rolewalk_curvature"}
+
+
+def with_mixed(df):
+    df = df[~df.method.isin(MIXED.values())]
+    return df.assign(method=df.method.replace(MIXED))
+
+
 def directed():
-    df = pd.read_csv("directed.csv")
+    df = with_mixed(pd.read_csv("directed.csv"))
     df = df[(df.noise == 0.05) & df.method.isin(NAMES)]
     return df.groupby("method")[["time", "accuracy"]].mean().rename(columns={"accuracy": "score"})
 
 
 def rfa():
-    df = pd.read_csv("roles_rfa.csv")
+    df = pd.concat([pd.read_csv(f) for f in ("roles_rfa.csv", "roles_rfa_new.csv",
+                                             "roles_rfa_mixed.csv")])
+    df = with_mixed(df)
     df = df[(df.dataset == "rfa-candidates") & df.method.isin(NAMES)]
     return df.set_index("method")[["time", "accuracy_mean"]].rename(columns={"accuracy_mean": "score"})
 
@@ -55,7 +67,8 @@ OFFSETS = {
     0: {"degree": (-4, -12, "left"), "rwse": (6, -3, "left"), "rolewalk": (-7, -8, "right"),
         "rolewalk_curvature": (-7, 1, "right"), "refex": (6, -3, "left"),
         "resd": (0, 6, "center"), "graphwave": (6, -3, "left")},
-    1: {"refex": (6, -9, "left"), "rolewalk": (6, -9, "left"), "rolewalk_curvature": (6, 3, "left"),
+    1: {"refex": (6, -9, "left"), "rolewalk": (4, -13, "center"),
+        "rolewalk_curvature": (4, 7, "center"), "refex_directed": (6, -3, "left"),
         "degree": (6, 4, "left"), "role2vec": (6, 4, "left"), "resd": (6, -4, "left"),
         "graphwave": (-7, -3, "right")},
     2: {"rolewalk": (-7, -3, "right"), "rolewalk_curvature": (-7, -3, "right"),
