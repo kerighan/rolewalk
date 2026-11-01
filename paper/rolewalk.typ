@@ -87,8 +87,9 @@ Since $f_theta (0) = 0$, the sum runs over the support of $p^w_u$ only.
 
 *Onion layers.* With $d(u, j)$ the length of the shortest walk from $u$ to $j$,
 $s^w_u (k) = sum_(j : d(u, j) = k) p^w_(u j)$ for $k = 0, ..., w$: the mass
-the walk keeps at each distance. Supports of earlier powers give the
-layers, so no extra walk is computed.
+the walk keeps at each distance, which the multiset of probabilities
+ignores. Supports of earlier powers give the layers, so no extra walk is
+computed.
 
 *Curvature (option).* For an edge $x y$ of the symmetrised unweighted graph,
 $kappa(x, y) = sum_z min(m_x (z), m_y (z))$ with $m_x$ the one-step lazy
@@ -98,16 +99,27 @@ $sigma^w_u$ of $kappa$ under $p^w_u$. Since a unit of mass that does not
 overlap moves at least one step, $W_1 (m_x, m_y) >= 1 - kappa(x, y)$: $kappa$ is
 an upper bound of Ollivier-Ricci curvature $1 - W_1$, made of probabilities.
 
-*Embedding.* $X_u$ concatenates, for $w = 1, ..., L$ ($L = 3$),
-$op("Re") phi^w_u$, $op("Im") phi^w_u$, $norm(Theta) s^w_u$ and, with curvature,
-$norm(Theta) (mu^w_u, sigma^w_u)$: $2 m L + L (L + 3) \/ 2 (+ 2 L)$ = 69 (75)
-features. The factor $norm(Theta) = (sum_theta theta^2)^(1\/2)$ puts a unit of
-mass in the units of $phi$, since $f_theta (p) approx i theta p$ for small $p$;
-without it the layers carry 0.02% of the variance and do not change the
-roles found by $k$-means (@sec-scaling).
+*One measure, one kernel.* Every node $j$ reached at step $w$ is an atom
+marked by its step and its layer, which gives the _footprint_ of the walks
+from $u$:
+$ mu_u = sum_(w = 1)^L sum_(j : p^w_(u j) > 0) delta_((w, p^w_(u j), d(u, j))). $
+The embedding is the mean of a single feature map over the footprint,
+$X_u = integral Psi thin d mu_u$, with
+$ Psi(w, a, ell) = e_w ⊗ (psi(a) ⊕ norm(Theta) a e_ell), quad psi(a) = (f_theta (a))_(theta in Theta), $ <eq-psi>
+which gives, for each step $w = 1, ..., L$ ($L = 3$), $op("Re") phi^w_u$,
+$op("Im") phi^w_u$ and $norm(Theta) s^w_u$. With curvature the mark is
+$(d(u, j), kappa_j)$ and $Psi$ adds $norm(Theta) a (kappa, kappa^2)$; we report
+$norm(Theta) (mu^w_u, sigma^w_u)$, a fixed reparametrisation of these two
+moments. In all, $2 m L + L (L + 3) \/ 2 (+ 2 L)$ = 69 (75) features. The
+probability block ignores the layer; the layer block is the first-order
+part of one characteristic function per layer, which is what fixes the
+factor $norm(Theta) = (sum_theta theta^2)^(1\/2)$ (@prop-mmd). Without it
+the layers carry 0.02% of the variance and do not change the roles found
+by $k$-means (@sec-scaling).
 
 *Pruning.* After each product, entries below $"tol" = 10^(-4)$ are dropped;
-their mass is added back to $op("Im") phi$ to first order ($theta dot "mass"$).
+their mass is added back to $op("Im") phi$ to first order ($theta dot "mass"$),
+the same tangent approximation as the layer block.
 Results in @sec-theory are stated for $"tol" = 0$.
 
 *Roles.* Ward clustering with silhouette for the number of roles, or
@@ -163,19 +175,44 @@ transition probabilities of $u$ after $w$ steps. The second claim is
 qualitative: the separation margin, not its existence, motivates
 $m = 10$ frequencies across two decades.
 
-#prop(name: "distances are MMDs")[
-  $norm(phi^w_u - phi^w_v)^2 = "MMD"_k^2 (mu_u, mu_v)$ between the counting
-  measures $mu_u = sum_j delta_(p^w_(u j))$, for the positive-definite kernel
-  $k(a, b) = sum_(theta in Theta) [cos theta (a - b) - cos theta a - cos theta b + 1]$.
-]
+#prop(name: "one kernel on the footprint")[
+  $norm(X_u - X_v)^2 = "MMD"_K^2 (mu_u, mu_v)$ for the positive-definite
+  kernel on marked atoms
+  $ K((w, a, ell), (w', b, ell')) = delta_(w w') [k_Theta (a, b) + norm(Theta)^2 a b thin delta_(ell ell')], $
+  $ k_Theta (a, b) = sum_(theta in Theta) [cos theta (a - b) - cos theta a - cos theta b + 1]. $
+  The first term compares probabilities whatever their layer, the second
+  compares masses in the same layer. Moreover, with
+  $t = max(Theta) max(a, b)$,
+  $ abs(k_Theta (a, b) - norm(Theta)^2 a b) <= norm(Theta)^2 a b thin t^2 (7 \/ 12 + t^2 \/ 36), $
+  so the layer term is the first-order part of $k_Theta (a, b) thin delta_(ell ell')$,
+  the kernel of one characteristic function per layer, and $norm(Theta)$ is
+  the only factor for which the two agree to first order.
+] <prop-mmd>
 #proof[
-  $phi^w_u = sum_j psi(p^w_(u j))$ with the feature map
-  $psi(x) = (f_theta (x))_(theta in Theta) in CC^m$, so $phi^w_u$ is the kernel
-  mean embedding of $mu_u$ and $norm(phi_u - phi_v)^2$ is the MMD for
-  $k(a, b) = op("Re") ⟨ psi(a), psi(b) ⟩$, positive definite as an
-  inner product. Expanding $op("Re") (e^(i theta a) - 1) overline((e^(i theta b) - 1))$ gives the formula.
-  Atoms at 0 have $psi(0) = 0$: unreached nodes do not count.
+  $X_u = sum Psi$ over the atoms of $mu_u$, so $X_u$ is the kernel mean
+  embedding of $mu_u$ and $norm(X_u - X_v)^2$ is the MMD @gretton2012 for
+  $K = op("Re") ⟨ Psi, Psi' ⟩$, positive definite as an inner product. The
+  blocks $e_w$ and $e_ell$ are orthonormal, which gives $delta_(w w')$ and
+  $delta_(ell ell')$; expanding $op("Re") (e^(i theta a) - 1) overline((e^(i theta b) - 1))$
+  gives $k_Theta$. Unreached nodes have $Psi = 0$ and do not count.
+  For the bound, fix $theta$ and write the real part as
+  $(cos theta a - 1)(cos theta b - 1) + sin theta a sin theta b$. Since
+  $abs(cos x - 1) <= x^2 \/ 2$, the first product is at most
+  $theta^4 a^2 b^2 \/ 4 <= theta^2 a b thin t^2 \/ 4$. With
+  $sin theta a = theta a + r_a$ and $abs(r_a) <= theta^3 a^3 \/ 6$,
+  $abs(sin theta a sin theta b - theta^2 a b) <= theta^4 a b (a^2 + b^2) \/ 6 + theta^6 a^3 b^3 \/ 36 <= theta^2 a b thin t^2 (1 \/ 3 + t^2 \/ 36)$.
+  Summing over $theta$ gives the bound, and $norm(Theta)^2 = sum_theta theta^2$
+  is the coefficient of $a b$.
 ]
+
+The concatenation is therefore a sum of kernels on one object: a mark-blind
+term on probabilities and a mark-aware term on masses. The first-order
+regime $t << 1$ holds for hubs, whose walks spread thin, but not for
+low-degree nodes ($max(Theta) = 100$): the linear layer kernel is a choice,
+$L (L + 3) \/ 2$ coordinates instead of $2 m (L + 1)$ per step, and the full
+per-layer kernel is not better (@tab-geometry). Further marks enter the
+same way, as factors of the second term: curvature, or labels on the
+steps of each path.
 
 #prop(name: "stability")[
   Let $G'$ be $G$ plus an unweighted edge $a b$, with $d = min(d_a, d_b)$
@@ -511,10 +548,21 @@ underlined. Code and CSV files in `benchmarks/`.
     [\+ curvature, exact Ollivier-Ricci], [0.662], [*0.494*], [0.746 / 0.750], [*0.743*],
     [\+ curvature, integrated CF], [0.663], [0.400], [#underline[0.751] / 0.750], [0.697],
   )
-]
+] <tab-geometry>
 
 The probabilistic bound is kept over exact Ollivier-Ricci for cost
 (no optimal transport) at a small loss.
+
+Marks on the steps of a path rather than on its end were also tried: the
+parity of steps inside a layer (closing odd cycles), obtained for free from
+the signed walk $tilde(D)^(-1) (A - I)$ since
+$\#"intra" equiv \#"moves" - d(u, j) space (mod 2)$, its exact count, and
+the order of moves out and in, as products in the quaternion group $Q_8$.
+On the 6,781 nodes of connected graphs with at most 7 nodes, none
+separates a pair of nodes that $X$ does not, and none improves airport
+accuracy (`intra_layer_study.py`, `quaternion_study.py`): with commuting
+labels the product along a path only depends on its end layer, and short
+cycles already change the multiset of probabilities.
 
 == Kernel scaling <sec-scaling>
 
