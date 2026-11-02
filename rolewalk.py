@@ -4,7 +4,7 @@ import json
 
 import networkx as nx
 import numpy as np
-from scipy.sparse import csr_matrix, identity
+from scipy.sparse import csr_matrix, diags, identity
 from sklearn.metrics import pairwise_distances
 from sklearn.preprocessing import normalize
 
@@ -367,6 +367,21 @@ if numba is not None:
     _edge_common_kernel = numba.njit(cache=True)(_edge_common_kernel)
 
 
+def lazy_walk(A):
+    """Transition matrix of the walk that stays put with the weight of an
+    average edge of the node: ``(diag(s / d) + A)`` normalised by rows, with
+    ``s`` the weighted and ``d`` the unweighted out-degree (1 without
+    edges). On unweighted graphs this is ``D~^-1 (I + A)``; on weighted ones
+    it stays put with probability ``1 / (d + 1)`` too, and does not depend on
+    the unit of the weights (nor on rescaling the edges of a node)."""
+    A = csr_matrix(A, dtype=np.float64)
+    A.eliminate_zeros()
+    count = np.diff(A.indptr)
+    strength = np.asarray(A.sum(axis=1)).ravel()
+    stay = np.where(count > 0, strength / np.maximum(count, 1), 1.0)
+    return normalize(diags(stay) + A, norm="l1").tocsr()
+
+
 def node_curvature(A, nodes=None):
     """Mean curvature of the edges around each node.
 
@@ -583,7 +598,7 @@ class RoleWalk:
             index = {v: i for i, v in enumerate(G.nodes)}
             rows = np.array([index[v] for v in nodes], dtype=np.int64)
         # extract raw embedding from sampling the characteristic function
-        H = normalize(identity(n) + A, norm="l1").tocsr()
+        H = lazy_walk(A)
         kappa = None
         if self.curvature:
             near = None
@@ -598,7 +613,7 @@ class RoleWalk:
             kappa = node_curvature(A, near)
         walks = [H]
         if nx.is_directed(G):
-            walks.append(normalize(identity(n) + A.T, norm="l1").tocsr())
+            walks.append(lazy_walk(A.T))
         X = np.hstack([self._embed_blocks(W, rows, kappa) for W in walks])
         if self.mixed and len(walks) == 2:
             H_out, H_in = walks

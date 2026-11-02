@@ -359,3 +359,22 @@ def test_invalid_pruning_parameters():
         except ValueError:
             continue
         raise AssertionError(f"{kw} must be rejected")
+
+
+def test_weighted_walk_ignores_units():
+    G = nx.gnp_random_graph(200, 0.05, seed=5, directed=True)
+    rng = np.random.default_rng(0)
+    for u, v in G.edges:
+        G[u][v]["weight"] = rng.lognormal(0, 2)
+    X = RoleWalk().transform(G)
+    H = G.copy()
+    for u, v in H.edges:
+        H[u][v]["weight"] *= 1e-6
+    np.testing.assert_allclose(RoleWalk().transform(H), X, rtol=1e-4, atol=1e-4)
+    # unit weights: the usual self-loop-augmented walk
+    U = nx.karate_club_graph()
+    nx.set_edge_attributes(U, 1.0, "weight")
+    V = nx.Graph()
+    V.add_nodes_from(U)
+    V.add_edges_from(U.edges)
+    np.testing.assert_array_equal(RoleWalk().transform(U), RoleWalk().transform(V))
