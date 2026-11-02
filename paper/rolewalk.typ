@@ -60,7 +60,7 @@ Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
 + Accuracy competitive with the state of the art on role classification (clearly ahead on one of six networks) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
-+ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs; on food webs, comparable to local statistics (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
++ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs; on food webs, not distinguishable from local statistics or Digraphwave (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
 + Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger better than every baseline; under a change of generator parameters it stays ahead of every embedding, but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
@@ -673,21 +673,21 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826. Paired over the 50 splits (Nadeau–Bengio, `paired_rfa.csv`), RoleWalk + curv. is significantly better than every other method on A (local statistics $+0.012$ $[0.001, 0.022]$, Digraphwave $+0.019$ $[0.008, 0.029]$) and on B, except local statistics in accuracy ($+0.003$ $[-0.000, 0.006]$; macro-F1 $+0.007$ $[0.000, 0.014]$).]
 ] <tab-rfa>
 
-#figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), proxy labels given by an LLM (GPT-6, low reasoning effort; prompt and frozen labels in `foodweb_labels.py`, `data/foodwebs/labels.csv`) from the compartment names and the ecosystem alone, without the graph; 63% are labelled high confidence by the model, which is not a measured accuracy. Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together): fitted on the others, tested on an unseen ecosystem. Balanced accuracy, mean over ecosystems. `foodwebs.csv`.])[
-  #table(columns: 3, align: (left, center, center),
-    [], [Carbon flows], [Unweighted],
-    [*RoleWalk*], [0.428], [0.524],
-    [RoleWalk, no mixed probes], [0.420], [0.459],
-    [RoleWalk + curv.], [0.413], [0.492],
-    [Top-$k$ + layers], [0.377], [0.489],
-    [Digraphwave], [0.429], [*0.559*],
-    [Local statistics (in / out)], [–], [#underline[0.527]],
-    [ReFeX (frozen)], [–], [0.232],
-    [RWSE, out + in], [0.214], [–],
+#figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes and self-loops removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), proxy labels given by LLMs from the compartment names and the ecosystem alone, without the graph (`foodweb_labels.py`): GPT-6 (low effort), GPT-6 (high) and Claude Opus 5.5 (high) agree on 88.6% of the compartments (pairwise Cohen's $kappa$ 0.88–0.96); disagreements are ecologically ambiguous (oysters, copepods). Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together). Balanced accuracy, mean over ecosystems. `foodwebs*.csv`.])[
+  #table(columns: 5, align: (left,) + (center,) * 4,
+    [], [Flows], [Unweighted, one labelling], [Majority of 3], [Unanimous (88.6%)],
+    [*RoleWalk*], [#underline[0.428]], [0.524], [0.517], [*0.569*],
+    [RoleWalk, no mixed probes], [0.420], [0.459], [0.465], [0.456],
+    [RoleWalk + curv.], [0.413], [0.492], [0.515], [0.543],
+    [Top-$k$ + layers], [0.377], [0.489], [0.487], [0.514],
+    [Digraphwave], [*0.429*], [*0.559*], [*0.558*], [0.547],
+    [Local statistics (in / out)], [–], [#underline[0.527]], [#underline[0.540]], [#underline[0.565]],
+    [ReFeX (frozen)], [–], [0.232], [0.234], [0.251],
+    [RWSE, out + in (flows)], [0.214], [0.214], [0.214], [0.210],
     table.hline(stroke: 0.4pt),
-    [#emph[In/out degree and flow (baseline)]], [#emph[0.436]], [–],
+    [#emph[In/out degree and flow (baseline)]], [#emph[0.436]], [#emph[0.436]], [#emph[0.447]], [#emph[0.455]],
   )
-  #text(size: 8pt)[Carbon flows span 19 orders of magnitude; read as transition weights they send walks along the few largest flows (to detritus), and every walk-based method evaluated both ways is better on the unweighted web, where the guild is who eats whom. There, the mixed probes add 0.065 $[0.006, 0.124]$ (paired over ecosystems, better on 10 of 12): sharing prey or predators (competition) is a trophic role. RoleWalk and the local statistics have similar means with no established difference ($-0.003$ $[-0.08, 0.08]$), and RoleWalk is below Digraphwave on unweighted webs. Top-$k$ + layers reads the out- and in-walks without the mixed probes; RoleWalk without them: 0.459. RoleWalk on the symmetrised flow web: 0.361.]
+  #text(size: 8pt)[Carbon flows span 19 orders of magnitude; read as transition weights they send walks along the few largest flows (to detritus), and every walk-based method evaluated both ways is better on the unweighted web, where the guild is who eats whom. On unweighted webs, RoleWalk, the local statistics and Digraphwave are not distinguishable: their ranking changes with the labelling and no paired difference is significant (RoleWalk minus local statistics $-0.003$ $[-0.08, 0.08]$, $-0.023$ $[-0.10, 0.06]$, $+0.004$ $[-0.05, 0.06]$; minus Digraphwave $-0.035$, $-0.041$, $+0.022$, all intervals including 0). Robust to the labelling: the mixed probes add $+0.065$ $[0.006, 0.124]$, $+0.052$ $[-0.015, 0.120]$, $+0.114$ $[0.046, 0.181]$ (sharing prey or predators, i.e. competition, is a trophic role), and RoleWalk is far above ReFeX and RWSE. Top-$k$ + layers reads the out- and in-walks without the mixed probes. RoleWalk on the symmetrised flow web: 0.361.]
 ] <tab-foodweb>
 
 #figure(caption: [Expressiveness ($"tol" = 0$): pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
@@ -1007,7 +1007,7 @@ benchmark.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
 - Under a change of generator parameters (@sec-shift), hand-made local statistics transfer better than RoleWalk on average (clustering, $k$-core, betweenness); RoleWalk still leads every embedding and the distance-based centralities.
-- Two real labelled directed settings (wiki-RfA, food webs); on food webs (proxy LLM labels) RoleWalk is comparable to local statistics and below Digraphwave, and raw flow weights hurt every walk-based method evaluated both ways.
+- Two real labelled directed settings (wiki-RfA, food webs); on food webs (proxy labels from three LLMs, 88.6% unanimous) RoleWalk, local statistics and Digraphwave are not distinguishable, and raw flow weights hurt every walk-based method evaluated both ways.
 - GPS on ZINC: 5 seeds; our RWSE reproduction (0.077) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, but the paired 95% interval just includes 0 (sign test $p = 0.06$).
 
 #bibliography("refs.bib", style: "ieee")

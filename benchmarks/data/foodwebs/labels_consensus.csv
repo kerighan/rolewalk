@@ -1,0 +1,1087 @@
+web,node,name,low,g6h,opus,consensus,agreement
+ChesLower,0,Net Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesLower,1,Picoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesLower,2,Free Bacteria,microbial,microbial,microbial,microbial,3
+ChesLower,3,Particle Attached Bacteria,microbial,microbial,microbial,microbial,3
+ChesLower,4,Heteroflagellates,microbial,microbial,microbial,microbial,3
+ChesLower,5,Ciliates,microbial,microbial,microbial,microbial,3
+ChesLower,6,Rotifers,omnivore,herbivore,herbivore,herbivore,2
+ChesLower,7,Meroplankton,omnivore,herbivore,herbivore,herbivore,2
+ChesLower,8,Mesozooplankton,omnivore,omnivore,herbivore,omnivore,2
+ChesLower,9,Ctenophores,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,10,Chrysaora,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,11,Microphytobenthos,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesLower,12,SAV,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesLower,13,Benthic Bacteria,microbial,microbial,microbial,microbial,3
+ChesLower,14,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+ChesLower,15,Deposit Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesLower,16,Suspension Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesLower,17,Oysters,herbivore,herbivore,detritivore,herbivore,2
+ChesLower,18,Blue Crab,invertivore,invertivore,omnivore,invertivore,2
+ChesLower,19,Menhaden,omnivore,omnivore,herbivore,omnivore,2
+ChesLower,20,Bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,21,Herrings and Shads,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,22,White Perch,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,23,Spot,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,24,Croaker,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,25,Hogchoker,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,26,American eel,invertivore,invertivore,invertivore,invertivore,3
+ChesLower,27,Catfish,omnivore,omnivore,invertivore,omnivore,2
+ChesLower,28,Striped Bass,top_predator,top_predator,top_predator,top_predator,3
+ChesLower,29,Bluefish,top_predator,top_predator,top_predator,top_predator,3
+ChesLower,30,Weakfish,top_predator,top_predator,top_predator,top_predator,3
+ChesLower,31,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesLower,32,Sediment POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesLower,33,POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesMiddle,0,Net Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesMiddle,1,Picoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesMiddle,2,Free Bacteria,microbial,microbial,microbial,microbial,3
+ChesMiddle,3,Particle Attached Bacteria,microbial,microbial,microbial,microbial,3
+ChesMiddle,4,Heteroflagellates,microbial,microbial,microbial,microbial,3
+ChesMiddle,5,Ciliates,microbial,microbial,microbial,microbial,3
+ChesMiddle,6,Rotifers,herbivore,herbivore,herbivore,herbivore,3
+ChesMiddle,7,Meroplankton,herbivore,herbivore,herbivore,herbivore,3
+ChesMiddle,8,Mesozooplankton,omnivore,omnivore,herbivore,omnivore,2
+ChesMiddle,9,Ctenophores,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,10,Chrysaora,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,11,Microphytobenthos,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesMiddle,12,SAV,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesMiddle,13,Benthic Bacteria,microbial,microbial,microbial,microbial,3
+ChesMiddle,14,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+ChesMiddle,15,Deposit Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesMiddle,16,Suspension Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesMiddle,17,Oysters,herbivore,herbivore,detritivore,herbivore,2
+ChesMiddle,18,Blue Crab,invertivore,invertivore,omnivore,invertivore,2
+ChesMiddle,19,Menhaden,herbivore,herbivore,herbivore,herbivore,3
+ChesMiddle,20,Bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,21,Herrings and Shads,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,22,White Perch,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,23,Spot,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,24,Croaker,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,25,Hogchoker,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,26,American eel,invertivore,invertivore,invertivore,invertivore,3
+ChesMiddle,27,Catfish,omnivore,omnivore,omnivore,omnivore,3
+ChesMiddle,28,Striped Bass,top_predator,top_predator,top_predator,top_predator,3
+ChesMiddle,29,Bluefish,top_predator,top_predator,top_predator,top_predator,3
+ChesMiddle,30,Weakfish,top_predator,top_predator,top_predator,top_predator,3
+ChesMiddle,31,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesMiddle,32,Sediment POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesMiddle,33,POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesUpper,0,Net Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesUpper,1,Picoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesUpper,2,Free Bacteria,microbial,microbial,microbial,microbial,3
+ChesUpper,3,Particle Attached Bacteria,microbial,microbial,microbial,microbial,3
+ChesUpper,4,Heteroflagellates,microbial,microbial,microbial,microbial,3
+ChesUpper,5,Ciliates,microbial,microbial,microbial,microbial,3
+ChesUpper,6,Rotifers,herbivore,herbivore,herbivore,herbivore,3
+ChesUpper,7,Meroplankton,herbivore,herbivore,herbivore,herbivore,3
+ChesUpper,8,Mesozooplankton,omnivore,omnivore,herbivore,omnivore,2
+ChesUpper,9,Ctenophores,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,10,Chrysaora,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,11,Microphytobenthos,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesUpper,12,SAV,primary_producer,primary_producer,primary_producer,primary_producer,3
+ChesUpper,13,Benthic Bacteria,microbial,microbial,microbial,microbial,3
+ChesUpper,14,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+ChesUpper,15,Deposit Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesUpper,16,Suspension Feeding Benthos,detritivore,detritivore,detritivore,detritivore,3
+ChesUpper,17,Oysters,herbivore,herbivore,detritivore,herbivore,2
+ChesUpper,18,Blue Crab,invertivore,invertivore,omnivore,invertivore,2
+ChesUpper,19,Menhaden,omnivore,herbivore,herbivore,herbivore,2
+ChesUpper,20,Bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,21,Herrings and Shads,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,22,White Perch,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,23,Spot,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,24,Croaker,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,25,Hogchoker,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,26,American Eel,invertivore,invertivore,invertivore,invertivore,3
+ChesUpper,27,Catfish,omnivore,omnivore,omnivore,omnivore,3
+ChesUpper,28,Striped Bass,top_predator,top_predator,top_predator,top_predator,3
+ChesUpper,29,Bluefish,top_predator,top_predator,top_predator,top_predator,3
+ChesUpper,30,Weakfish,top_predator,top_predator,top_predator,top_predator,3
+ChesUpper,31,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesUpper,32,Sediment POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+ChesUpper,33,POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Chesapeake,0,phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+Chesapeake,1,bacteria in suspended poc,microbial,microbial,microbial,microbial,3
+Chesapeake,2,bacteria in sediment poc,microbial,microbial,microbial,microbial,3
+Chesapeake,3,benthic diatoms,primary_producer,primary_producer,primary_producer,primary_producer,3
+Chesapeake,4,free bacteria,microbial,microbial,microbial,microbial,3
+Chesapeake,5,heterotrophic microflagel,microbial,microbial,microbial,microbial,3
+Chesapeake,6,ciliates,microbial,microbial,microbial,microbial,3
+Chesapeake,7,zooplankton,herbivore,herbivore,herbivore,herbivore,3
+Chesapeake,8,ctenophores,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,9,sea nettle,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,10,other suspension feeders,detritivore,detritivore,detritivore,detritivore,3
+Chesapeake,11,mya arenaria,herbivore,herbivore,detritivore,herbivore,2
+Chesapeake,12,oysters,herbivore,herbivore,detritivore,herbivore,2
+Chesapeake,13,other polychaetes,detritivore,detritivore,detritivore,detritivore,3
+Chesapeake,14,nereis,omnivore,omnivore,omnivore,omnivore,3
+Chesapeake,15,macoma spp.,detritivore,detritivore,detritivore,detritivore,3
+Chesapeake,16,meiofauna,detritivore,detritivore,detritivore,detritivore,3
+Chesapeake,17,crustacean deposit feeder,detritivore,detritivore,detritivore,detritivore,3
+Chesapeake,18,blue crab,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,19,fish larvae,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,20,alewife & blue herring,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,21,bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,22,menhaden,herbivore,herbivore,herbivore,herbivore,3
+Chesapeake,23,shad,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,24,croaker,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,25,hogchoker,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,26,spot,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,27,white perch,invertivore,invertivore,invertivore,invertivore,3
+Chesapeake,28,catfish,omnivore,omnivore,invertivore,omnivore,2
+Chesapeake,29,bluefish,top_predator,top_predator,top_predator,top_predator,3
+Chesapeake,30,weakfish,top_predator,top_predator,top_predator,top_predator,3
+Chesapeake,31,summer flounder,top_predator,top_predator,top_predator,top_predator,3
+Chesapeake,32,striped bass,top_predator,top_predator,top_predator,top_predator,3
+Chesapeake,33,dissolved organic carbon,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Chesapeake,34,suspended particulate org,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Chesapeake,35,sediment particulate orga,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+CrystalC,0,microphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+CrystalC,1,macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+CrystalC,2,zooplankton,herbivore,herbivore,herbivore,herbivore,3
+CrystalC,3,benthic invertebrates,detritivore,detritivore,detritivore,detritivore,3
+CrystalC,4,blacktip shark,top_predator,top_predator,top_predator,top_predator,3
+CrystalC,5,stingray,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,6,striped anchovy,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,7,bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,8,needlefish,top_predator,top_predator,top_predator,top_predator,3
+CrystalC,9,sheepshead killifish,omnivore,omnivore,omnivore,omnivore,3
+CrystalC,10,goldspotted killifish,omnivore,omnivore,omnivore,omnivore,3
+CrystalC,11,gulf killifish,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,12,longnosed killifish,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,13,silverside,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,14,moharra,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,15,silver jenny,invertivore,invertivore,invertivore,invertivore,3
+CrystalC,16,sheepshead,invertivore,invertivore,omnivore,invertivore,2
+CrystalC,17,pinfish,omnivore,omnivore,omnivore,omnivore,3
+CrystalC,18,mullet,detritivore,detritivore,detritivore,detritivore,3
+CrystalC,19,gulf flounder,top_predator,top_predator,top_predator,top_predator,3
+CrystalC,20,detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+CrystalD,0,microphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+CrystalD,1,macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+CrystalD,2,zooplankton,herbivore,herbivore,herbivore,herbivore,3
+CrystalD,3,benthic invertebrates,detritivore,detritivore,detritivore,detritivore,3
+CrystalD,4,stingray,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,5,bay anchovy,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,6,catfish,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,7,needlefish,top_predator,top_predator,top_predator,top_predator,3
+CrystalD,8,sheepshead killifish,omnivore,omnivore,omnivore,omnivore,3
+CrystalD,9,goldspotted killifish,omnivore,omnivore,invertivore,omnivore,2
+CrystalD,10,gulf killifish,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,11,longnosed killifish,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,12,molly,herbivore,herbivore,herbivore,herbivore,3
+CrystalD,13,silverside,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,14,moharra,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,15,pinfish,omnivore,omnivore,omnivore,omnivore,3
+CrystalD,16,spot,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,17,black drum,invertivore,invertivore,invertivore,invertivore,3
+CrystalD,18,red drum,invertivore,top_predator,invertivore,invertivore,2
+CrystalD,19,mullet,detritivore,detritivore,detritivore,detritivore,3
+CrystalD,20,detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Maspalomas,0,Cyanobacteria,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,1,Eukaryotic Phyto,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,2,Chara globularis,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,3,Ruppia Maritima,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,4,Cladophora,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,5,Periphyton,primary_producer,primary_producer,primary_producer,primary_producer,3
+Maspalomas,6,Pelagic Bacteria,microbial,microbial,microbial,microbial,3
+Maspalomas,7,Microzooplankton,microbial,microbial,microbial,microbial,3
+Maspalomas,8,Mesozooplankton,herbivore,herbivore,herbivore,herbivore,3
+Maspalomas,9,Macrozooplankton,omnivore,omnivore,omnivore,omnivore,3
+Maspalomas,10,Benthic Microfauna,microbial,microbial,detritivore,microbial,2
+Maspalomas,11,Benthic Suspension Feeder,detritivore,detritivore,detritivore,detritivore,3
+Maspalomas,12,Benthic Deposit Feeders,detritivore,detritivore,detritivore,detritivore,3
+Maspalomas,13,Benthic Invertebrate Car.,invertivore,invertivore,invertivore,invertivore,3
+Maspalomas,14,Liza Aurata,detritivore,detritivore,detritivore,detritivore,3
+Maspalomas,15,Gallinula chloropus,omnivore,omnivore,omnivore,omnivore,3
+Maspalomas,16,Diplodus Sargus,invertivore,invertivore,omnivore,invertivore,2
+Maspalomas,17,Dicentratus punctatus,top_predator,invertivore,invertivore,invertivore,2
+Maspalomas,18,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Maspalomas,19,Suspended POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Maspalomas,20,Sedimented POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Michigan,0,Flagellates,primary_producer,primary_producer,microbial,primary_producer,2
+Michigan,1,Blue-greenGree,primary_producer,primary_producer,primary_producer,primary_producer,3
+Michigan,2,Diatoms,primary_producer,primary_producer,primary_producer,primary_producer,3
+Michigan,3,Rotifers,herbivore,herbivore,herbivore,herbivore,3
+Michigan,4,Cyclopoids,omnivore,omnivore,omnivore,omnivore,3
+Michigan,5,Calanoids,herbivore,herbivore,herbivore,herbivore,3
+Michigan,6,Cladocerans,herbivore,herbivore,herbivore,herbivore,3
+Michigan,7,Leptodora,invertivore,invertivore,invertivore,invertivore,3
+Michigan,8,Bythotrephes,invertivore,invertivore,invertivore,invertivore,3
+Michigan,9,Diporeia,detritivore,detritivore,detritivore,detritivore,3
+Michigan,10,Mysis,omnivore,omnivore,omnivore,omnivore,3
+Michigan,11,Oligoch/Chiron,detritivore,detritivore,detritivore,detritivore,3
+Michigan,12,Sphae/Gast,detritivore,detritivore,detritivore,detritivore,3
+Michigan,13,Zebra mussels,herbivore,herbivore,herbivore,herbivore,3
+Michigan,14,Benthic microin,detritivore,detritivore,detritivore,detritivore,3
+Michigan,15,Other fish,invertivore,invertivore,invertivore,invertivore,3
+Michigan,16,Alewife,invertivore,invertivore,invertivore,invertivore,3
+Michigan,17,Bloater,invertivore,invertivore,invertivore,invertivore,3
+Michigan,18,Rainbow smelt,invertivore,invertivore,invertivore,invertivore,3
+Michigan,19,Slimy sculpin,invertivore,invertivore,invertivore,invertivore,3
+Michigan,20,Deepwater sculp,invertivore,invertivore,invertivore,invertivore,3
+Michigan,21,Lake Whitefish,invertivore,invertivore,invertivore,invertivore,3
+Michigan,22,Yellow perch,invertivore,invertivore,invertivore,invertivore,3
+Michigan,23,Juv. Brown trou,invertivore,invertivore,invertivore,invertivore,3
+Michigan,24,Juv. Steelhead,invertivore,invertivore,invertivore,invertivore,3
+Michigan,25,Juv. Coho,invertivore,invertivore,invertivore,invertivore,3
+Michigan,26,Juv. Chinook,invertivore,invertivore,top_predator,invertivore,2
+Michigan,27,Juv. Lake Trout,invertivore,invertivore,invertivore,invertivore,3
+Michigan,28,Burbot,top_predator,top_predator,top_predator,top_predator,3
+Michigan,29,Brown trout,top_predator,top_predator,top_predator,top_predator,3
+Michigan,30,Steelhead,top_predator,top_predator,top_predator,top_predator,3
+Michigan,31,Coho,top_predator,top_predator,top_predator,top_predator,3
+Michigan,32,Chinook,top_predator,top_predator,top_predator,top_predator,3
+Michigan,33,Lake trout,top_predator,top_predator,top_predator,top_predator,3
+Michigan,34,Sea lamprey,top_predator,top_predator,top_predator,top_predator,3
+Michigan,35,Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Mondego,0,Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,1,Enteromorpha sp,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,2,Ulva lactuca,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,3,Zostera,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,4,Epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,5,Gracilaria,primary_producer,primary_producer,primary_producer,primary_producer,3
+Mondego,6,Zooplankton,herbivore,herbivore,herbivore,herbivore,3
+Mondego,7,Hydrobia ulvae,herbivore,herbivore,herbivore,herbivore,3
+Mondego,8,Melita palmata,detritivore,detritivore,detritivore,detritivore,3
+Mondego,9,Ampithoe ferox,herbivore,herbivore,herbivore,herbivore,3
+Mondego,10,Gibulla,herbivore,herbivore,herbivore,herbivore,3
+Mondego,11,Littorina,herbivore,herbivore,herbivore,herbivore,3
+Mondego,12,Cyathura carinata,omnivore,detritivore,invertivore,,1
+Mondego,13,Scrobicularia plana,detritivore,detritivore,detritivore,detritivore,3
+Mondego,14,Cerastoderma edule,herbivore,herbivore,detritivore,herbivore,2
+Mondego,15,Modiolus,detritivore,herbivore,detritivore,detritivore,2
+Mondego,16,Amage adspersa,detritivore,detritivore,detritivore,detritivore,3
+Mondego,17,Capitella capitata,detritivore,detritivore,detritivore,detritivore,3
+Mondego,18,Heteromastus filifor,detritivore,detritivore,detritivore,detritivore,3
+Mondego,19,Oligochaeta,detritivore,detritivore,detritivore,detritivore,3
+Mondego,20,Other detrivors,detritivore,detritivore,detritivore,detritivore,3
+Mondego,21,Nephtys,invertivore,invertivore,invertivore,invertivore,3
+Mondego,22,Other predatory inve,invertivore,invertivore,invertivore,invertivore,3
+Mondego,23,Idotea chelipes,herbivore,herbivore,herbivore,herbivore,3
+Mondego,24,Sphaeroma hookeri,detritivore,detritivore,herbivore,detritivore,2
+Mondego,25,Nereis diversicolor,omnivore,omnivore,omnivore,omnivore,3
+Mondego,26,Carcinus maenas,invertivore,invertivore,invertivore,invertivore,3
+Mondego,27,Crangon crangon,invertivore,invertivore,invertivore,invertivore,3
+Mondego,28,Lumbrineris impatien,invertivore,invertivore,invertivore,invertivore,3
+Mondego,29,Diopatra neapolitana,omnivore,omnivore,omnivore,omnivore,3
+Mondego,30,Microalgae and detri,detritivore,detritivore,detritivore,detritivore,3
+Mondego,31,Zooplankton consumer,invertivore,invertivore,invertivore,invertivore,3
+Mondego,32,Endofauna consumers,invertivore,invertivore,invertivore,invertivore,3
+Mondego,33,Macrofauna predators,invertivore,invertivore,invertivore,invertivore,3
+Mondego,34,Trigla lucerna,invertivore,invertivore,invertivore,invertivore,3
+Mondego,35,Pomatoschistus minut,invertivore,invertivore,invertivore,invertivore,3
+Mondego,36,Larus ridibundus,omnivore,invertivore,omnivore,omnivore,2
+Mondego,37,Larus fuscus,top_predator,top_predator,omnivore,top_predator,2
+Mondego,38,Kentish Plover,invertivore,invertivore,invertivore,invertivore,3
+Mondego,39,Ringed Plover,invertivore,invertivore,invertivore,invertivore,3
+Mondego,40,Grey Plover,invertivore,invertivore,invertivore,invertivore,3
+Mondego,41,Dunlin,invertivore,invertivore,invertivore,invertivore,3
+Mondego,42,Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Narragan,0,Bluefish,top_predator,top_predator,top_predator,top_predator,3
+Narragan,1,Striped Bass,top_predator,top_predator,top_predator,top_predator,3
+Narragan,2,Winter Flounder,invertivore,invertivore,invertivore,invertivore,3
+Narragan,3,Windowpane,invertivore,invertivore,invertivore,invertivore,3
+Narragan,4,Scup,invertivore,invertivore,invertivore,invertivore,3
+Narragan,5,Tautog,invertivore,invertivore,invertivore,invertivore,3
+Narragan,6,Dogfish,top_predator,top_predator,top_predator,top_predator,3
+Narragan,7,Skates,invertivore,invertivore,invertivore,invertivore,3
+Narragan,8,Longfin Squid,top_predator,top_predator,top_predator,top_predator,3
+Narragan,9,Butterfish,invertivore,invertivore,invertivore,invertivore,3
+Narragan,10,Menhaden,herbivore,herbivore,herbivore,herbivore,3
+Narragan,11,Bay Anchovy,invertivore,invertivore,invertivore,invertivore,3
+Narragan,12,Atl Silversides,invertivore,invertivore,invertivore,invertivore,3
+Narragan,13,Mummichog,omnivore,omnivore,omnivore,omnivore,3
+Narragan,14,Hard Clam,herbivore,herbivore,herbivore,herbivore,3
+Narragan,15,Cancer Crabs,invertivore,invertivore,invertivore,invertivore,3
+Narragan,16,Am. Lobster,invertivore,invertivore,invertivore,invertivore,3
+Narragan,17,Softshell Clam,herbivore,herbivore,herbivore,herbivore,3
+Narragan,18,Ben Macrofauna,detritivore,detritivore,detritivore,detritivore,3
+Narragan,19,Ben Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+Narragan,20,"Shrimp(Pal,Crg)",omnivore,omnivore,omnivore,omnivore,3
+Narragan,21,Ctenophores,invertivore,invertivore,invertivore,invertivore,3
+Narragan,22,Fish Larvae,invertivore,invertivore,invertivore,invertivore,3
+Narragan,23,Mesozooplankton,herbivore,herbivore,herbivore,herbivore,3
+Narragan,24,Microzooplankto,microbial,microbial,microbial,microbial,3
+Narragan,25,Hetero Microflag,microbial,microbial,microbial,microbial,3
+Narragan,26,Pelag Bacteria,microbial,microbial,microbial,microbial,3
+Narragan,27,SusPoc Bacteria,microbial,microbial,microbial,microbial,3
+Narragan,28,SedPOC Bacteria,microbial,microbial,microbial,microbial,3
+Narragan,29,Benthic Alage,primary_producer,primary_producer,primary_producer,primary_producer,3
+Narragan,30,Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+Narragan,31,Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Rhode,0,crop land,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,1,pasture land,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,2,upland forest,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,3,riparian forest adj. crop,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,4,riparian forest adj. past,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,5,riparian forest adj. upla,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,6,flooded swamp forest,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,7,herbaceous wetland,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,8,floodplain forest,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,9,main fork,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Rhode,10,low marsh adj. north fork,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,11,low marsh adj. main fork,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,12,north fork,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Rhode,13,muddy creek,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Rhode,14,mud flat,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+Rhode,15,high marsh,primary_producer,primary_producer,primary_producer,primary_producer,3
+Rhode,16,low marsh adj. muddy cree,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,0,Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,1,Halodule,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,2,Micro-epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,3,Macro-epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,4,Benthic algae,primary_producer,primary_producer,primary_producer,primary_producer,3
+StMarks,5,Bacterio plankton,microbial,microbial,microbial,microbial,3
+StMarks,6,Micro protozoa,microbial,microbial,microbial,microbial,3
+StMarks,7,Zooplankton,herbivore,herbivore,herbivore,herbivore,3
+StMarks,8,Epiphyte-graz amphipods,herbivore,herbivore,herbivore,herbivore,3
+StMarks,9,suspension-feed molluscs,detritivore,herbivore,detritivore,detritivore,2
+StMarks,10,Suspension-feed polychts,detritivore,detritivore,detritivore,detritivore,3
+StMarks,11,Benthic bact,microbial,microbial,microbial,microbial,3
+StMarks,12,Microfauna,microbial,microbial,microbial,microbial,3
+StMarks,13,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+StMarks,14,Deposit feed amphipods,detritivore,detritivore,detritivore,detritivore,3
+StMarks,15,Detritus feed crust.,detritivore,detritivore,detritivore,detritivore,3
+StMarks,16,Hermit crab,omnivore,omnivore,detritivore,omnivore,2
+StMarks,17,Spider crab,omnivore,omnivore,omnivore,omnivore,3
+StMarks,18,Omnivorous crabs,omnivore,omnivore,omnivore,omnivore,3
+StMarks,19,Blue crab,invertivore,invertivore,invertivore,invertivore,3
+StMarks,20,Isopod,detritivore,detritivore,detritivore,detritivore,3
+StMarks,21,Brittle stars,detritivore,detritivore,detritivore,detritivore,3
+StMarks,22,Herbivorous shrimp,herbivore,herbivore,herbivore,herbivore,3
+StMarks,23,Predatory shrimp,invertivore,invertivore,invertivore,invertivore,3
+StMarks,24,Deposit-feed gastropod,detritivore,detritivore,detritivore,detritivore,3
+StMarks,25,Deposit-feed polycht,detritivore,detritivore,detritivore,detritivore,3
+StMarks,26,Predatory polycht,invertivore,invertivore,invertivore,invertivore,3
+StMarks,27,Predatory gastropod,invertivore,invertivore,invertivore,invertivore,3
+StMarks,28,Epiphyte-graz gastropod,herbivore,herbivore,herbivore,herbivore,3
+StMarks,29,Other gastropods,herbivore,omnivore,detritivore,,1
+StMarks,30,Catfish & stingrays,invertivore,invertivore,invertivore,invertivore,3
+StMarks,31,Tongue fish,invertivore,invertivore,invertivore,invertivore,3
+StMarks,32,Gulf flound & needle fish,top_predator,top_predator,top_predator,top_predator,3
+StMarks,33,Southrn hake & sea robins,invertivore,invertivore,invertivore,invertivore,3
+StMarks,34,Atl. silverside & bay anc,invertivore,invertivore,invertivore,invertivore,3
+StMarks,35,Gobies & blennies,invertivore,invertivore,invertivore,invertivore,3
+StMarks,36,Pinfish,omnivore,omnivore,omnivore,omnivore,3
+StMarks,37,Spot,invertivore,invertivore,invertivore,invertivore,3
+StMarks,38,Pipefish & seahorses,invertivore,invertivore,invertivore,invertivore,3
+StMarks,39,Sheepshead minnow,omnivore,omnivore,omnivore,omnivore,3
+StMarks,40,Red Drum,invertivore,invertivore,invertivore,invertivore,3
+StMarks,41,Killifish,invertivore,invertivore,invertivore,invertivore,3
+StMarks,42,Herbivorous ducks,herbivore,herbivore,herbivore,herbivore,3
+StMarks,43,Benthos-eating birds,invertivore,invertivore,invertivore,invertivore,3
+StMarks,44,Fish-eating birds,top_predator,top_predator,top_predator,top_predator,3
+StMarks,45,Fish & crust. eating bird,top_predator,top_predator,top_predator,top_predator,3
+StMarks,46,Gulls,omnivore,omnivore,omnivore,omnivore,3
+StMarks,47,Raptors,top_predator,top_predator,top_predator,top_predator,3
+StMarks,48,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+StMarks,49,Suspended POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+StMarks,50,Sediment POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baydry,0,2um Spherical Phytoplankt,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,1,Synedococcus,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,2,Oscillatoria,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,3,Small Diatoms (<20um),primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,4,Big Diatoms (>20um),primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,5,Dinoflagellates,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,6,Other Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,7,Benthic Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,8,Thalassia,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,9,Halodule,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,10,Syringodium,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,11,Roots,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,12,Drift Algae,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,13,Epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+baydry,14,Free Bacteria,microbial,microbial,microbial,microbial,3
+baydry,15,Water Flagellates,microbial,microbial,microbial,microbial,3
+baydry,16,Water Cilitaes,microbial,microbial,microbial,microbial,3
+baydry,17,Acartia Tonsa,omnivore,omnivore,herbivore,omnivore,2
+baydry,18,Oithona nana,invertivore,invertivore,herbivore,invertivore,2
+baydry,19,Paracalanus,herbivore,herbivore,herbivore,herbivore,3
+baydry,20,Other Copepoda,omnivore,omnivore,herbivore,omnivore,2
+baydry,21,Meroplankton,herbivore,omnivore,herbivore,herbivore,2
+baydry,22,Other Zooplankton,omnivore,omnivore,herbivore,omnivore,2
+baydry,23,Benthic Flagellates,microbial,microbial,microbial,microbial,3
+baydry,24,Benthic Ciliates,microbial,microbial,microbial,microbial,3
+baydry,25,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+baydry,26,Sponges,detritivore,detritivore,detritivore,detritivore,3
+baydry,27,Coral,invertivore,invertivore,invertivore,invertivore,3
+baydry,28,Other Cnidaridae,invertivore,invertivore,invertivore,invertivore,3
+baydry,29,Echinoderma,detritivore,detritivore,detritivore,detritivore,3
+baydry,30,Bivalves,herbivore,detritivore,detritivore,detritivore,2
+baydry,31,Detritivorous Gastropods,detritivore,detritivore,detritivore,detritivore,3
+baydry,32,Epiphytic Gastropods,herbivore,herbivore,herbivore,herbivore,3
+baydry,33,Predatory Gastropods,invertivore,invertivore,invertivore,invertivore,3
+baydry,34,Detritivorous Polychaetes,detritivore,detritivore,detritivore,detritivore,3
+baydry,35,Predatory Polychaetes,invertivore,invertivore,invertivore,invertivore,3
+baydry,36,Suspension Feeding Polych,detritivore,detritivore,detritivore,detritivore,3
+baydry,37,Macrobenthos,detritivore,detritivore,detritivore,detritivore,3
+baydry,38,Benthic Crustaceans,omnivore,omnivore,detritivore,omnivore,2
+baydry,39,Detritivorous Amphipods,detritivore,detritivore,detritivore,detritivore,3
+baydry,40,Herbivorous Amphipods,herbivore,herbivore,herbivore,herbivore,3
+baydry,41,Isopods,detritivore,detritivore,detritivore,detritivore,3
+baydry,42,Herbivorous Shrimp,herbivore,herbivore,herbivore,herbivore,3
+baydry,43,Predatory Shrimp,invertivore,invertivore,invertivore,invertivore,3
+baydry,44,Pink Shrimp,omnivore,omnivore,omnivore,omnivore,3
+baydry,45,Thor Floridanus,omnivore,herbivore,herbivore,herbivore,2
+baydry,46,Lobster,invertivore,invertivore,invertivore,invertivore,3
+baydry,47,Detritivorous Crabs,detritivore,detritivore,detritivore,detritivore,3
+baydry,48,Omnivorous Crabs,omnivore,omnivore,omnivore,omnivore,3
+baydry,49,Predatory Crabs,invertivore,invertivore,invertivore,invertivore,3
+baydry,50,Callinectus sapidus,invertivore,invertivore,invertivore,invertivore,3
+baydry,51,Stone Crab,invertivore,invertivore,invertivore,invertivore,3
+baydry,52,Sharks,top_predator,top_predator,top_predator,top_predator,3
+baydry,53,Rays,invertivore,invertivore,invertivore,invertivore,3
+baydry,54,Tarpon,top_predator,top_predator,top_predator,top_predator,3
+baydry,55,Bonefish,invertivore,invertivore,invertivore,invertivore,3
+baydry,56,Sardines,omnivore,invertivore,invertivore,invertivore,2
+baydry,57,Anchovy,invertivore,invertivore,invertivore,invertivore,3
+baydry,58,Bay Anchovy,invertivore,invertivore,invertivore,invertivore,3
+baydry,59,Lizardfish,top_predator,top_predator,top_predator,top_predator,3
+baydry,60,Catfish,invertivore,invertivore,invertivore,invertivore,3
+baydry,61,Eels,invertivore,top_predator,invertivore,invertivore,2
+baydry,62,Toadfish,invertivore,invertivore,invertivore,invertivore,3
+baydry,63,Brotalus,invertivore,invertivore,invertivore,invertivore,3
+baydry,64,Halfbeaks,omnivore,herbivore,omnivore,omnivore,2
+baydry,65,Needlefish,top_predator,top_predator,top_predator,top_predator,3
+baydry,66,Other Killifish,invertivore,invertivore,invertivore,invertivore,3
+baydry,67,Goldspotted killifish,omnivore,omnivore,invertivore,omnivore,2
+baydry,68,Rainwater killifish,invertivore,invertivore,invertivore,invertivore,3
+baydry,69,Snook,top_predator,top_predator,top_predator,top_predator,3
+baydry,70,Sailfin Molly,herbivore,herbivore,herbivore,herbivore,3
+baydry,71,Silverside,invertivore,invertivore,invertivore,invertivore,3
+baydry,72,Other Horsefish,invertivore,invertivore,invertivore,invertivore,3
+baydry,73,Gulf Pipefish,invertivore,invertivore,invertivore,invertivore,3
+baydry,74,Dwarf Seahorse,invertivore,invertivore,invertivore,invertivore,3
+baydry,75,Grouper,top_predator,top_predator,top_predator,top_predator,3
+baydry,76,Jacks,top_predator,top_predator,top_predator,top_predator,3
+baydry,77,Pompano,invertivore,invertivore,invertivore,invertivore,3
+baydry,78,Other Snapper,top_predator,top_predator,invertivore,top_predator,2
+baydry,79,Gray Snapper,top_predator,top_predator,top_predator,top_predator,3
+baydry,80,Mojarra,invertivore,invertivore,invertivore,invertivore,3
+baydry,81,Grunt,invertivore,invertivore,invertivore,invertivore,3
+baydry,82,Porgy,invertivore,invertivore,invertivore,invertivore,3
+baydry,83,Pinfish,omnivore,omnivore,omnivore,omnivore,3
+baydry,84,Scianids,invertivore,invertivore,invertivore,invertivore,3
+baydry,85,Spotted Seatrout,top_predator,top_predator,top_predator,top_predator,3
+baydry,86,Red Drum,invertivore,invertivore,invertivore,invertivore,3
+baydry,87,Spadefish,invertivore,invertivore,invertivore,invertivore,3
+baydry,88,Parrotfish,herbivore,herbivore,herbivore,herbivore,3
+baydry,89,Mackerel,top_predator,top_predator,top_predator,top_predator,3
+baydry,90,Mullet,detritivore,detritivore,detritivore,detritivore,3
+baydry,91,Barracuda,top_predator,top_predator,top_predator,top_predator,3
+baydry,92,Blennies,omnivore,invertivore,invertivore,invertivore,2
+baydry,93,Code Goby,invertivore,invertivore,invertivore,invertivore,3
+baydry,94,Clown Goby,invertivore,invertivore,invertivore,invertivore,3
+baydry,95,Flatfish,invertivore,invertivore,invertivore,invertivore,3
+baydry,96,Filefishes,omnivore,omnivore,omnivore,omnivore,3
+baydry,97,Puffer,invertivore,invertivore,invertivore,invertivore,3
+baydry,98,Other Pelagic Fishes,invertivore,top_predator,invertivore,invertivore,2
+baydry,99,Other Demersal Fishes,invertivore,invertivore,invertivore,invertivore,3
+baydry,100,Loon,top_predator,top_predator,top_predator,top_predator,3
+baydry,101,Greeb,top_predator,top_predator,top_predator,top_predator,3
+baydry,102,Pelican,top_predator,top_predator,top_predator,top_predator,3
+baydry,103,Comorant,top_predator,top_predator,top_predator,top_predator,3
+baydry,104,Big Herons & Egrets,top_predator,top_predator,top_predator,top_predator,3
+baydry,105,Small Herons & Egrets,top_predator,top_predator,top_predator,top_predator,3
+baydry,106,Ibis,invertivore,invertivore,invertivore,invertivore,3
+baydry,107,Roseate Spoonbill,top_predator,top_predator,invertivore,top_predator,2
+baydry,108,Herbivorous Ducks,herbivore,herbivore,herbivore,herbivore,3
+baydry,109,Omnivorous Ducks,omnivore,omnivore,omnivore,omnivore,3
+baydry,110,Predatory Ducks,top_predator,top_predator,top_predator,top_predator,3
+baydry,111,Raptors,top_predator,top_predator,top_predator,top_predator,3
+baydry,112,Gruiformes,omnivore,omnivore,omnivore,omnivore,3
+baydry,113,Small Shorebirds,invertivore,invertivore,invertivore,invertivore,3
+baydry,114,Gulls & Terns,top_predator,top_predator,top_predator,top_predator,3
+baydry,115,Kingfisher,top_predator,top_predator,top_predator,top_predator,3
+baydry,116,Crocodiles,top_predator,top_predator,top_predator,top_predator,3
+baydry,117,Loggerhead Turtle,invertivore,invertivore,invertivore,invertivore,3
+baydry,118,Green Turtle,herbivore,herbivore,herbivore,herbivore,3
+baydry,119,Hawksbill Turtle,invertivore,invertivore,invertivore,invertivore,3
+baydry,120,Dolphin,top_predator,top_predator,top_predator,top_predator,3
+baydry,121,Manatee,herbivore,herbivore,herbivore,herbivore,3
+baydry,122,Water POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baydry,123,Benthic POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baydry,124,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baywet,0,2um Spherical Phytoplankt,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,1,Synedococcus,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,2,Oscillatoria,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,3,Small Diatoms (<20um),primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,4,Big Diatoms (>20um),primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,5,Dinoflagellates,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,6,Other Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,7,Benthic Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,8,Thalassia,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,9,Halodule,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,10,Syringodium,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,11,Roots,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,12,Drift Algae,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,13,Epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+baywet,14,Free Bacteria,microbial,microbial,microbial,microbial,3
+baywet,15,Water Flagellates,microbial,microbial,microbial,microbial,3
+baywet,16,Water Cilitaes,microbial,microbial,microbial,microbial,3
+baywet,17,Acartia Tonsa,omnivore,omnivore,herbivore,omnivore,2
+baywet,18,Oithona nana,invertivore,invertivore,herbivore,invertivore,2
+baywet,19,Paracalanus,herbivore,herbivore,herbivore,herbivore,3
+baywet,20,Other Copepoda,omnivore,omnivore,herbivore,omnivore,2
+baywet,21,Meroplankton,omnivore,omnivore,herbivore,omnivore,2
+baywet,22,Other Zooplankton,omnivore,omnivore,herbivore,omnivore,2
+baywet,23,Benthic Flagellates,microbial,microbial,microbial,microbial,3
+baywet,24,Benthic Ciliates,microbial,microbial,microbial,microbial,3
+baywet,25,Meiofauna,detritivore,detritivore,detritivore,detritivore,3
+baywet,26,Sponges,detritivore,detritivore,detritivore,detritivore,3
+baywet,27,Coral,invertivore,invertivore,invertivore,invertivore,3
+baywet,28,Other Cnidaridae,invertivore,invertivore,invertivore,invertivore,3
+baywet,29,Echinoderma,detritivore,detritivore,detritivore,detritivore,3
+baywet,30,Bivalves,detritivore,herbivore,detritivore,detritivore,2
+baywet,31,Detritivorous Gastropods,detritivore,detritivore,detritivore,detritivore,3
+baywet,32,Epiphytic Gastropods,herbivore,herbivore,herbivore,herbivore,3
+baywet,33,Predatory Gastropods,invertivore,invertivore,invertivore,invertivore,3
+baywet,34,Detritivorous Polychaetes,detritivore,detritivore,detritivore,detritivore,3
+baywet,35,Predatory Polychaetes,invertivore,invertivore,invertivore,invertivore,3
+baywet,36,Suspension Feeding Polych,detritivore,detritivore,detritivore,detritivore,3
+baywet,37,Macrobenthos,detritivore,detritivore,detritivore,detritivore,3
+baywet,38,Benthic Crustaceans,omnivore,omnivore,detritivore,omnivore,2
+baywet,39,Detritivorous Amphipods,detritivore,detritivore,detritivore,detritivore,3
+baywet,40,Herbivorous Amphipods,herbivore,herbivore,herbivore,herbivore,3
+baywet,41,Isopods,detritivore,herbivore,detritivore,detritivore,2
+baywet,42,Herbivorous Shrimp,herbivore,herbivore,herbivore,herbivore,3
+baywet,43,Predatory Shrimp,invertivore,invertivore,invertivore,invertivore,3
+baywet,44,Pink Shrimp,omnivore,omnivore,omnivore,omnivore,3
+baywet,45,Thor Floridanus,omnivore,omnivore,herbivore,omnivore,2
+baywet,46,Lobster,invertivore,invertivore,invertivore,invertivore,3
+baywet,47,Detritivorous Crabs,detritivore,detritivore,detritivore,detritivore,3
+baywet,48,Omnivorous Crabs,omnivore,omnivore,omnivore,omnivore,3
+baywet,49,Predatory Crabs,invertivore,invertivore,invertivore,invertivore,3
+baywet,50,Callinectus sapidus,invertivore,invertivore,omnivore,invertivore,2
+baywet,51,Stone Crab,invertivore,invertivore,invertivore,invertivore,3
+baywet,52,Sharks,top_predator,top_predator,top_predator,top_predator,3
+baywet,53,Rays,invertivore,invertivore,invertivore,invertivore,3
+baywet,54,Tarpon,top_predator,top_predator,top_predator,top_predator,3
+baywet,55,Bonefish,invertivore,invertivore,invertivore,invertivore,3
+baywet,56,Sardines,omnivore,omnivore,invertivore,omnivore,2
+baywet,57,Anchovy,invertivore,invertivore,invertivore,invertivore,3
+baywet,58,Bay Anchovy,invertivore,invertivore,invertivore,invertivore,3
+baywet,59,Lizardfish,top_predator,top_predator,top_predator,top_predator,3
+baywet,60,Catfish,invertivore,invertivore,invertivore,invertivore,3
+baywet,61,Eels,invertivore,invertivore,invertivore,invertivore,3
+baywet,62,Toadfish,invertivore,invertivore,invertivore,invertivore,3
+baywet,63,Brotalus,invertivore,invertivore,invertivore,invertivore,3
+baywet,64,Halfbeaks,omnivore,herbivore,omnivore,omnivore,2
+baywet,65,Needlefish,top_predator,top_predator,top_predator,top_predator,3
+baywet,66,Other Killifish,invertivore,invertivore,invertivore,invertivore,3
+baywet,67,Goldspotted killifish,omnivore,omnivore,invertivore,omnivore,2
+baywet,68,Rainwater killifish,invertivore,invertivore,invertivore,invertivore,3
+baywet,69,Snook,top_predator,top_predator,top_predator,top_predator,3
+baywet,70,Sailfin Molly,herbivore,herbivore,herbivore,herbivore,3
+baywet,71,Silverside,invertivore,invertivore,invertivore,invertivore,3
+baywet,72,Other Horsefish,invertivore,invertivore,invertivore,invertivore,3
+baywet,73,Gulf Pipefish,invertivore,invertivore,invertivore,invertivore,3
+baywet,74,Dwarf Seahorse,invertivore,invertivore,invertivore,invertivore,3
+baywet,75,Grouper,top_predator,top_predator,top_predator,top_predator,3
+baywet,76,Jacks,top_predator,top_predator,top_predator,top_predator,3
+baywet,77,Pompano,invertivore,invertivore,invertivore,invertivore,3
+baywet,78,Other Snapper,invertivore,top_predator,invertivore,invertivore,2
+baywet,79,Gray Snapper,invertivore,top_predator,invertivore,invertivore,2
+baywet,80,Mojarra,invertivore,invertivore,invertivore,invertivore,3
+baywet,81,Grunt,invertivore,invertivore,invertivore,invertivore,3
+baywet,82,Porgy,invertivore,invertivore,invertivore,invertivore,3
+baywet,83,Pinfish,omnivore,omnivore,omnivore,omnivore,3
+baywet,84,Scianids,invertivore,invertivore,invertivore,invertivore,3
+baywet,85,Spotted Seatrout,top_predator,top_predator,top_predator,top_predator,3
+baywet,86,Red Drum,invertivore,invertivore,invertivore,invertivore,3
+baywet,87,Spadefish,invertivore,invertivore,invertivore,invertivore,3
+baywet,88,Parrotfish,herbivore,herbivore,herbivore,herbivore,3
+baywet,89,Mackerel,top_predator,top_predator,top_predator,top_predator,3
+baywet,90,Mullet,detritivore,detritivore,detritivore,detritivore,3
+baywet,91,Barracuda,top_predator,top_predator,top_predator,top_predator,3
+baywet,92,Blennies,omnivore,omnivore,omnivore,omnivore,3
+baywet,93,Code Goby,invertivore,invertivore,invertivore,invertivore,3
+baywet,94,Clown Goby,invertivore,invertivore,invertivore,invertivore,3
+baywet,95,Flatfish,invertivore,invertivore,invertivore,invertivore,3
+baywet,96,Filefishes,omnivore,omnivore,omnivore,omnivore,3
+baywet,97,Puffer,invertivore,invertivore,invertivore,invertivore,3
+baywet,98,Other Pelagic Fishes,invertivore,top_predator,invertivore,invertivore,2
+baywet,99,Other Demersal Fishes,invertivore,invertivore,invertivore,invertivore,3
+baywet,100,Loon,top_predator,top_predator,top_predator,top_predator,3
+baywet,101,Greeb,top_predator,top_predator,top_predator,top_predator,3
+baywet,102,Pelican,top_predator,top_predator,top_predator,top_predator,3
+baywet,103,Comorant,top_predator,top_predator,top_predator,top_predator,3
+baywet,104,Big Herons & Egrets,top_predator,top_predator,top_predator,top_predator,3
+baywet,105,Small Herons & Egrets,top_predator,top_predator,top_predator,top_predator,3
+baywet,106,Ibis,invertivore,invertivore,invertivore,invertivore,3
+baywet,107,Roseate Spoonbill,invertivore,top_predator,invertivore,invertivore,2
+baywet,108,Herbivorous Ducks,herbivore,herbivore,herbivore,herbivore,3
+baywet,109,Omnivorous Ducks,omnivore,omnivore,omnivore,omnivore,3
+baywet,110,Predatory Ducks,invertivore,top_predator,top_predator,top_predator,2
+baywet,111,Raptors,top_predator,top_predator,top_predator,top_predator,3
+baywet,112,Gruiformes,omnivore,omnivore,omnivore,omnivore,3
+baywet,113,Small Shorebirds,invertivore,invertivore,invertivore,invertivore,3
+baywet,114,Gulls & Terns,top_predator,top_predator,top_predator,top_predator,3
+baywet,115,Kingfisher,top_predator,top_predator,top_predator,top_predator,3
+baywet,116,Crocodiles,top_predator,top_predator,top_predator,top_predator,3
+baywet,117,Loggerhead Turtle,invertivore,invertivore,invertivore,invertivore,3
+baywet,118,Green Turtle,herbivore,herbivore,herbivore,herbivore,3
+baywet,119,Hawksbill Turtle,invertivore,invertivore,invertivore,invertivore,3
+baywet,120,Dolphin,top_predator,top_predator,top_predator,top_predator,3
+baywet,121,Manatee,herbivore,herbivore,herbivore,herbivore,3
+baywet,122,Water POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baywet,123,Benthic POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+baywet,124,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypdry,0,Living POC,microbial,microbial,microbial,microbial,3
+cypdry,1,Living sediment,microbial,microbial,microbial,microbial,3
+cypdry,2,Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,3,Float. vegetation,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,4,Periphyton/Macroalgae,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,5,Macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,6,Epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,7,Understory,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,8,Vine Leaves,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,9,Hardwoods Leaves,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,10,Cypress Leaves,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,11,Cypress Wood,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,12,HW Wood,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,13,Roots,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypdry,14,Crayfish,omnivore,omnivore,detritivore,omnivore,2
+cypdry,15,Apple Snail,herbivore,herbivore,herbivore,herbivore,3
+cypdry,16,Prawn,omnivore,omnivore,detritivore,omnivore,2
+cypdry,17,Aquatic Invertebrates,detritivore,detritivore,detritivore,detritivore,3
+cypdry,18,Ter. Invertebrates,herbivore,detritivore,herbivore,herbivore,2
+cypdry,19,"Small Fish, herb + omniv",omnivore,omnivore,omnivore,omnivore,3
+cypdry,20,"Small Fish, prim. carniv",invertivore,invertivore,invertivore,invertivore,3
+cypdry,21,Large Fish,top_predator,top_predator,top_predator,top_predator,3
+cypdry,22,Alligators,top_predator,top_predator,top_predator,top_predator,3
+cypdry,23,Turtles,omnivore,omnivore,omnivore,omnivore,3
+cypdry,24,Lizards,invertivore,invertivore,invertivore,invertivore,3
+cypdry,25,Snakes,top_predator,top_predator,top_predator,top_predator,3
+cypdry,26,Salamanders,invertivore,invertivore,invertivore,invertivore,3
+cypdry,27,Large Frogs,invertivore,invertivore,invertivore,invertivore,3
+cypdry,28,Medium Frogs,invertivore,invertivore,invertivore,invertivore,3
+cypdry,29,Small Frogs,invertivore,invertivore,invertivore,invertivore,3
+cypdry,30,Salamander L,invertivore,invertivore,invertivore,invertivore,3
+cypdry,31,Tadpoles,herbivore,herbivore,herbivore,herbivore,3
+cypdry,32,Pelecaniformes,top_predator,top_predator,top_predator,top_predator,3
+cypdry,33,Anseriformes,omnivore,omnivore,herbivore,omnivore,2
+cypdry,34,Vultures,top_predator,top_predator,top_predator,top_predator,3
+cypdry,35,Kites & Hawks,top_predator,top_predator,top_predator,top_predator,3
+cypdry,36,Galliformes,omnivore,omnivore,omnivore,omnivore,3
+cypdry,37,Egrets,top_predator,top_predator,top_predator,top_predator,3
+cypdry,38,Great blue heron,top_predator,top_predator,top_predator,top_predator,3
+cypdry,39,Other herons,top_predator,top_predator,top_predator,top_predator,3
+cypdry,40,Wood stork,top_predator,top_predator,top_predator,top_predator,3
+cypdry,41,White ibis,invertivore,invertivore,invertivore,invertivore,3
+cypdry,42,Gruiformes,omnivore,omnivore,invertivore,omnivore,2
+cypdry,43,Owls,top_predator,top_predator,top_predator,top_predator,3
+cypdry,44,Caprimulgiformes,invertivore,invertivore,invertivore,invertivore,3
+cypdry,45,Hummingbirds,herbivore,herbivore,herbivore,herbivore,3
+cypdry,46,Woodpeckers,invertivore,invertivore,invertivore,invertivore,3
+cypdry,47,Passeriformes onniv.,omnivore,omnivore,omnivore,omnivore,3
+cypdry,48,Passeriformes pred.,invertivore,invertivore,invertivore,invertivore,3
+cypdry,49,Opossum,omnivore,omnivore,omnivore,omnivore,3
+cypdry,50,Shrews,invertivore,invertivore,invertivore,invertivore,3
+cypdry,51,Bats,invertivore,invertivore,invertivore,invertivore,3
+cypdry,52,Black Bear,omnivore,omnivore,omnivore,omnivore,3
+cypdry,53,G. Fox,omnivore,omnivore,omnivore,omnivore,3
+cypdry,54,Raccoon,omnivore,omnivore,omnivore,omnivore,3
+cypdry,55,Mink,top_predator,top_predator,top_predator,top_predator,3
+cypdry,56,Otter,top_predator,top_predator,top_predator,top_predator,3
+cypdry,57,Florida Panther,top_predator,top_predator,top_predator,top_predator,3
+cypdry,58,Bobcat,top_predator,top_predator,top_predator,top_predator,3
+cypdry,59,Squirrels,herbivore,herbivore,herbivore,herbivore,3
+cypdry,60,Mice & Rats,omnivore,omnivore,omnivore,omnivore,3
+cypdry,61,Rabbits,herbivore,herbivore,herbivore,herbivore,3
+cypdry,62,White-Tailed Deer,herbivore,herbivore,herbivore,herbivore,3
+cypdry,63,Hogs,omnivore,omnivore,omnivore,omnivore,3
+cypdry,64,Armadillo,invertivore,invertivore,invertivore,invertivore,3
+cypdry,65,Refractory Det.,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypdry,66,Liable Det.,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypdry,67,Vertebrate Det.,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypwet,0,Living POC,microbial,microbial,microbial,microbial,3
+cypwet,1,Living SED,microbial,microbial,microbial,microbial,3
+cypwet,2,Phytoplankton,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,3,Float Veg.,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,4,Periphyton,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,5,Macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,6,Epiphytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,7,Understory,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,8,Vine L,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,9,Hardwood L,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,10,Cypress L,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,11,Cypress W,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,12,Hardwood W,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,13,Roots,primary_producer,primary_producer,primary_producer,primary_producer,3
+cypwet,14,Crayfish,omnivore,omnivore,detritivore,omnivore,2
+cypwet,15,Apple Snail,herbivore,herbivore,herbivore,herbivore,3
+cypwet,16,Prawn,omnivore,omnivore,detritivore,omnivore,2
+cypwet,17,Aquatic I,detritivore,detritivore,detritivore,detritivore,3
+cypwet,18,Terrst. I,herbivore,herbivore,herbivore,herbivore,3
+cypwet,19,Fish HO,omnivore,omnivore,omnivore,omnivore,3
+cypwet,20,Fish PC,invertivore,invertivore,invertivore,invertivore,3
+cypwet,21,L Fish,top_predator,top_predator,top_predator,top_predator,3
+cypwet,22,Alligators,top_predator,top_predator,top_predator,top_predator,3
+cypwet,23,Turtles,omnivore,omnivore,omnivore,omnivore,3
+cypwet,24,Lizards,invertivore,invertivore,invertivore,invertivore,3
+cypwet,25,Snakes,top_predator,top_predator,top_predator,top_predator,3
+cypwet,26,Salamanders,invertivore,invertivore,invertivore,invertivore,3
+cypwet,27,L Frog,invertivore,invertivore,invertivore,invertivore,3
+cypwet,28,M Frog,invertivore,invertivore,invertivore,invertivore,3
+cypwet,29,S Frog,invertivore,invertivore,invertivore,invertivore,3
+cypwet,30,Salam. L,invertivore,invertivore,invertivore,invertivore,3
+cypwet,31,Tadpoles,detritivore,herbivore,herbivore,herbivore,2
+cypwet,32,Pelecaniformes,top_predator,top_predator,top_predator,top_predator,3
+cypwet,33,Anseriformes,omnivore,omnivore,herbivore,omnivore,2
+cypwet,34,Vultures,top_predator,top_predator,top_predator,top_predator,3
+cypwet,35,Kites & Hawks,top_predator,top_predator,top_predator,top_predator,3
+cypwet,36,Galliformes,omnivore,omnivore,omnivore,omnivore,3
+cypwet,37,Egrets,top_predator,top_predator,top_predator,top_predator,3
+cypwet,38,GB Heron,top_predator,top_predator,top_predator,top_predator,3
+cypwet,39,Other Herons,top_predator,top_predator,top_predator,top_predator,3
+cypwet,40,Wood stork,top_predator,top_predator,top_predator,top_predator,3
+cypwet,41,White ibis,invertivore,invertivore,invertivore,invertivore,3
+cypwet,42,Gruiformes,omnivore,omnivore,invertivore,omnivore,2
+cypwet,43,Owls,top_predator,top_predator,top_predator,top_predator,3
+cypwet,44,Caprimulgiformes,invertivore,invertivore,invertivore,invertivore,3
+cypwet,45,Hummingbirds,herbivore,herbivore,herbivore,herbivore,3
+cypwet,46,Woodpeckers,invertivore,invertivore,invertivore,invertivore,3
+cypwet,47,Passeriformes onniv.,omnivore,omnivore,omnivore,omnivore,3
+cypwet,48,Passeriformes pred.,invertivore,invertivore,invertivore,invertivore,3
+cypwet,49,Opossum,omnivore,omnivore,omnivore,omnivore,3
+cypwet,50,Shrews,invertivore,invertivore,invertivore,invertivore,3
+cypwet,51,Bats,invertivore,invertivore,invertivore,invertivore,3
+cypwet,52,Black Bear,omnivore,omnivore,omnivore,omnivore,3
+cypwet,53,G Fox,omnivore,omnivore,omnivore,omnivore,3
+cypwet,54,Raccoon,omnivore,omnivore,omnivore,omnivore,3
+cypwet,55,Mink,top_predator,top_predator,top_predator,top_predator,3
+cypwet,56,Otter,top_predator,top_predator,top_predator,top_predator,3
+cypwet,57,Florida Panther,top_predator,top_predator,top_predator,top_predator,3
+cypwet,58,Bobcat,top_predator,top_predator,top_predator,top_predator,3
+cypwet,59,Squirrels,herbivore,herbivore,herbivore,herbivore,3
+cypwet,60,Mice & Rats,omnivore,omnivore,herbivore,omnivore,2
+cypwet,61,Rabbits,herbivore,herbivore,herbivore,herbivore,3
+cypwet,62,White-Tailed Deer,herbivore,herbivore,herbivore,herbivore,3
+cypwet,63,Hogs,omnivore,omnivore,omnivore,omnivore,3
+cypwet,64,Armadillo,invertivore,invertivore,invertivore,invertivore,3
+cypwet,65,Refractory Det.,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypwet,66,Liable Det.,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+cypwet,67,Vert. det,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramdry,0,Living Sediments,microbial,microbial,microbial,microbial,3
+gramdry,1,Living POC,microbial,microbial,microbial,microbial,3
+gramdry,2,Periphyton,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramdry,3,Macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramdry,4,Utricularia,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramdry,5,Floating Veg.,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramdry,6,Apple snail,herbivore,herbivore,herbivore,herbivore,3
+gramdry,7,Freshwater Prawn,omnivore,omnivore,detritivore,omnivore,2
+gramdry,8,Crayfish,omnivore,omnivore,detritivore,omnivore,2
+gramdry,9,Mesoinverts,detritivore,detritivore,detritivore,detritivore,3
+gramdry,10,Other Macroinverts,detritivore,detritivore,detritivore,detritivore,3
+gramdry,11,Large Aquatic Insects,invertivore,invertivore,invertivore,invertivore,3
+gramdry,12,Terrestrial Inverts,omnivore,omnivore,herbivore,omnivore,2
+gramdry,13,Fishing spider,invertivore,invertivore,invertivore,invertivore,3
+gramdry,14,Gar,top_predator,top_predator,top_predator,top_predator,3
+gramdry,15,Shiners & Minnows,omnivore,omnivore,invertivore,omnivore,2
+gramdry,16,Chubsuckers,detritivore,omnivore,invertivore,,1
+gramdry,17,Catfish,omnivore,omnivore,invertivore,omnivore,2
+gramdry,18,Flagfish,herbivore,herbivore,herbivore,herbivore,3
+gramdry,19,Topminnows,invertivore,invertivore,invertivore,invertivore,3
+gramdry,20,Bluefin killifish,omnivore,invertivore,invertivore,invertivore,2
+gramdry,21,Killifishes,invertivore,invertivore,invertivore,invertivore,3
+gramdry,22,Mosquitofishes,invertivore,invertivore,invertivore,invertivore,3
+gramdry,23,Poecilids,omnivore,omnivore,omnivore,omnivore,3
+gramdry,24,Pigmy Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramdry,25,Bluespotted Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramdry,26,Warmouth,invertivore,invertivore,invertivore,invertivore,3
+gramdry,27,Dollar Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramdry,28,Redear Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramdry,29,Spotted sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramdry,30,Other Centrarchids,invertivore,invertivore,invertivore,invertivore,3
+gramdry,31,Largemouth Bass,top_predator,top_predator,top_predator,top_predator,3
+gramdry,32,Cichlids,omnivore,omnivore,omnivore,omnivore,3
+gramdry,33,Other Large Fishes,top_predator,top_predator,top_predator,top_predator,3
+gramdry,34,Other Small Fishes,invertivore,invertivore,invertivore,invertivore,3
+gramdry,35,Salamanders,invertivore,invertivore,invertivore,invertivore,3
+gramdry,36,Salamander larvae,invertivore,invertivore,invertivore,invertivore,3
+gramdry,37,Large frogs,invertivore,invertivore,invertivore,invertivore,3
+gramdry,38,Medium frogs,invertivore,invertivore,invertivore,invertivore,3
+gramdry,39,Small frogs,invertivore,invertivore,invertivore,invertivore,3
+gramdry,40,Tadpoles,herbivore,herbivore,herbivore,herbivore,3
+gramdry,41,Turtles,omnivore,omnivore,omnivore,omnivore,3
+gramdry,42,Snakes,top_predator,top_predator,top_predator,top_predator,3
+gramdry,43,Lizards,invertivore,invertivore,invertivore,invertivore,3
+gramdry,44,Alligators,top_predator,top_predator,top_predator,top_predator,3
+gramdry,45,Muskrats,herbivore,herbivore,herbivore,herbivore,3
+gramdry,46,Rats&Mice,omnivore,omnivore,herbivore,omnivore,2
+gramdry,47,Rabbits,herbivore,herbivore,herbivore,herbivore,3
+gramdry,48,Raccoons,omnivore,omnivore,omnivore,omnivore,3
+gramdry,49,Opossum,omnivore,omnivore,omnivore,omnivore,3
+gramdry,50,Otter,top_predator,top_predator,top_predator,top_predator,3
+gramdry,51,Mink,top_predator,top_predator,top_predator,top_predator,3
+gramdry,52,W-T Deer,herbivore,herbivore,herbivore,herbivore,3
+gramdry,53,Bobcat,top_predator,top_predator,top_predator,top_predator,3
+gramdry,54,Panthers,top_predator,top_predator,top_predator,top_predator,3
+gramdry,55,Grebes,top_predator,top_predator,invertivore,top_predator,2
+gramdry,56,Bitterns,top_predator,top_predator,top_predator,top_predator,3
+gramdry,57,Ducks,omnivore,omnivore,herbivore,omnivore,2
+gramdry,58,Snailkites,invertivore,invertivore,invertivore,invertivore,3
+gramdry,59,Nighthawks,invertivore,invertivore,invertivore,invertivore,3
+gramdry,60,Gruiformes,omnivore,omnivore,omnivore,omnivore,3
+gramdry,61,CSSsparrow,invertivore,invertivore,invertivore,invertivore,3
+gramdry,62,Passerines,omnivore,omnivore,invertivore,omnivore,2
+gramdry,63,Sediment Carbon,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramdry,64,Labile Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramdry,65,Refractory Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramwet,0,Living Sediments,microbial,microbial,microbial,microbial,3
+gramwet,1,Living POC,microbial,microbial,microbial,microbial,3
+gramwet,2,Periphyton,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramwet,3,Macrophytes,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramwet,4,Utricularia,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramwet,5,Floating Veg.,primary_producer,primary_producer,primary_producer,primary_producer,3
+gramwet,6,Apple snail,herbivore,herbivore,herbivore,herbivore,3
+gramwet,7,Freshwater Prawn,omnivore,omnivore,detritivore,omnivore,2
+gramwet,8,Crayfish,omnivore,omnivore,detritivore,omnivore,2
+gramwet,9,Mesoinverts,detritivore,detritivore,detritivore,detritivore,3
+gramwet,10,Other Macroinverts,detritivore,detritivore,detritivore,detritivore,3
+gramwet,11,Large Aquatic Insects,invertivore,invertivore,invertivore,invertivore,3
+gramwet,12,Terrestrial Inverts,herbivore,herbivore,herbivore,herbivore,3
+gramwet,13,Fishing spider,invertivore,invertivore,invertivore,invertivore,3
+gramwet,14,Gar,top_predator,top_predator,top_predator,top_predator,3
+gramwet,15,Shiners & Minnows,omnivore,omnivore,invertivore,omnivore,2
+gramwet,16,Chubsuckers,invertivore,detritivore,invertivore,invertivore,2
+gramwet,17,Catfish,omnivore,omnivore,invertivore,omnivore,2
+gramwet,18,Flagfish,herbivore,herbivore,herbivore,herbivore,3
+gramwet,19,Topminnows,invertivore,invertivore,invertivore,invertivore,3
+gramwet,20,Bluefin killifish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,21,Killifishes,invertivore,invertivore,invertivore,invertivore,3
+gramwet,22,Mosquitofishes,invertivore,invertivore,invertivore,invertivore,3
+gramwet,23,Poecilids,omnivore,omnivore,omnivore,omnivore,3
+gramwet,24,Pigmy Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,25,Bluespotted Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,26,Warmouth,invertivore,invertivore,invertivore,invertivore,3
+gramwet,27,Dollar Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,28,Redear Sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,29,Spotted sunfish,invertivore,invertivore,invertivore,invertivore,3
+gramwet,30,Other Centrarchids,invertivore,invertivore,invertivore,invertivore,3
+gramwet,31,Largemouth Bass,top_predator,top_predator,top_predator,top_predator,3
+gramwet,32,Cichlids,omnivore,omnivore,omnivore,omnivore,3
+gramwet,33,Other Large Fishes,top_predator,top_predator,top_predator,top_predator,3
+gramwet,34,Other Small Fishes,invertivore,invertivore,invertivore,invertivore,3
+gramwet,35,Salamanders,invertivore,invertivore,invertivore,invertivore,3
+gramwet,36,Salamander larvae,invertivore,invertivore,invertivore,invertivore,3
+gramwet,37,Large frogs,invertivore,invertivore,invertivore,invertivore,3
+gramwet,38,Medium frogs,invertivore,invertivore,invertivore,invertivore,3
+gramwet,39,Small frogs,invertivore,invertivore,invertivore,invertivore,3
+gramwet,40,Tadpoles,herbivore,herbivore,herbivore,herbivore,3
+gramwet,41,Turtles,omnivore,omnivore,omnivore,omnivore,3
+gramwet,42,Snakes,top_predator,top_predator,top_predator,top_predator,3
+gramwet,43,Lizards,invertivore,invertivore,invertivore,invertivore,3
+gramwet,44,Alligators,top_predator,top_predator,top_predator,top_predator,3
+gramwet,45,Muskrats,herbivore,herbivore,herbivore,herbivore,3
+gramwet,46,Rats&Mice,omnivore,omnivore,omnivore,omnivore,3
+gramwet,47,Rabbits,herbivore,herbivore,herbivore,herbivore,3
+gramwet,48,Raccoons,omnivore,omnivore,omnivore,omnivore,3
+gramwet,49,Opossum,omnivore,omnivore,omnivore,omnivore,3
+gramwet,50,Otter,top_predator,top_predator,top_predator,top_predator,3
+gramwet,51,Mink,top_predator,top_predator,top_predator,top_predator,3
+gramwet,52,W-T Deer,herbivore,herbivore,herbivore,herbivore,3
+gramwet,53,Bobcat,top_predator,top_predator,top_predator,top_predator,3
+gramwet,54,Panthers,top_predator,top_predator,top_predator,top_predator,3
+gramwet,55,Grebes,top_predator,top_predator,invertivore,top_predator,2
+gramwet,56,Bitterns,top_predator,top_predator,top_predator,top_predator,3
+gramwet,57,Ducks,omnivore,omnivore,herbivore,omnivore,2
+gramwet,58,Snailkites,invertivore,invertivore,invertivore,invertivore,3
+gramwet,59,Nighthawks,invertivore,invertivore,invertivore,invertivore,3
+gramwet,60,Gruiformes,omnivore,omnivore,omnivore,omnivore,3
+gramwet,61,CSSsparrow,invertivore,invertivore,invertivore,invertivore,3
+gramwet,62,Passerines,invertivore,omnivore,invertivore,invertivore,2
+gramwet,63,Sediment Carbon,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramwet,64,Labile Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+gramwet,65,Refractory Detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangdry,0,PHY,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangdry,1,OTH. PP,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangdry,2,LEAF,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangdry,3,WOOD,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangdry,4,ROOT,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangdry,5,MICR. H2O,microbial,microbial,microbial,microbial,3
+mangdry,6,ZOOPL.,herbivore,herbivore,herbivore,herbivore,3
+mangdry,7,BACT.SED.,microbial,microbial,microbial,microbial,3
+mangdry,8,FLA. SED.,microbial,microbial,microbial,microbial,3
+mangdry,9,CIL. SED.,microbial,microbial,microbial,microbial,3
+mangdry,10,MEIOF.,detritivore,detritivore,detritivore,detritivore,3
+mangdry,11,MERO,herbivore,herbivore,herbivore,herbivore,3
+mangdry,12,EPIFN,detritivore,detritivore,detritivore,detritivore,3
+mangdry,13,POLY,detritivore,detritivore,detritivore,detritivore,3
+mangdry,14,TGAST,herbivore,herbivore,herbivore,herbivore,3
+mangdry,15,AGAST,herbivore,herbivore,detritivore,herbivore,2
+mangdry,16,BVLVS,detritivore,detritivore,detritivore,detritivore,3
+mangdry,17,MBENTH,detritivore,detritivore,detritivore,detritivore,3
+mangdry,18,SCRUST,omnivore,detritivore,detritivore,detritivore,2
+mangdry,19,AMPHI,detritivore,detritivore,detritivore,detritivore,3
+mangdry,20,PENAID,omnivore,omnivore,detritivore,omnivore,2
+mangdry,21,CARID,omnivore,omnivore,detritivore,omnivore,2
+mangdry,22,OSHMP,omnivore,omnivore,detritivore,omnivore,2
+mangdry,23,JLOBST,invertivore,invertivore,invertivore,invertivore,3
+mangdry,24,OCRAB,omnivore,omnivore,omnivore,omnivore,3
+mangdry,25,TCRAB,herbivore,herbivore,herbivore,herbivore,3
+mangdry,26,DCRAB,detritivore,detritivore,detritivore,detritivore,3
+mangdry,27,PCRAB,invertivore,invertivore,invertivore,invertivore,3
+mangdry,28,FWINV,omnivore,omnivore,detritivore,omnivore,2
+mangdry,29,LARV,detritivore,detritivore,herbivore,detritivore,2
+mangdry,30,INSCT,omnivore,omnivore,herbivore,omnivore,2
+mangdry,31,SPIDR,invertivore,invertivore,invertivore,invertivore,3
+mangdry,32,SHRK,top_predator,top_predator,top_predator,top_predator,3
+mangdry,33,RAYS,invertivore,invertivore,invertivore,invertivore,3
+mangdry,34,TARP,top_predator,top_predator,top_predator,top_predator,3
+mangdry,35,HERR,invertivore,invertivore,invertivore,invertivore,3
+mangdry,36,ANCH,invertivore,invertivore,invertivore,invertivore,3
+mangdry,37,NEED,top_predator,top_predator,top_predator,top_predator,3
+mangdry,38,KILLI,invertivore,invertivore,invertivore,invertivore,3
+mangdry,39,POEC,omnivore,omnivore,omnivore,omnivore,3
+mangdry,40,HRSE,invertivore,invertivore,invertivore,invertivore,3
+mangdry,41,SLVR,invertivore,invertivore,invertivore,invertivore,3
+mangdry,42,SNOOK,top_predator,top_predator,top_predator,top_predator,3
+mangdry,43,CUDA,top_predator,top_predator,top_predator,top_predator,3
+mangdry,44,FWFSH,omnivore,invertivore,invertivore,invertivore,2
+mangdry,45,BENTH,invertivore,invertivore,invertivore,invertivore,3
+mangdry,46,EFISH,invertivore,invertivore,invertivore,invertivore,3
+mangdry,47,SNAP,invertivore,top_predator,invertivore,invertivore,2
+mangdry,48,MOJA,invertivore,invertivore,invertivore,invertivore,3
+mangdry,49,SCIAE,invertivore,invertivore,invertivore,invertivore,3
+mangdry,50,PIN,omnivore,omnivore,omnivore,omnivore,3
+mangdry,51,MULL,detritivore,detritivore,detritivore,detritivore,3
+mangdry,52,GOBY,invertivore,invertivore,invertivore,invertivore,3
+mangdry,53,OFISH,invertivore,invertivore,invertivore,invertivore,3
+mangdry,54,TURT,omnivore,omnivore,omnivore,omnivore,3
+mangdry,55,LZRD,invertivore,invertivore,invertivore,invertivore,3
+mangdry,56,SNKS,top_predator,top_predator,top_predator,top_predator,3
+mangdry,57,COCO,top_predator,top_predator,top_predator,top_predator,3
+mangdry,58,AMPH,invertivore,invertivore,invertivore,invertivore,3
+mangdry,59,L & G,top_predator,top_predator,top_predator,top_predator,3
+mangdry,60,PELC,top_predator,top_predator,top_predator,top_predator,3
+mangdry,61,CORM,top_predator,top_predator,top_predator,top_predator,3
+mangdry,62,BH & E,top_predator,top_predator,top_predator,top_predator,3
+mangdry,63,SE & E,top_predator,top_predator,top_predator,top_predator,3
+mangdry,64,IBIS,invertivore,invertivore,invertivore,invertivore,3
+mangdry,65,DUCK1,omnivore,omnivore,herbivore,omnivore,2
+mangdry,66,DUCK2,omnivore,omnivore,omnivore,omnivore,3
+mangdry,67,DUCK3,omnivore,omnivore,top_predator,omnivore,2
+mangdry,68,VULT,top_predator,top_predator,top_predator,top_predator,3
+mangdry,69,K & H,top_predator,top_predator,top_predator,top_predator,3
+mangdry,70,MRAPT,top_predator,top_predator,top_predator,top_predator,3
+mangdry,71,GUIF,omnivore,omnivore,omnivore,omnivore,3
+mangdry,72,SSBIRDS,invertivore,invertivore,invertivore,invertivore,3
+mangdry,73,G & T,top_predator,top_predator,top_predator,top_predator,3
+mangdry,74,C & C,omnivore,omnivore,omnivore,omnivore,3
+mangdry,75,OWLS,top_predator,top_predator,top_predator,top_predator,3
+mangdry,76,WOODP,invertivore,invertivore,invertivore,invertivore,3
+mangdry,77,PASSOMN,omnivore,omnivore,omnivore,omnivore,3
+mangdry,78,PASSPERD,invertivore,invertivore,invertivore,invertivore,3
+mangdry,79,OPSU,omnivore,omnivore,omnivore,omnivore,3
+mangdry,80,RABT,herbivore,herbivore,herbivore,herbivore,3
+mangdry,81,SQIUR,herbivore,herbivore,herbivore,herbivore,3
+mangdry,82,M & R,omnivore,omnivore,omnivore,omnivore,3
+mangdry,83,FOX,omnivore,omnivore,top_predator,omnivore,2
+mangdry,84,BEAR,omnivore,omnivore,omnivore,omnivore,3
+mangdry,85,RACO,omnivore,omnivore,omnivore,omnivore,3
+mangdry,86,M & O,top_predator,top_predator,top_predator,top_predator,3
+mangdry,87,CATS,top_predator,top_predator,top_predator,top_predator,3
+mangdry,88,DERS,herbivore,herbivore,herbivore,herbivore,3
+mangdry,89,DOLP,top_predator,top_predator,top_predator,top_predator,3
+mangdry,90,MANA,herbivore,herbivore,herbivore,herbivore,3
+mangdry,91,C in SED,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangdry,92,POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangdry,93,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangwet,0,PHY,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangwet,1,OTH. PP,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangwet,2,LEAF,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangwet,3,WOOD,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangwet,4,ROOT,primary_producer,primary_producer,primary_producer,primary_producer,3
+mangwet,5,MICR. H2O,microbial,microbial,microbial,microbial,3
+mangwet,6,ZOOPL.,herbivore,herbivore,herbivore,herbivore,3
+mangwet,7,BACT.SED.,microbial,microbial,microbial,microbial,3
+mangwet,8,FLA. SED.,microbial,microbial,microbial,microbial,3
+mangwet,9,CIL. SED.,microbial,microbial,microbial,microbial,3
+mangwet,10,MEIOF.,detritivore,detritivore,detritivore,detritivore,3
+mangwet,11,MERO,herbivore,herbivore,herbivore,herbivore,3
+mangwet,12,EPIFN,detritivore,detritivore,detritivore,detritivore,3
+mangwet,13,POLY,detritivore,detritivore,detritivore,detritivore,3
+mangwet,14,TGAST,herbivore,herbivore,herbivore,herbivore,3
+mangwet,15,AGAST,herbivore,herbivore,detritivore,herbivore,2
+mangwet,16,BVLVS,detritivore,detritivore,detritivore,detritivore,3
+mangwet,17,MBENTH,detritivore,detritivore,detritivore,detritivore,3
+mangwet,18,SCRUST,detritivore,detritivore,detritivore,detritivore,3
+mangwet,19,AMPHI,detritivore,detritivore,detritivore,detritivore,3
+mangwet,20,PENAID,omnivore,omnivore,detritivore,omnivore,2
+mangwet,21,CARID,omnivore,omnivore,detritivore,omnivore,2
+mangwet,22,OSHMP,omnivore,omnivore,detritivore,omnivore,2
+mangwet,23,JLOBST,invertivore,invertivore,invertivore,invertivore,3
+mangwet,24,OCRAB,omnivore,omnivore,omnivore,omnivore,3
+mangwet,25,TCRAB,herbivore,herbivore,herbivore,herbivore,3
+mangwet,26,DCRAB,detritivore,detritivore,detritivore,detritivore,3
+mangwet,27,PCRAB,invertivore,invertivore,invertivore,invertivore,3
+mangwet,28,FWINV,detritivore,detritivore,detritivore,detritivore,3
+mangwet,29,LARV,detritivore,detritivore,detritivore,detritivore,3
+mangwet,30,INSCT,omnivore,omnivore,herbivore,omnivore,2
+mangwet,31,SPIDR,invertivore,invertivore,invertivore,invertivore,3
+mangwet,32,SHRK,top_predator,top_predator,top_predator,top_predator,3
+mangwet,33,RAYS,invertivore,invertivore,invertivore,invertivore,3
+mangwet,34,TARP,top_predator,top_predator,top_predator,top_predator,3
+mangwet,35,HERR,invertivore,invertivore,invertivore,invertivore,3
+mangwet,36,ANCH,invertivore,invertivore,invertivore,invertivore,3
+mangwet,37,NEED,top_predator,top_predator,top_predator,top_predator,3
+mangwet,38,KILLI,invertivore,invertivore,invertivore,invertivore,3
+mangwet,39,POEC,omnivore,omnivore,omnivore,omnivore,3
+mangwet,40,HRSE,invertivore,invertivore,invertivore,invertivore,3
+mangwet,41,SLVR,invertivore,invertivore,invertivore,invertivore,3
+mangwet,42,SNOOK,top_predator,top_predator,top_predator,top_predator,3
+mangwet,43,CUDA,top_predator,top_predator,top_predator,top_predator,3
+mangwet,44,FWFSH,omnivore,invertivore,omnivore,omnivore,2
+mangwet,45,BENTH,invertivore,invertivore,invertivore,invertivore,3
+mangwet,46,EFISH,invertivore,omnivore,invertivore,invertivore,2
+mangwet,47,SNAP,invertivore,top_predator,top_predator,top_predator,2
+mangwet,48,MOJA,invertivore,invertivore,invertivore,invertivore,3
+mangwet,49,SCIAE,invertivore,invertivore,invertivore,invertivore,3
+mangwet,50,PIN,omnivore,omnivore,omnivore,omnivore,3
+mangwet,51,MULL,detritivore,detritivore,detritivore,detritivore,3
+mangwet,52,GOBY,invertivore,invertivore,invertivore,invertivore,3
+mangwet,53,OFISH,invertivore,invertivore,invertivore,invertivore,3
+mangwet,54,TURT,omnivore,omnivore,omnivore,omnivore,3
+mangwet,55,LZRD,invertivore,invertivore,invertivore,invertivore,3
+mangwet,56,SNKS,top_predator,top_predator,top_predator,top_predator,3
+mangwet,57,COCO,top_predator,top_predator,top_predator,top_predator,3
+mangwet,58,AMPH,invertivore,invertivore,invertivore,invertivore,3
+mangwet,59,L & G,top_predator,top_predator,top_predator,top_predator,3
+mangwet,60,PELC,top_predator,top_predator,top_predator,top_predator,3
+mangwet,61,CORM,top_predator,top_predator,top_predator,top_predator,3
+mangwet,62,BH & E,top_predator,top_predator,top_predator,top_predator,3
+mangwet,63,SE & E,top_predator,top_predator,top_predator,top_predator,3
+mangwet,64,IBIS,invertivore,invertivore,invertivore,invertivore,3
+mangwet,65,DUCK1,omnivore,herbivore,herbivore,herbivore,2
+mangwet,66,DUCK2,omnivore,omnivore,invertivore,omnivore,2
+mangwet,67,DUCK3,omnivore,top_predator,top_predator,top_predator,2
+mangwet,68,VULT,top_predator,top_predator,top_predator,top_predator,3
+mangwet,69,K & H,top_predator,top_predator,top_predator,top_predator,3
+mangwet,70,MRAPT,top_predator,top_predator,top_predator,top_predator,3
+mangwet,71,GUIF,omnivore,omnivore,omnivore,omnivore,3
+mangwet,72,SSBIRDS,invertivore,invertivore,invertivore,invertivore,3
+mangwet,73,G & T,top_predator,top_predator,top_predator,top_predator,3
+mangwet,74,C & C,invertivore,omnivore,top_predator,,1
+mangwet,75,OWLS,top_predator,top_predator,top_predator,top_predator,3
+mangwet,76,WOODP,invertivore,invertivore,invertivore,invertivore,3
+mangwet,77,PASSOMN,omnivore,omnivore,omnivore,omnivore,3
+mangwet,78,PASSPERD,invertivore,invertivore,invertivore,invertivore,3
+mangwet,79,OPSU,omnivore,omnivore,omnivore,omnivore,3
+mangwet,80,RABT,herbivore,herbivore,herbivore,herbivore,3
+mangwet,81,SQIUR,herbivore,herbivore,herbivore,herbivore,3
+mangwet,82,M & R,omnivore,omnivore,omnivore,omnivore,3
+mangwet,83,FOX,omnivore,omnivore,top_predator,omnivore,2
+mangwet,84,BEAR,omnivore,omnivore,omnivore,omnivore,3
+mangwet,85,RACO,omnivore,omnivore,omnivore,omnivore,3
+mangwet,86,M & O,top_predator,top_predator,top_predator,top_predator,3
+mangwet,87,CATS,top_predator,top_predator,top_predator,top_predator,3
+mangwet,88,DERS,herbivore,herbivore,herbivore,herbivore,3
+mangwet,89,DOLP,top_predator,top_predator,top_predator,top_predator,3
+mangwet,90,MANA,herbivore,herbivore,herbivore,herbivore,3
+mangwet,91,C in SED,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangwet,92,POC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3
+mangwet,93,DOC,nonliving_detritus,nonliving_detritus,nonliving_detritus,nonliving_detritus,3

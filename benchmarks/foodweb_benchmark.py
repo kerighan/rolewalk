@@ -79,9 +79,13 @@ METHODS = {
 }
 
 
-def load():
+def load(labels="labels.csv", column="guild", unanimous=False):
+    """Graphs and labels; with ``unanimous``, only the compartments on which
+    the three labellings of labels_consensus.csv agree."""
     nodes = pd.read_csv(os.path.join(DATA, "nodes.csv"))
-    labels = pd.read_csv(os.path.join(DATA, "labels.csv"))
+    labels = pd.read_csv(os.path.join(DATA, labels))
+    if unanimous:
+        labels[column] = labels[column].where(labels.agreement == 3)
     webs = {}
     for web, g in nodes.groupby("web", sort=False):
         inner = g[g.eco <= 2].node.tolist()
@@ -93,7 +97,7 @@ def load():
         index = {v: i for i, v in enumerate(inner)}
         G.add_weighted_edges_from((index[s], index[t], w) for s, t, w in edges.values)
         lab = labels[labels.web == web].set_index("node").reindex(inner)
-        webs[web] = (G, lab.guild.values)
+        webs[web] = (G, lab[column].values)
     return webs
 
 
@@ -101,9 +105,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--methods", nargs="*", default=list(METHODS) + ["refex_frozen"])
     parser.add_argument("--output", default="foodwebs.csv")
+    parser.add_argument("--labels", default="labels.csv")
+    parser.add_argument("--label-column", default="guild")
+    parser.add_argument("--unanimous", action="store_true")
     args = parser.parse_args()
 
-    webs = load()
+    webs = load(args.labels, args.label_column, args.unanimous)
     group = {w: GROUPS.get(w, w) for w in webs}
     held = sorted(set(group.values()))
     print(f"{len(webs)} webs, {len(held)} ecosystems, "
