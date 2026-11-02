@@ -59,7 +59,7 @@
 Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
-+ Accuracy at or above the state of the art on role classification at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
++ Accuracy competitive with the state of the art on role classification (clearly ahead on one of six networks) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs; on food webs, comparable to local statistics (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
 + Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger better than every baseline; under a change of generator parameters it stays ahead of every embedding, but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
@@ -75,7 +75,9 @@ here). Diffusion: GraphWave @donnat2018, closest to RoleWalk
 (@prop-graphwave), and Digraphwave @ceylan2022, its extension to directed
 and weighted graphs (heat diffusion on the out- and in-graph, timescales
 read from each graph, characteristic functions aggregated over neighbours). Deep role embeddings: RESD @resd, from the RONE survey and benchmark
-@rone, whose code and Wikipedia talk datasets we use. Structural encodings for GNNs: RWSE
+@rone, whose code and Wikipedia talk datasets we use. Transferable structural signatures: xNetMF in REGAL @heimann2018, from
+degree distributions of neighbourhoods, with landmark-based coordinates
+fitted on the graphs to align. Structural encodings for GNNs: RWSE
 @dwivedi2022, used by GPS @rampasek2022. Expressiveness: 1-WL @weisfeiler1968 @xu2019 @morris2019,
 CSL @murphy2019, BREC @wang2023. Curvature: Ollivier-Ricci @ollivier2009 @jost2014.
 Kernel mean embeddings and MMD: @gretton2012.
@@ -83,7 +85,7 @@ Kernel mean embeddings and MMD: @gretton2012.
 = Method <sec-method>
 
 *Walk.* $G = (V, E)$ with non-negative weights $A$ (directed or not, self-loops
-ignored), $s_u$ and $d_u$ the weighted and unweighted out-degrees,
+ignored), $s_u$ the weighted out-degree and $d_u$ the number of out-neighbours with positive weight,
 $b_u = s_u \/ d_u$ ($b_u = 1$ if $d_u = 0$), $B = op("diag")(b)$, and the
 self-loop-augmented walk
 $ H = op("diag")((A + B) bold(1))^(-1) (A + B), quad H_(u u) = 1 / (d_u + 1), quad H_(u v) = d_u / (d_u + 1) A_(u v) / s_u quad (d_u > 0). $
@@ -328,13 +330,16 @@ the two hubs $a, b$ moves $s^2_a (2)$ from $d \/ (3 (d + 1))$ to 0, whatever $d$
 #prop(name: "degree and triangles")[
   Let $G$ be simple, undirected and unweighted. Then
   $s^1_u (0) = 1 \/ (d_u + 1)$, and if $G$ is $d$-regular ($d > 0$), $s^3_u (0) = (H^3)_(u u) = (1 + 3 d + 2 t_u) \/ (d + 1)^3$, with $t_u$
-  the number of triangles at $u$. Hence RoleWalk with $L >= 3$ separates
+  the number of triangles at $u$; already at step 2,
+  $s^2_u (1) = (2 d + 2 t_u) \/ (d + 1)^2$. Hence RoleWalk with $L >= 2$ separates
   1-WL-equivalent graphs, e.g. two triangles and a hexagon, or any two
   $d$-regular graphs with different triangle counts.
 ] <prop-tri>
 #proof[
   $(I + A)^3 = I + 3 A + 3 A^2 + A^3$ with $(A)_(u u) = 0$, $(A^2)_(u u) = d$,
-  $(A^3)_(u u) = 2 t_u$, and $H = (I + A) \/ (d + 1)$. 1-WL gives every node
+  $(A^3)_(u u) = 2 t_u$, and $H = (I + A) \/ (d + 1)$. At step 2, the mass on
+  the neighbours of $u$ is $sum_(j tilde u) (I + 2 A + A^2)_(u j) \/ (d + 1)^2$,
+  with $sum_(j tilde u) A_(u j) = d$ and $sum_(j tilde u) (A^2)_(u j) = 2 t_u$. 1-WL gives every node
   of two $d$-regular graphs of the same size the same colour.
 ]
 
@@ -864,7 +869,7 @@ $0.3 -> 0.6$ (clustering), Watts-Strogatz rewiring $0.1 -> 0.3$, SBM
 within-block probabilities doubled, random geometric radius $0.04 -> 0.06$
 (density); 10 independent pairs each, same features and protocol.
 
-#figure(caption: [Centrality transfer under a parameter shift (Spearman, mean over the 50 pairs of graphs; 20 cells with a constant $k$-core left out). `centrality_transfer_shift.csv`, `shift_paired.csv`.])[
+#figure(caption: [Centrality transfer under a parameter shift (Spearman; per target, mean over the 50 pairs; overall, mean of the 330 valid graph–target cells, 20 cells with a constant $k$-core left out: all 10 Barabási-Albert, 9 powerlaw-cluster, 1 Watts-Strogatz; paired intervals in the text average targets within each pair, then pairs). `centrality_transfer_shift.csv`, `shift_paired.csv`.])[
   #table(columns: 9, align: (left,) + (center,) * 8,
     [], [RoleWalk], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]],
     [Betweenness], [0.614], [0.544], [*0.742*], [#underline[0.701]], [0.614], [0.373], [0.619], [#emph[0.644]],
@@ -880,20 +885,24 @@ within-block probabilities doubled, random geometric radius $0.04 -> 0.06$
   )
 ] <tab-shift>
 
-Paired over the 50 pairs, RoleWalk is ahead of every other embedding:
-top-$k$ + layers by $+0.080$ $[0.048, 0.111]$ (a larger gap than under a
-change of size), the heat-kernel CF, RWSE and GraphWave by more, and frozen
-ReFeX by $+0.023$ $[-0.007, 0.054]$. It leads on closeness and harmonic
+RoleWalk has the highest mean among the embedding baselines. Paired over
+the 50 pairs, its lead is established over top-$k$ + layers ($+0.080$
+$[0.048, 0.111]$, a larger gap than under a change of size), the
+heat-kernel CF, RWSE and GraphWave, but not over frozen ReFeX ($+0.023$
+$[-0.007, 0.054]$). It leads on closeness and harmonic
 against every method, local statistics included ($+0.10$ $[0.05, 0.16]$
 and $+0.09$ $[0.04, 0.15]$). The local statistics are better on average
-($-0.055$ $[-0.080, -0.031]$): on clustering ($-0.32$), which they contain,
-on $k$-core ($-0.15$), where the degree alone is best, and on betweenness
-($-0.13$). Per family, RoleWalk's mean is 0.911 / 0.899 / 0.807 on
+($-0.055$ $[-0.080, -0.031]$): on clustering ($-0.32$), which is one of
+their features, and on two global quantities that they predict better from
+local features, $k$-core ($-0.15$; the degree alone is best) and
+betweenness ($-0.13$). Per family, RoleWalk's mean is 0.911 / 0.899 / 0.807 on
 Barabási-Albert, powerlaw-cluster and Watts-Strogatz, and every method
 falls to 0.1–0.5 on SBM and random geometric, where changing density or
-community strength changes what the centralities measure. Walk features
-transfer distance-based centralities across generators; for targets that
-are themselves local statistics, the statistics transfer better.
+community strength changes what the centralities measure. Across the
+tested within-family parameter shifts, walk features transfer closeness and
+harmonic centrality best; a feature that is the target (clustering), or
+degree-driven quantities ($k$-core, betweenness), transfer better from local
+statistics.
 
 == Pruning <sec-pruning>
 
@@ -919,7 +928,7 @@ near-exact features at about the exact cost. The library returns each
 node's missing masses and certificate, so a user can check the worst case
 of a pruned run instead of trusting the median.
 
-#figure(caption: [Certified pruning as a setting: one core, peak memory of the process (graph included), relative error of each node's embedding against the exact one (median and worst node, %), and the largest per-node certificate (`RoleWalk.certificate_`, absolute; $norm(X_u)$ is a few hundred). Directed SF: directed scale-free graph (Bollobás et al.), mixed probes included. `pruning_frontier.csv`.])[
+#figure(caption: [Certified pruning as a setting (curvature-free): one core, peak memory of the process (graph included), relative error of each node's embedding against the exact one (median and worst node, %), and the largest per-node certificate (`RoleWalk.certificate_`, absolute; $norm(X_u)$ is a few hundred). Directed SF: directed scale-free graph (Bollobás et al.), mixed probes included. `pruning_frontier.csv`.])[
   #table(columns: 7, align: (left, left) + (center,) * 5,
     [], [tol, budget], [Time], [GB], [Median %], [Worst %], [Cert. max],
     [BA 50k], [exact], [3.8 s], [0.29], [0.0], [0.0], [–],
@@ -938,7 +947,7 @@ of a pruned run instead of trusting the median.
     [wiki-RfA], [$10^(-4)$, $delta = 0.01$], [4.3 s], [0.59], [0.0], [0.5], [5],
     [wiki-RfA], [$10^(-3)$, $delta = 0.05$], [4.3 s], [0.59], [0.0], [2.5], [20],
   )
-  #text(size: 8pt)[Observed error over certificate: at most 0.64 on every node of every run (0.45 in all but one). With a budget, rows that would exceed it keep all their entries, so a budget of 1% is nearly exact at the cost of the exact time: on the directed graph, the budget is even slower than no pruning, as kept hub rows feed the mixed products. Threshold pruning alone is 1.2–8$times$ faster, with a small median error but up to 48% on the worst node.]
+  #text(size: 8pt)[Observed error over certificate: at most 0.64 on every node of every run (0.45 in all but one). With a budget, rows that would exceed it keep all their entries, so a budget of 1% is nearly exact at the cost of the exact time: on the directed graph, the budget is even slower than exact computation (not profiled; mixed products are formed from $H_+$ and $H_-$ and pruned afterwards, so retained pure-walk rows do not feed them). Threshold pruning alone is 1.2–8$times$ faster, with a small median error but up to 48% on the worst node.]
 ] <tab-frontier>
 
 == Kernel scaling <sec-scaling>
