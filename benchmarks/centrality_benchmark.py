@@ -105,6 +105,28 @@ FEATURES["topk_layers"] = topk_layers
 FEATURES["local_stats"] = local_stats
 FEATURES["digraphwave"] = rb.digraphwave
 FEATURES["rolewalk_local"] = lambda G: np.hstack([FEATURES["rolewalk"](G), local_stats(G)])
+
+
+def _blocks(X, walk_len=4, m=10, which="layers"):
+    """Columns of one block of an undirected RoleWalk embedding (with shells,
+    no curvature): the characteristic function or the layers of each step."""
+    cols, start = [], 0
+    for w in range(1, walk_len + 1):
+        if which == "cf":
+            cols += range(start, start + 2 * m)
+        start += 2 * m
+        if which == "layers":
+            cols += range(start, start + w + 1)
+        elif which == "returns":
+            cols.append(start)  # distance-0 layer: lazy return probability
+        start += w + 1
+    return X[:, cols]
+
+
+# component attribution: the same walks, one block at a time
+FEATURES["rolewalk_cf_only"] = lambda G: _blocks(FEATURES["rolewalk"](G), which="cf")
+FEATURES["rolewalk_layers_only"] = lambda G: _blocks(FEATURES["rolewalk"](G), which="layers")
+FEATURES["rwse_lazy4"] = lambda G: _blocks(FEATURES["rolewalk"](G), which="returns")
 SELECTED = list(FEATURES)
 
 

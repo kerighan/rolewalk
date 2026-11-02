@@ -8,14 +8,18 @@ name, the trophic guild (the role) and a coarse taxonomic class, with a
 confidence. Input, Output and Respiration are boundary nodes and are left out.
 
     python foodweb_labels.py            # writes data/foodwebs/labels.csv
+    python foodweb_labels.py --model anthropic-claude-opus-5-5@high --output labels_opus.csv
 """
+import argparse
 import os
 from typing import List, Literal
 
 import pandas as pd
 from pydantic import BaseModel
 
-from aiquery import ask_dataframe
+from concurrent.futures import ThreadPoolExecutor
+
+from aiquery import ask_model
 from aiquery.core.classes import QueryConfig
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -72,27 +76,50 @@ Compartments (index: name):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--model", default=MODEL)
+    parser.add_argument("--output", default="labels.csv")
+    args = parser.parse_args()
     nodes = pd.read_csv(os.path.join(DATA, "nodes.csv"))
     webs = pd.read_csv(os.path.join(DATA, "webs.csv"))
     inner = nodes[nodes.eco <= 2]
     webs["listing"] = [
         "\n".join(f"{r.node}: {r.name}" for r in inner[inner.web == w].itertuples())
         for w in webs.web]
-    out = ask_dataframe(webs, PROMPT, model=MODEL, response_format=WebLabels,
-                        columns=["web"], max_workers=20, desc="Labelling webs",
-                        query_config=QueryConfig(timeout=3600))
-    rows = []
-    for web, answer in zip(out.web, out.response):
+    path = os.path.join(DATA, args.output)
+    done = pd.read_csv(path) if os.path.exists(path) else None
+    todo = [w for w in webs.web
+            if done is None or done[done.web == w].guild.isna().all()]
+    print(f"{len(todo)} webs to label", flush=True)
+
+    def ask(web):
+        row = webs[webs.web == web].iloc[0]
+        try:
+            answer = ask_model(PROMPT.format(title=row.title, listing=row.listing),
+                               model=args.model, response_format=WebLabels,
+                               query_config=QueryConfig(timeout=3600))
+        except Exception as e:  # reported below as no answer
+            print(f"{web}: {e}", flush=True)
+            return web, None
+        print(f"{web} done", flush=True)
+        return web, answer.content.model_dump() if answer and answer.content else None
+
+    with ThreadPoolExecutor(20) as pool:
+        answers = list(pool.map(ask, todo))
+    rows = [] if done is None else done[~done.web.isin(todo)].dropna(
+        subset=["guild"])[["web", "node", "expanded_name", "guild", "taxon",
+                           "confidence"]].to_dict("records")
+    for web, answer in answers:
         if answer is None:
             print(f"{web}: no answer", flush=True)
             continue
         for c in answer["compartments"]:
             rows.append({"web": web, **c})
-    labels = pd.DataFrame(rows).rename(columns={"index": "node"})
+    rows = [{("node" if k == "index" else k): v for k, v in r.items()} for r in rows]
+    labels = pd.DataFrame(rows)
     labels = inner[["web", "node", "name"]].merge(labels, on=["web", "node"], how="left")
-    labels.to_csv(os.path.join(DATA, "labels.csv"), index=False)
-    print(f"{labels.guild.notna().sum()} / {len(labels)} labelled; cost "
-          f"{out.response_cost.sum():.2f}", flush=True)
+    labels.to_csv(path, index=False)
+    print(f"{labels.guild.notna().sum()} / {len(labels)} labelled", flush=True)
     print(labels.guild.value_counts().to_string())
     print(labels.confidence.value_counts().to_string())
 
