@@ -50,7 +50,7 @@
   beats struc2vec, GraphWave, Role2Vec, RESD and ReFeX on role
   classification at a fraction of the cost of most learned and diffusion
   baselines, has the best scores on a real directed-role dataset and on the Enron network alignment of Digraphwave (with its protocol), transfers centralities
-  to larger graphs as well as a dimension-matched top-$k$ summary of the same walks and better than the other baselines, embeds a million nodes in 20 s to 2.5 min on one core (under 4 min with a certified 1% mass budget), and
+  to larger graphs as well as a dimension-matched top-$k$ summary of the same walks and better than the other baselines, embeds a million nodes in 20 s to 3 min on one core (under 4 min with a certified 1% mass budget), and
   shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
 

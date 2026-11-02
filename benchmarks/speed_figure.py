@@ -111,6 +111,7 @@ def main():
     fig.tight_layout(w_pad=1.2)
     fig.savefig("../paper/fig_speed.svg")
     fig.savefig("../paper/fig_speed.png", dpi=150)
+    fig.savefig("../paper/human/fig_speed.pdf")
 
 
 if __name__ == "__main__":
