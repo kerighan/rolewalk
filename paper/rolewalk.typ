@@ -26,7 +26,7 @@
   #text(size: 15pt, weight: "bold")[RoleWalk: inductive structural roles for directed graphs \ from the characteristic function of random walks]
   #v(0.6em)
   Maixent Chenebaux \
-  #text(size: 9pt)[Draft of #datetime.today().display("[day] [month repr:long] [year]") — results and proofs; prose to come]
+  #text(size: 9pt)[Draft of #datetime.today().display("[day] [month repr:long] [year]") — results and proofs]
 ]
 
 #v(0.8em)
@@ -48,8 +48,8 @@
   failure class. With a budget on the probability mass that pruning may
   drop, the approximation error is certified. Empirically it matches or
   beats struc2vec, GraphWave, Role2Vec, RESD and ReFeX on role
-  classification at a fraction of the cost of every method but ReFeX, is
-  has the best scores on a real directed-role dataset and on the transfer
+  classification at a fraction of the cost of most learned and diffusion
+  baselines, has the best scores on a real directed-role dataset and on the transfer
   of centralities to larger graphs, embeds a million nodes in 20 s to 2.5 min on one core, and
   shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
@@ -82,13 +82,14 @@ Kernel mean embeddings and MMD: @gretton2012.
 
 = Method <sec-method>
 
-*Walk.* $G = (V, E)$ with non-negative weights $A$ (directed or not),
-$tilde(D) = op("diag")((I + A) bold(1))$ and the self-loop-augmented walk
-$H = tilde(D)^(-1) (I + A)$. On weighted graphs the self-loop of $u$ weighs
-the mean $s_u \/ d_u$ of its edge weights ($s_u$ weighted, $d_u$ unweighted
-degree), which is 1 on unweighted graphs: the walk stays put with
-probability $1 \/ (d_u + 1)$ in both cases, and does not depend on the unit
-of the weights. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
+*Walk.* $G = (V, E)$ with non-negative weights $A$ (directed or not, self-loops
+ignored), $s_u$ and $d_u$ the weighted and unweighted out-degrees,
+$b_u = s_u \/ d_u$ ($b_u = 1$ if $d_u = 0$), $B = op("diag")(b)$, and the
+self-loop-augmented walk
+$ H = op("diag")((A + B) bold(1))^(-1) (A + B), quad H_(u u) = 1 / (d_u + 1), quad H_(u v) = d_u / (d_u + 1) A_(u v) / s_u quad (d_u > 0). $
+On unweighted graphs $B = I$ and $H = tilde(D)^(-1) (I + A)$ with
+$tilde(D) = op("diag")((I + A) bold(1))$; on weighted ones the self-loop
+weighs an average edge, so $H$ does not depend on the unit of the weights. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
 is the distribution of the walk after $w$ steps. Directed graphs use the
 out-walk $H_+$ ($A$) and the in-walk $H_-$ ($A^top$), concatenate both
 embeddings, and add the characteristic functions of the rows of
@@ -152,9 +153,10 @@ $F^w_u (theta, omega) = sum_j e^(i omega d(u, j)) (e^(i theta p^w_(u j)) - 1)$
 (unnormalised: $F(0, 0) = 0$; not the law of $(p_(u X_w), d(u, X_w))$, which
 would weight atom $j$ by $p_(u j)$), the characteristic function is
 $F^w_u (theta, 0)$ and the law of the distance is its derivative at
-$theta = 0$, $-i partial_theta F^w_u (0, omega) = sum_k s^w_u (k) e^(i omega k)$, whose
-values at $omega = 2 pi k \/ (w + 1)$ (unitary DFT) determine $s^w_u$ with the
-same Euclidean geometry. Without it
+$theta = 0$, $-i partial_theta F^w_u (0, omega) = sum_k s^w_u (k) e^(i omega k)$; with
+$N = w + 1$, the values $tilde(g)_j = (-i \/ sqrt(N)) partial_theta F^w_u (0, 2 pi j \/ N)$
+form the unitary DFT of $s^w_u$, so $norm(tilde(g))_2 = norm(s^w_u)_2$: they
+determine $s^w_u$ with the same Euclidean geometry. Without it
 the layers carry 0.02% of the variance and do not change the roles found
 by $k$-means (@sec-scaling).
 
@@ -180,7 +182,8 @@ dense accumulator, prunes it, and summarises it (characteristic function,
 layers from the step at which each node is first reached, curvature
 moments) without storing the powers: $O(n)$ memory per thread, and rows
 are independent. Mixed probes are sparse products computed by blocks of
-rows of bounded work (entries before pruning). Below $p = 10^(-3)$ every angle $theta p$ is under 0.1,
+rows whose work (entries before pruning) is bounded by a budget plus at
+most one row's own work. Below $p = 10^(-3)$ every angle $theta p$ is under 0.1,
 and the characteristic function comes from the power sums $sum p^k$,
 $k <= 8$ instead of $2 m$ sines (truncation error below
 $theta^9 p_max^8 \/ 9! < 3 dot 10^(-12)$ per coordinate and row in exact
@@ -211,7 +214,7 @@ hold for $"tol" = 0$, in exact arithmetic.
 #proof[
   $p^w_(u j) = sum_(u = x_0, ..., x_w = j) product_t H_(x_t x_(t+1))$ runs over walks of
   length $w <= L$ from $u$. Their nodes lie within distance $w$, and
-  $H_(x y) = (I + A)_(x y) \/ tilde(D)_(x x)$ needs the edges at $x$, with
+  $H_(x y)$ needs the edges at $x$ (and $s_x$, $d_x$), with
   $x$ within distance $w - 1$: all are in $B_L (u)$. An isomorphism of
   rooted balls maps these walks bijectively and preserves their weights,
   so it maps $p^w_u$ to $p'^w_(u')$ entry by entry; @eq-phi is a sum over
@@ -264,7 +267,9 @@ $m = 10$ frequencies across two decades.
   $ abs(k_Theta (a, b) - norm(Theta)^2 a b) <= norm(Theta)^2 a b thin t^2 (7 \/ 12 + t^2 \/ 36), $
   so the layer term is the first-order part of $k_Theta (a, b) thin delta_(ell ell')$,
   the kernel of one characteristic function per layer, and $norm(Theta)$ is
-  the only factor for which the two agree to first order.
+  the only positive factor for which the two agree to first order (with
+  orthonormal layer coordinates). The distance is an MMD pseudometric: a
+  finite grid is not proved characteristic.
 ] <prop-mmd>
 #proof[
   $X_u = sum Psi$ over the atoms of $mu_u$, so $X_u$ is the kernel mean
@@ -336,7 +341,7 @@ the two hubs $a, b$ moves $s^2_a (2)$ from $d \/ (3 (d + 1))$ to 0, whatever $d$
 #prop(name: "relation to RWSE")[
   The distance-0 layer $s^w_u (0) = (H^w)_(u u)$ is the return probability
   of the lazy walk, i.e. RWSE @dwivedi2022 for $H$, up to $L$ steps. On a
-  $d$-regular graph with $d > 0$, ${(H^w)_(u u)}_(w <= L)$ and the simple-walk RWSE
+  simple, undirected, unweighted $d$-regular graph with $d > 0$, ${(H^w)_(u u)}_(w <= L)$ and the simple-walk RWSE
   ${(P^k)_(u u)}_(k <= L)$, $P = A \/ d$, determine each other.
 ]
 #proof[
@@ -349,7 +354,7 @@ On irregular graphs the binomial transformation above does not apply; RoleWalk a
 full distribution of transition probabilities.
 
 #prop(name: "a failure class: distance-regular graphs")[
-  Let $G, G'$ be distance-regular graphs with the same intersection array.
+  Let $G, G'$ be unweighted distance-regular graphs with the same intersection array.
   Then all nodes of $G$ and $G'$ get the same embedding, for every $L$,
   with or without curvature. This covers strongly regular graphs with equal
   parameters (diameter 2).
@@ -471,7 +476,7 @@ RoleWalk (@tab-airport-transfer).
 #prop(name: "cost")[
   Let $q^t_u$ be the retained (pruned) row after step $t$. Step $w$ costs
   $O(sum_u sum_(j in "supp" q^(w-1)_u) (d_j + 1))$; with threshold pruning
-  (no budget), $|"supp" q^t_u| <= min(|B_t (u)|, floor(1 \/ "tol"))$ for
+  ($"tol" > 0$, no budget), $|"supp" q^t_u| <= min(|B_t (u)|, floor(1 \/ "tol"))$ for
   $t >= 2$, while the first step keeps all $d_u + 1$ entries and a budget
   can keep any number. The cap is on retained rows, not on the
   accumulator before pruning. The characteristic function adds
@@ -479,7 +484,9 @@ RoleWalk (@tab-airport-transfer).
   $kappa(x, y) = (c_(x y) + 2) \/ (max(d_x, d_y) + 1)$ with $c_(x y)$ the
   common neighbours of $x$ and $y$, curvature costs a triangle enumeration,
   $O(|E|^(3\/2))$ plus $O(n log n + |E|)$ set-up (on a subset of nodes,
-  $O(min(d_x, d_y) log d)$ per edge at those nodes). The embedding of a set
+  $O(min(d_x, d_y) log d)$ per edge at those nodes); this is the compiled
+  implementation, whose fallback without a compiler uses one sparse
+  product, quadratic on a star. The embedding of a set
   $S$ depends only on its ball (@prop-local), and only its walks are
   computed; the transition matrices are still built for the whole graph.
 ]
@@ -525,7 +532,9 @@ RoleWalk (@tab-airport-transfer).
 The bound is a posteriori without a budget ($r^w_u <= 1$) and a priori with
 one; it is absolute in feature space ($norm(Theta)_2 approx 125$, so about
 24 at $delta = 0.05$, $L = 3$), not a guarantee on downstream accuracy.
-The certificate is for the exact features: the returned array also
+The certificate is an exact-arithmetic pruning certificate, returned per
+node by the library (`certificate_`, with the missing masses `missing_`); it
+is not a numerical certificate of the returned array, which also
 carries the Taylor truncation of the fused kernel and float32 rounding,
 $norm(X_u - hat(X)_u^"returned") <= B_"prune" + epsilon_"Taylor" + epsilon_"float"$, and
 curvature moments are not covered.
@@ -577,8 +586,25 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[Degree (baseline)]], [#emph[0.756]], [#emph[0.554]], [#emph[0.567]], [#emph[0.858]], [#emph[0.476]], [#emph[0.478]],
   )
-  #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory. Paired tests over the 50 splits (Nadeau–Bengio corrected intervals, `paired_tests.csv`): RoleWalk + curv. against each other method, at 5% without correction for the 13 comparisons per dataset; the splits are of one graph, not independent graphs. On USA it is significantly better than every method except RoleWalk and RESD. On Brazil, Europe, Reality-call and Actor it is significantly better than Role2Vec (and on Brazil, top-$k$ + layers and directed ReFeX; on Reality-call, ReFeX and RWSE; on Actor, RWSE), and no method is significantly better than it: against GraphWave, the heat-kernel CF, RESD, ReFeX or degree the intervals include 0 (±0.05 on Brazil and Europe, 131 and 399 nodes). On Film, Role2Vec wins. Within one graph, GraphWave without $1 \/ n$ is GraphWave up to an affine map that standardisation cancels: the two rows differ by numerical noise. Appending the local statistics to RoleWalk gives 0.752 / 0.595 / 0.659 / 0.861 / 0.486 / 0.598.]
+  #text(size: 8pt)[#super[\*] A node-type task (@sec-film). "–": too slow or out of memory. Paired differences: @tab-paired. Within one graph, GraphWave without $1 \/ n$ is GraphWave up to an affine map that standardisation cancels: the two rows differ by numerical noise. Appending the local statistics to RoleWalk gives 0.752 / 0.595 / 0.659 / 0.861 / 0.486 / 0.598.]
 ] <tab-roles>
+
+#figure(caption: [RoleWalk + curv. minus each method, accuracy, paired over the 50 splits of @tab-roles; bold: significant at 5% with the Nadeau–Bengio correction for overlapping splits, without correction for the 10 comparisons per dataset. The splits are of one graph, not independent graphs. `paired_tests.csv`.])[
+  #table(columns: 7, align: (left,) + (center,) * 6,
+    [], [Brazil], [Europe], [USA], [Reality-call], [Actor], [Film],
+    [RoleWalk], [−0.002], [+0.012], [+0.008], [−0.000], [−0.002], [*+0.012*],
+    [GraphWave], [−0.028], [+0.034], [*+0.079*], [+0.000], [+0.004], [–],
+    [RW heat CF], [−0.009], [−0.003], [*+0.032*], [+0.001], [+0.001], [*+0.032*],
+    [RESD], [+0.013], [+0.051], [+0.013], [+0.003], [+0.010], [*+0.018*],
+    [ReFeX], [+0.050], [+0.019], [*+0.044*], [*+0.008*], [+0.007], [+0.003],
+    [Top-$k$ + layers], [*+0.069*], [+0.005], [*+0.041*], [+0.002], [+0.003], [*+0.017*],
+    [Local statistics], [+0.024], [+0.011], [*+0.050*], [−0.002], [−0.001], [*+0.065*],
+    [Role2Vec], [*+0.265*], [*+0.229*], [*+0.104*], [*+0.016*], [*+0.087*], [*−0.162*],
+    [RWSE], [+0.030], [+0.023], [*+0.148*], [*+0.004*], [*+0.122*], [*+0.131*],
+    [#emph[Degree]], [−0.016], [+0.041], [*+0.099*], [+0.001], [+0.009], [*+0.103*],
+  )
+  #text(size: 8pt)[Intervals are about ±0.05 on Brazil and Europe (131 and 399 nodes).]
+] <tab-paired>
 
 #figure(
   image("fig_speed.svg", width: 100%),
@@ -642,7 +668,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826.]
 ] <tab-rfa>
 
-#figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), given by an LLM from the compartment names and the ecosystem alone, without the graph (`foodweb_labels.py`; 63% high confidence). Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together): fitted on the others, tested on an unseen ecosystem. Balanced accuracy, mean over ecosystems. `foodwebs.csv`.])[
+#figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), proxy labels given by an LLM (GPT-6, low reasoning effort; prompt and frozen labels in `foodweb_labels.py`, `data/foodwebs/labels.csv`) from the compartment names and the ecosystem alone, without the graph; 63% are labelled high confidence by the model, which is not a measured accuracy. Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together): fitted on the others, tested on an unseen ecosystem. Balanced accuracy, mean over ecosystems. `foodwebs.csv`.])[
   #table(columns: 3, align: (left, center, center),
     [], [Carbon flows], [Unweighted],
     [*RoleWalk*], [0.428], [0.524],
@@ -656,10 +682,10 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree and flow (baseline)]], [#emph[0.436]], [–],
   )
-  #text(size: 8pt)[Carbon flows span 19 orders of magnitude; read as transition weights they send walks along the few largest flows (to detritus), and every walk-based method is better on the unweighted web, where the guild is who eats whom. There, the mixed probes add 0.065 $[0.006, 0.124]$ (paired over ecosystems, better on 10 of 12): sharing prey or predators (competition) is a trophic role. RoleWalk ties the local statistics ($-0.003$ $[-0.08, 0.08]$) and is below Digraphwave on unweighted webs; RoleWalk on the symmetrised flow web: 0.361.]
+  #text(size: 8pt)[Carbon flows span 19 orders of magnitude; read as transition weights they send walks along the few largest flows (to detritus), and every walk-based method evaluated both ways is better on the unweighted web, where the guild is who eats whom. There, the mixed probes add 0.065 $[0.006, 0.124]$ (paired over ecosystems, better on 10 of 12): sharing prey or predators (competition) is a trophic role. RoleWalk and the local statistics have similar means with no established difference ($-0.003$ $[-0.08, 0.08]$), and RoleWalk is below Digraphwave on unweighted webs. Top-$k$ + layers reads the out- and in-walks without the mixed probes; RoleWalk without them: 0.459. RoleWalk on the symmetrised flow web: 0.361.]
 ] <tab-foodweb>
 
-#figure(caption: [Expressiveness: pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
+#figure(caption: [Expressiveness ($"tol" = 0$): pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Atlas ≤ 7 (20)], [Regular (3,181)], [CSL (10 cl.)], [Decalin / bicyc.], [$2 C_3$ / $C_6$], [SRG pair#super[\*]],
     [*RoleWalk (3 steps)*], [*20*], [*3,181*], [#underline[6]], [yes], [yes], [no],
@@ -672,7 +698,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[#super[\*] Shrikhande / $4 times 4$ rook: strongly regular with equal parameters, hence not separated by @prop-drg. Without layers, RoleWalk (3 steps) separates 16 / 3,180 / 6.]
 ] <tab-expr>
 
-#figure(caption: [BREC @wang2023 (400 pairs).])[
+#figure(caption: [BREC @wang2023 (400 pairs; $"tol" = 0$).])[
   #table(columns: 8, align: (left,) + (center,) * 7,
     [], [Basic (60)], [Regular (100)], [Extension (100)], [CFI (100)], [4-vertex (20)], [Dist.-reg. (20)], [Total],
     [RoleWalk (3 steps)], [60], [50], [97], [0], [0], [0], [207],
@@ -683,7 +709,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked). Without layers, RoleWalk (3 steps) separates 203 pairs.]
 ] <tab-brec>
 
-#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 10 independent pairs of graphs. Path-based centralities and PageRank (top four rows) are where walks matter; 20 of the 420 graph–target cells have a constant target ($k$-core on Barabási-Albert) and are left out. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. `centrality_transfer_x4_10seeds.csv`, `transfer_paired.csv`.])[
+#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 10 independent pairs of graphs. Path-based centralities and PageRank (top four rows) are where walks matter; 20 of the 420 test graph–target cells have a constant target ($k$-core: all 10 Barabási-Albert graphs, 9 powerlaw-cluster, 1 Watts-Strogatz) and are left out. Table means average the 400 valid cells; paired differences average the targets of each pair of graphs, then the pairs. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. `centrality_transfer_x4_10seeds.csv`, `transfer_paired.csv`.])[
   #table(columns: 10, align: (left,) + (center,) * 9,
     [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]],
     [Betweenness], [#underline[0.864]], [*0.866*], [0.862], [0.852], [0.845], [0.849], [0.412], [0.659], [#emph[0.623]],
@@ -697,7 +723,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [Mean], [*0.813*], [#underline[0.812]], [0.801], [0.790], [0.790], [0.777], [0.532], [0.533], [#emph[0.524]],
   )
-  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Paired over the 60 pairs of graphs (RoleWalk minus other, mean over targets, 95% $t$-interval, share of pairs won): top-$k$ + layers $+0.013$ $[0.009, 0.018]$, 77%; local stats $+0.022$ $[0.016, 0.029]$, 80%; frozen ReFeX $+0.024$ $[0.018, 0.029]$, 82%; RW heat CF $+0.038$ $[0.030, 0.046]$, 98%. On closeness and harmonic, RoleWalk wins every pair against local stats and ReFeX ($+0.07$ to $+0.08$) and leads top-$k$ + layers, at the same dimension, by $+0.04$ $[0.03, 0.04]$; on betweenness it ties top-$k$ ($+0.002$ $[-0.003, 0.007]$); local stats win clustering ($-0.04$) and ReFeX eigenvector ($-0.03$). Per family, RoleWalk (with or without curvature) has the best mean on Barabási-Albert, random geometric and Watts-Strogatz, and is within 0.007 of the best on the other three. With 2 seeds, test graphs of the training size give the same top two (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`): from the same size to $4 times$ the size, RoleWalk's mean drops by 0.04, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10. GraphWave's scale is chosen from each graph's spectrum (@prop-graphwave); RWSE's coordinates are local like RoleWalk's, so its drop is not a matter of coordinates, and we have not diagnosed it. With 2 seeds, appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. Digraphwave does not transfer (2 seeds, mean 0.08; `centrality_transfer_x4_dgw.csv`): its coordinates are near 1 with spreads that shrink with the graph's size, so on the larger graph they fall outside the bins learned on the smaller one and the regressor predicts a constant on 25 of the 80 scored pairs (counted as 0). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
+  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Paired over the 60 pairs of graphs (RoleWalk minus other, mean over targets, 95% $t$-interval, share of pairs won): top-$k$ + layers $+0.013$ $[0.009, 0.018]$, 77%; local stats $+0.022$ $[0.016, 0.029]$, 80%; frozen ReFeX $+0.024$ $[0.018, 0.029]$, 82%; RW heat CF $+0.038$ $[0.030, 0.046]$, 98%. On closeness and harmonic, RoleWalk wins every pair against local stats and ReFeX ($+0.07$ to $+0.08$) and leads top-$k$ + layers, at the same dimension, by $+0.04$ $[0.03, 0.04]$; on betweenness it ties top-$k$ ($+0.002$ $[-0.003, 0.007]$); local stats win clustering ($-0.04$) and ReFeX eigenvector ($-0.03$). Per family (mean over targets; RoleWalk / + curv. / top-$k$ / local stats / ReFeX / heat CF): Barabási-Albert 0.881 / 0.882 / 0.854 / 0.866 / 0.845 / 0.792; powerlaw-cluster 0.925 / 0.925 / 0.892 / 0.928 / 0.923 / 0.863; random geometric 0.577 / 0.571 / 0.555 / 0.532 / 0.531 / 0.557; SBM 0.829 / 0.831 / 0.832 / 0.813 / 0.796 / 0.813; motifs 0.881 / 0.876 / 0.888 / 0.880 / 0.883 / 0.853; Watts-Strogatz 0.812 / 0.813 / 0.803 / 0.750 / 0.785 / 0.799. With 2 seeds, test graphs of the training size give the same top two (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`): descriptively (2 against 10 seeds), from the same size to $4 times$ the size, RoleWalk's mean drops by 0.04, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10. GraphWave's scale is chosen from each graph's spectrum (@prop-graphwave); RWSE's coordinates are local like RoleWalk's, so its drop is not a matter of coordinates, and we have not diagnosed it. With 2 seeds, appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. Digraphwave does not transfer (2 seeds, mean 0.08; `centrality_transfer_x4_dgw.csv`): its coordinates are near 1 with spreads that shrink with the graph's size, so on the larger graph they fall outside the bins learned on the smaller one and the regressor predicts a constant on 25 of the 80 scored pairs (counted as 0). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
 ] <tab-centrality>
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
@@ -801,7 +827,7 @@ probabilities at different steps sit on the same node, which per-step
 multisets forget, and makes every coordinate Lipschitz. At 48 to 160
 features it separates the same small-graph nodes as RoleWalk and matches it
 on airports (0.664–0.666 against 0.662), but transfers worse (0.454–0.471
-against 0.486) and loses on directed motifs (ARI 0.295–0.314 against 0.366)
+against 0.486) and loses on directed motifs (ARI 0.295–0.314 against 0.366, all without mixed probes)
 (`trajectory.csv`): hard layers are a better use of a few dimensions.
 
 == An observation: betweenness from one small graph <sec-betweenness>
@@ -924,7 +950,7 @@ benchmark.
 - ReFeX is faster (5× at a million nodes) and wins on noisy synthetic directed motifs in supervised accuracy (with logistic regression; comparable with gradient boosting); a fixed-scale heat-kernel CF matches RoleWalk on two of three airport networks.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
-- Two real labelled directed settings (wiki-RfA, food webs); on food webs RoleWalk ties local statistics and is below Digraphwave, and raw flow weights hurt every walk-based method.
+- Two real labelled directed settings (wiki-RfA, food webs); on food webs (proxy LLM labels) RoleWalk is comparable to local statistics and below Digraphwave, and raw flow weights hurt every walk-based method evaluated both ways.
 - GPS on ZINC: 5 seeds; our RWSE reproduction (0.077) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, but the paired 95% interval just includes 0 (sign test $p = 0.06$).
 
 #bibliography("refs.bib", style: "ieee")
