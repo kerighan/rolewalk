@@ -3,6 +3,7 @@ baselines.digraphwave, in its own environment (torch + torch_sparse).
 
     python dgw_runner.py adjacency.npz out.npy R k_emb
 """
+import os
 import sys
 import time
 import warnings
@@ -23,7 +24,10 @@ def main():
         num_nodes=adj.shape[0], num_edges=adj.nnz, R=R, k_emb=k_emb,
         arctan_log_transform=False, n_flag=False, t_flag=True, a_flag=True)
     start = time.perf_counter()
-    emb = digw.digraphwave(adj=adj, param=param, device_ids=None)
+    # DGW_DEVICES=0 (or 0,1) runs on those GPUs, as in the authors' experiments
+    devices = os.environ.get("DGW_DEVICES")
+    devices = [int(d) for d in devices.split(",")] if devices else None
+    emb = digw.digraphwave(adj=adj, param=param, device_ids=devices)
     np.save(out, emb)
     with open(out + ".time", "w") as f:  # compute time, without loading torch
         f.write(str(time.perf_counter() - start))

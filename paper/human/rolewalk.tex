@@ -44,7 +44,7 @@ We present \emph{RoleWalk}, a training-free embedding that follows a short lazy 
 On directed graphs, walks that go forward then backward add who shares a node's targets or sources.
 The embedding depends only on a node's neighbourhood within a fixed radius, so its coordinates mean the same thing in every graph.
 We show that, without curvature, it is the kernel mean embedding of the walk's footprint, that it separates graphs that the Weisfeiler--Leman test cannot, and that pruning small probabilities comes with a per-node error certificate.
-Empirically, RoleWalk is competitive with the best role embeddings on six classification benchmarks at a fraction of their cost, has the highest scores on real directed roles in Wikipedia adminship, exceeds the published accuracy of Digraphwave at every noise level of its own Enron network-alignment benchmark, transfers centrality predictors to graphs four times larger better than existing inductive embeddings and hand-made features, and embeds a million nodes in 20\,s to 3\,min on one CPU core.
+Empirically, RoleWalk is competitive with the best role embeddings on six classification benchmarks at a fraction of their cost, has the highest scores on real directed roles in Wikipedia adminship, exceeds the published accuracy of Digraphwave at every noise level of its own Enron network-alignment benchmark, transfers centrality predictors to graphs four times larger better than existing inductive embeddings, hand-made features and a trained GIN, and embeds a million nodes in 20\,s to 3\,min on one CPU core.
 \end{abstract}
 
 % ---------------------------------------------------------------------------
@@ -78,17 +78,28 @@ Code and every result file are released with the paper; a complete technical rep
 \paragraph{Structural roles.}
 ReFeX \citep{henderson2011} aggregates degree-like features recursively over neighbours, and RolX \citep{henderson2012} factorises them into roles.
 struc2vec \citep{ribeiro2017} builds a multilayer graph of degree-sequence similarities and learns skip-gram coordinates; struc2vec++ \citep{steenfatt2018} extends it to directed and weighted graphs.
-Role2Vec \citep{ahmed2018} runs attributed random walks, and RESD \citep{resd} learns a variational autoencoder on structural features; the RONE survey \citep{rone} benchmarks these methods.
+Role2Vec \citep{ahmed2018} and RiWalk \citep{ma2019riwalk} relabel nodes by structural signatures and run skip-gram on walks over the relabelled graph, and RESD \citep{resd} learns a variational autoencoder on structural features; the RONE survey \citep{rone} benchmarks these methods.
 xNetMF, used in REGAL \citep{heimann2018}, embeds neighbourhood degree distributions against landmarks fitted on the graphs to align.
+Learned coordinates can be shared across graphs by freezing an encoder or a reference basis; RoleWalk's coordinates are instead computed independently for each node, with no fitted component.
 
-\paragraph{Diffusion signatures.}
-GraphWave \citep{donnat2018} is the closest method: it embeds each node by the empirical characteristic function of its column of the heat kernel.
-RoleWalk uses the same summary on a different object --- the rows of powers of a lazy walk --- and drops the two graph-level quantities, the $1/n$ average and the spectral choice of scale (\cref{prop:graphwave} in the appendix).
+\paragraph{Characteristic functions and diffusion signatures.}
+GraphWave \citep{donnat2018} embeds each node by the empirical characteristic function of its column of the heat kernel.
+RoleWalk uses the same summary on a different object --- the rows of powers of a lazy walk --- and drops GraphWave's two graph-level quantities, the $1/n$ average and the spectral choice of scale (\cref{prop:graphwave} in the appendix).
 Digraphwave \citep{ceylan2022} extends GraphWave to directed graphs with diffusion on the graph and its transpose and aggregation over neighbours.
+FEATHER \citep{rozemberczki2020feather} also uses random-walk transition probabilities and characteristic functions, but in the opposite role: it takes the characteristic function of node \emph{features} (such as log-degree or clustering) at the nodes where the walk lands, weighted by the transition probabilities, whereas RoleWalk takes the characteristic function of the probabilities themselves and needs no node feature.
+
+\paragraph{Walks, distances and directions.}
+Anonymous walks \citep{ivanov2018anonymous} describe a walk by the order in which it first visits nodes, which, like RoleWalk's layers, records how far and how often a walk returns, but are sampled and used for graph-level embeddings.
+Distance encodings \citep{li2020distance} give GNNs the shortest-path distance or landing probabilities between a target node set and every node; RoleWalk's layer block is the law of the shortest-path distance under the walk distribution, a summary of such an encoding that has a fixed size per node.
+The mixed probes are normalised, lazy forms of bibliographic coupling \citep{kessler1963} (sharing targets) and co-citation \citep{small1973} (sharing sources), used here inside a structural embedding.
 
 \paragraph{Structural encodings and expressiveness.}
 Random-walk structural encodings (RWSE) \citep{dwivedi2022} use the return probabilities of the simple walk and are standard in GPS \citep{rampasek2022}; RoleWalk's distance-0 coordinate is the lazy-walk analogue (\cref{app:proofs}).
 We compare expressiveness with the 1-WL test \citep{weisfeiler1968,xu2019,morris2019} and on BREC \citep{wang2023}.
+
+\paragraph{Positioning.}
+Each ingredient of RoleWalk has precedents: characteristic functions of diffusion rows, return probabilities, distances under a walk, coupling and co-citation.
+What is new is their combination into fixed, local, training-free coordinates for directed and weighted graphs, with a kernel reading of the whole and certified pruning; and the empirical finding that the walker's distance law is the statistic that carries information across graphs of different sizes.
 
 % ---------------------------------------------------------------------------
 \section{Method}\label{sec:method}
@@ -283,30 +294,40 @@ Local statistics (in / out) & \second{0.814} & \second{0.941} & 3\,s \\
 
 \paragraph{Network alignment on Digraphwave's protocol.}
 Network alignment is where structural embeddings must transfer: a node is matched to the node of another graph whose embedding is closest.
-We use the protocol, data and published numbers of Digraphwave \citep{ceylan2022}: the internal 22,888-node subgraph of the Enron email network is aligned to the full 91,685-node graph, after adding a share $p$ of random edges to their union; each node of the subgraph is matched to its nearest neighbour among the nodes of the full graph.
+We use the protocol and data of Digraphwave \citep{ceylan2022}: the internal 22,888-node subgraph of the Enron email network is aligned to the full 91,685-node graph, after adding a share $p$ of random edges to their union; each node of the subgraph is matched to its nearest neighbour (euclidean, raw coordinates) among the nodes of the full graph.
 This is the benchmark on which Digraphwave reports its largest gains.
-RoleWalk runs with its defaults and raw coordinates, with no alignment-specific tuning; the baselines are quoted from the authors' published results with their best settings, not rerun, so noise draws are not paired and the comparison is descriptive.
-RoleWalk is ahead of Digraphwave at every noise level, by 4 to 9 points of top-1 accuracy without weights and 6 to 8 points with email counts as weights (\cref{tab:align}).
-With weights and the most noise, ReFeX, which combines weighted and unweighted features, degrades more slowly and leads at $p=0.1$.
-On the undirected arXiv collaboration graph of the same protocol (aligned to a permuted copy), RoleWalk ties GraphWave and ReFeX without noise (0.784 against 0.785) and leads from $p=0.02$ (0.158 against 0.139 at $p=0.05$).
+RoleWalk runs with its defaults, with no alignment-specific tuning.
+We reran Digraphwave with the authors' code and settings: without noise it reproduces their published accuracy exactly (0.398), and on shared noisy graphs ($p = 0.01, 0.05, 0.1$, two draws each) it matches their published values (0.321, 0.170, 0.088 against 0.331, 0.170, 0.085) while RoleWalk leads on every draw, by 0.08, 0.07 and 0.04.
+
+\Cref{tab:align} compares RoleWalk with its own ablations and with the baselines, all variants on the same noise draws.
+Two components carry the result.
+The characteristic function is the key block here: with the same out- and in-walks and layers (and no mixed probes, which the top-$k$ ablation lacks), replacing it by the 20 largest probabilities at each step loses 8 points on average, on every one of the 35 noisy draws.
+The mixed probes add 3.7 points, again on every draw.
+Two findings temper it.
+The layers, scaled by $\nTh$ for raw-distance geometry, dilute nearest-neighbour matching on this task: the characteristic function alone is 0.02 above the full embedding on every draw.
+And the local statistics, our hand-made baseline, also beat Digraphwave and tie RoleWalk on average (RoleWalk minus local statistics $-0.006$, not significant): RoleWalk leads up to $p=0.03$, the local statistics beyond.
+With email counts as weights, RoleWalk is ahead of Digraphwave at every noise level (0.596 against 0.536 without noise, 0.198 against 0.136 at $p=0.1$), and ReFeX's published results lead at $p=0.1$ (0.227).
+On the undirected arXiv graph of the same protocol (aligned to a permuted copy), RoleWalk ties GraphWave and ReFeX without noise (0.784 against 0.785) and leads from $p=0.02$.
 
 \begin{table}[t]
 \centering
-\caption{Network alignment on the Enron protocol of Digraphwave \citep{ceylan2022}: top-1 accuracy of matching the internal subgraph to the full email graph, with a share $p$ of random edges added; mean of 5 noise draws (one deterministic run without noise). Rows other than RoleWalk are the published results of \citep{ceylan2022} (EMBER is an email-network embedding they include).}
+\caption{Network alignment on the Enron protocol of Digraphwave \citep{ceylan2022} (directed, unweighted): top-1 accuracy of matching the internal subgraph to the full email graph, with a share $p$ of random edges added; mean of 5 noise draws, the same for every row computed here (one deterministic run without noise). $^*$Published results of \citep{ceylan2022}; our rerun of Digraphwave reproduces them (text).}
 \label{tab:align}
 \small
-\begin{tabular}{lcccccccc}
+\begin{tabular}{lcccccc}
 \toprule
-& \multicolumn{4}{c}{Enron, unweighted} & \multicolumn{4}{c}{Enron, weighted by email counts} \\
-\cmidrule(lr){2-5}\cmidrule(lr){6-9}
-$p$ & 0 & 0.01 & 0.05 & 0.1 & 0 & 0.01 & 0.05 & 0.1 \\
+$p$ & 0 & 0.01 & 0.02 & 0.05 & 0.075 & 0.1 \\
 \midrule
-RoleWalk & \best{0.487} & \best{0.406} & \best{0.235} & \best{0.125} & \best{0.596} & \best{0.515} & \best{0.321} & \second{0.198} \\
-Digraphwave & \second{0.398} & \second{0.331} & \second{0.170} & \second{0.085} & \second{0.536} & \second{0.447} & 0.248 & 0.136 \\
-ReFeX & 0.151 & 0.138 & 0.098 & 0.065 & 0.335 & 0.320 & \second{0.270} & \best{0.227} \\
-EMBER & 0.027 & 0.022 & 0.011 & 0.007 & 0.000 & 0.000 & 0.000 & 0.000 \\
+RoleWalk & \second{0.487} & \second{0.406} & \second{0.356} & 0.235 & 0.172 & 0.125 \\
+\quad characteristic function only (no layers) & \best{0.520} & \best{0.436} & \best{0.379} & \best{0.253} & \second{0.189} & \second{0.142} \\
+\quad without mixed probes & 0.442 & 0.363 & 0.316 & 0.198 & 0.140 & 0.097 \\
+\quad top-$k$ + layers, without mixed probes & 0.369 & 0.287 & 0.227 & 0.114 & 0.065 & 0.038 \\
+\quad layers only & 0.268 & 0.206 & 0.169 & 0.086 & 0.053 & 0.031 \\
+Local statistics (in / out) & 0.427 & 0.372 & 0.332 & \second{0.249} & \best{0.207} & \best{0.176} \\
+Digraphwave$^*$ & 0.398 & 0.331 & 0.278 & 0.170 & 0.116 & 0.085 \\
+ReFeX$^*$ & 0.151 & 0.138 & 0.127 & 0.098 & 0.080 & 0.065 \\
 \midrule
-\emph{Degree} & \emph{0.066} & \emph{0.059} & \emph{0.043} & \emph{0.030} & \emph{0.259} & \emph{0.239} & \emph{0.178} & \emph{0.129} \\
+\emph{Degree}$^*$ & \emph{0.066} & \emph{0.059} & \emph{0.054} & \emph{0.043} & \emph{0.036} & \emph{0.030} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -320,32 +341,33 @@ On directed motifs hung from a directed cycle, where several roles coincide once
 Locality (\cref{prop:local}) makes transfer \emph{possible}; whether coordinates actually carry information across graphs is an empirical question.
 We fit a gradient-boosting regressor from embeddings to a centrality on one 2,000-node graph and evaluate it (Spearman correlation) on another graph of the same family, four times larger, at the same mean degree.
 Six families (Barabási--Albert, powerlaw-cluster, Watts--Strogatz, SBM, random geometric, motifs) with 10 independent pairs of graphs each give 60 pairs.
-Only embeddings with fixed coordinates can enter: struc2vec, Role2Vec and RESD learn per-graph coordinates, and ReFeX's feature selection is frozen on the training graph.
+Only embeddings with fixed coordinates can enter: struc2vec, Role2Vec and RESD learn per-graph coordinates, and ReFeX's feature selection is frozen on the training graph. As a trained inductive model, a GIN \citep{xu2019} (4 layers, 64 hidden units, log-degree input, one configuration, not tuned) is fitted on the training graph to all seven targets at once, with early stopping on a fifth of its nodes.
 
 \begin{table}[t]
 \centering
-\caption{Centrality transfer to graphs four times larger (Spearman, mean over 60 independent pairs of graphs; 20 cells with a constant $k$-core are left out). $^\dagger$The clustering coefficient is itself one of the features of the local statistics and of ReFeX.}
+\caption{Centrality transfer to graphs four times larger (Spearman, mean over 60 independent pairs of graphs; 20 cells with a constant $k$-core are left out). $^\dagger$The clustering coefficient is itself one of the features of the local statistics and of ReFeX. $^\ddagger$Without its $1/n$ factor. GIN: trained on the training graph (log-degree input).}
 \label{tab:centrality}
 \small
-\begin{tabular}{lccccccc}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccccc}
 \toprule
-& RoleWalk & Local stats & ReFeX (frozen) & RW heat CF & RWSE & GraphWave, no $1/n$ & \emph{Degree} \\
+& RoleWalk & Local stats & ReFeX (frozen) & RW heat CF & GIN & RWSE & GraphWave$^\ddagger$ & \emph{Degree} \\
 \midrule
-Betweenness & \best{0.864} & \second{0.852} & 0.845 & 0.849 & 0.412 & 0.659 & \emph{0.623} \\
-Closeness & \best{0.797} & 0.716 & 0.725 & \second{0.738} & 0.464 & 0.529 & \emph{0.407} \\
-Harmonic & \best{0.861} & 0.778 & 0.788 & \second{0.806} & 0.517 & 0.597 & \emph{0.460} \\
-PageRank & \best{0.989} & 0.984 & 0.973 & \second{0.986} & 0.741 & 0.611 & \emph{0.929} \\
-Clustering & 0.805 & \best{0.844}$^\dagger$ & \second{0.813}$^\dagger$ & 0.785 & 0.723 & 0.347 & \emph{0.201} \\
-$k$-core & \best{0.651} & \second{0.650} & 0.631 & 0.647 & 0.494 & 0.594 & \emph{0.614} \\
-Eigenvector & \second{0.673} & 0.661 & \best{0.700} & 0.586 & 0.358 & 0.415 & \emph{0.463} \\
+Betweenness & \best{0.864} & \second{0.852} & 0.845 & 0.849 & 0.778 & 0.412 & 0.659 & \emph{0.623} \\
+Closeness & \best{0.797} & 0.716 & 0.725 & \second{0.738} & 0.695 & 0.464 & 0.529 & \emph{0.407} \\
+Harmonic & \best{0.861} & 0.778 & 0.788 & \second{0.806} & 0.756 & 0.517 & 0.597 & \emph{0.460} \\
+PageRank & \best{0.989} & 0.984 & 0.973 & \second{0.986} & 0.982 & 0.741 & 0.611 & \emph{0.929} \\
+Clustering & 0.805 & \best{0.844}$^\dagger$ & \second{0.813}$^\dagger$ & 0.785 & 0.387 & 0.723 & 0.347 & \emph{0.201} \\
+$k$-core & \best{0.651} & \second{0.650} & 0.631 & 0.647 & 0.604 & 0.494 & 0.594 & \emph{0.614} \\
+Eigenvector & 0.673 & 0.661 & \second{0.700} & 0.586 & \best{0.736} & 0.358 & 0.415 & \emph{0.463} \\
 \midrule
-Mean & \best{0.813} & \second{0.790} & \second{0.790} & 0.777 & 0.532 & 0.533 & \emph{0.524} \\
+Mean & \best{0.813} & \second{0.790} & \second{0.790} & 0.777 & 0.711 & 0.532 & 0.533 & \emph{0.524} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 RoleWalk has the best mean (\cref{tab:centrality}).
-Paired over the 60 pairs of graphs, it is ahead of local statistics by $+0.022$ $[0.016,0.029]$ (80\% of pairs won), of frozen ReFeX by $+0.024$ $[0.018,0.029]$ and of the random-walk heat-kernel characteristic function by $+0.038$ $[0.030,0.046]$ (98\% of pairs).
+Paired over the 60 pairs of graphs, it is ahead of local statistics by $+0.022$ $[0.016,0.029]$ (80\% of pairs won), of frozen ReFeX by $+0.024$ $[0.018,0.029]$ of the random-walk heat-kernel characteristic function by $+0.038$ $[0.030,0.046]$ (98\% of pairs), and of the trained GIN by $+0.102$ $[0.087, 0.116]$, on every pair; the GIN is best only on eigenvector centrality. Feeding RoleWalk to the GIN as input lowers its mean to 0.675, and RWSE to 0.496: on one training graph, the gradient-boosted regressor on fixed features transfers better than message passing.
 On closeness and harmonic centrality it wins every pair against local statistics and ReFeX.
 GraphWave and RWSE lose more with size: going from test graphs of the training size to four times that size (2 seeds at equal size, so descriptively), RoleWalk's mean drops by 0.04, GraphWave's by 0.10 and RWSE's by 0.19.
 
@@ -391,11 +413,20 @@ On BREC \citep{wang2023} (400 pairs of non-isomorphic graphs that 1-WL cannot se
 As a structural encoding in GPS \citep{rampasek2022} on ZINC, adding RoleWalk with curvature to RWSE lowers the test error on each of 5 seeds (0.072 against 0.077 for our RWSE reproduction), but the paired interval just includes zero and our reproduction is weaker than the published 0.070: we read this as preliminary.
 
 % ---------------------------------------------------------------------------
+\section{Beyond square adjacency}
+
+Nothing in RoleWalk requires the walk to stay on one set of nodes.
+The characteristic function is defined for any row of a row-stochastic matrix, square or not, and the products that build the walk only need to compose: with $B$ the row-normalised incidence from nodes to edges, $B B'$ walks node $\to$ edge $\to$ node, and incidences between edges and faces walk across the ranks of a cell complex or a hypergraph; the distance law becomes the number of steps between cells.
+The mixed probes are already a case of this: $H_+H_-$ composes two different operators.
+Diffusion signatures such as GraphWave instead need a square symmetric operator to exponentiate and diagonalise; Hodge Laplacians are square at each rank but do not mix ranks.
+Walks between cells of different dimensions --- atoms, bonds and rings in molecules, for instance --- are therefore a direct extension of RoleWalk, which we leave to future work.
+
+% ---------------------------------------------------------------------------
 \section{Limitations}
 
 \begin{itemize}
 \item \textbf{Provable blind spots.} Walk statistics cannot separate distance-regular graphs with equal intersection arrays, most CFI pairs, or graphs whose neighbourhoods coincide; without curvature, some nodes separated by 1-WL are confused.
-\item \textbf{Simple baselines remain strong.} ReFeX is faster and slightly more accurate on noisy synthetic directed motifs with a linear classifier; hand-made local statistics transfer better than RoleWalk when generator parameters change; on a second real directed setting, food webs with LLM-generated proxy trophic labels, RoleWalk, local statistics and Digraphwave are not distinguishable (supplementary report).
+\item \textbf{Simple baselines remain strong.} ReFeX is faster and slightly more accurate on noisy synthetic directed motifs with a linear classifier; hand-made local statistics transfer better than RoleWalk when generator parameters change, and match it on average on Enron alignment; on a second real directed setting, food webs with LLM-generated proxy trophic labels, RoleWalk, local statistics and Digraphwave are not distinguishable (supplementary report).
 \item \textbf{Pruning.} Without a budget the certificate is only a posteriori and large on hubs; the budget costs time on hub-heavy graphs.
 \item \textbf{Labels.} Airport labels are activity quartiles and favour degree-like features; in transfer between airport networks, local statistics and the degree alone beat every embedding. Real labelled directed role datasets remain scarce.
 \end{itemize}

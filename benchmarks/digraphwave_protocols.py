@@ -69,10 +69,48 @@ def to_csr(n, edges, weights, weighted, undirected):
     return A.tocsr()
 
 
+def _directed_blocks(X, which, walk_len=3, m=10):
+    """Columns of a directed RoleWalk embedding (no curvature): per walk
+    (out, then in) and step, the characteristic function (2m) then the
+    layers (w + 1); then the two mixed probes (2m each)."""
+    per_walk = sum(2 * m + w + 1 for w in range(1, walk_len + 1))
+    cols = []
+    for walk in range(2):
+        start = walk * per_walk
+        for w in range(1, walk_len + 1):
+            if which in ("cf", "nomixed"):
+                cols += range(start, start + 2 * m)
+            start += 2 * m
+            if which in ("layers", "nomixed"):
+                cols += range(start, start + w + 1)
+            start += w + 1
+    if which == "cf":
+        cols += range(2 * per_walk, X.shape[1])
+    return X[:, cols]
+
+
+_CACHE = {}
+
+
+def _rolewalk(G):
+    # the ablations slice one embedding of the same graph
+    key = (id(G), G.number_of_edges())
+    if key not in _CACHE:
+        _CACHE.clear()
+        _CACHE[key] = RoleWalk().transform(G)
+    return _CACHE[key]
+
+
 def _methods():
     import baselines
     return {
-        "rolewalk": lambda G: RoleWalk().transform(G),
+        "rolewalk": _rolewalk,
+        # ablations of the same walks (directed graphs)
+        "rolewalk_nomixed": lambda G: _directed_blocks(_rolewalk(G), "nomixed"),
+        "rolewalk_layers": lambda G: _directed_blocks(_rolewalk(G), "layers"),
+        "rolewalk_cf": lambda G: _directed_blocks(_rolewalk(G), "cf"),
+        "topk_layers": baselines.topk_layers,
+        "local_stats": baselines.local_stats,
         "digraphwave_r2": lambda G: baselines.digraphwave(G, R=2),
         "digraphwave_r3": lambda G: baselines.digraphwave(G, R=3),
         "refex": lambda G: (baselines.refex_directed(G) if G.is_directed()
@@ -80,9 +118,15 @@ def _methods():
     }
 
 
+_GRAPH = {}
+
+
 def embed(A, undirected, method="rolewalk"):
     import networkx as nx
-    G = nx.from_scipy_sparse_array(A, create_using=nx.Graph if undirected else nx.DiGraph)
+    if _GRAPH.get("A") is not A:
+        _GRAPH.update(A=A, G=nx.from_scipy_sparse_array(
+            A, create_using=nx.Graph if undirected else nx.DiGraph))
+    G = _GRAPH["G"]
     start = time.perf_counter()
     X = _methods()[method](G)
     return X, time.perf_counter() - start
@@ -148,7 +192,7 @@ def topk_accuracy(X, n1, g2_to_g1):
     return {f"k@{k}": float((rank < k).mean()) for k in TOPK}
 
 
-def alignment(repo, experiment, weighted, undirected, reps, methods=("rolewalk",)):
+def alignment(repo, experiment, weighted, undirected, reps, methods=("rolewalk",), noise=NOISE):
     rng = np.random.default_rng(0)
     permuted = experiment == "arxiv" or experiment.startswith("snap:")
     if experiment == "arxiv":
@@ -164,8 +208,8 @@ def alignment(repo, experiment, weighted, undirected, reps, methods=("rolewalk",
         n2, e2, w2 = read_edges(os.path.join(base, "internal_subgraph", "enron_edges.tsv"))
         g2_to_g1 = pd.read_csv(os.path.join(base, "internal_subgraph", "node_index_alignment.csv"),
                                index_col=0, header=None, comment="%")[1].to_numpy()
-    rows, start, total = [], time.time(), len(NOISE) * reps * len(methods)
-    for p in NOISE:
+    rows, start, total = [], time.time(), len(noise) * reps * len(methods)
+    for p in noise:
         for rep in range(reps):
             if permuted:
                 perm = rng.permutation(n1)          # g2 node i is g1 node perm[i]
@@ -201,9 +245,11 @@ def main():
     parser.add_argument("--experiment", default="enron_all_internal",
                         help="enron_all_internal, arxiv or snap:<name>")
     parser.add_argument("--methods", nargs="*", default=["rolewalk"])
+    parser.add_argument("--suffix", default="", help="appended to the output name")
     parser.add_argument("--weighted", action="store_true")
     parser.add_argument("--undirected", action="store_true")
     parser.add_argument("--reps", type=int, default=5)
+    parser.add_argument("--noise", type=float, nargs="*", default=NOISE)
     args = parser.parse_args()
     tag = f"{'weighted' if args.weighted else 'unweighted'}_{'undirected' if args.undirected else 'directed'}"
     os.makedirs("digraphwave_protocols", exist_ok=True)
@@ -215,9 +261,9 @@ def main():
         if args.experiment == "arxiv":
             tag = "unweighted_undirected"
         out = alignment(args.repo, args.experiment, args.weighted, args.undirected, args.reps,
-                        args.methods)
+                        args.methods, args.noise)
         name = args.experiment.replace(":", "_")
-        out.to_csv(f"digraphwave_protocols/alignment_{name}_{tag}.csv", index=False)
+        out.to_csv(f"digraphwave_protocols/alignment_{name}_{tag}{args.suffix}.csv", index=False)
         print(out.groupby(["method", "noise_p"])["k@1"].mean().unstack().round(3))
 
 
