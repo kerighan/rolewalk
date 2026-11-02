@@ -50,7 +50,7 @@
   beats struc2vec, GraphWave, Role2Vec, RESD and ReFeX on role
   classification at a fraction of the cost of most learned and diffusion
   baselines, has the best scores on a real directed-role dataset and on the transfer
-  of centralities to larger graphs, embeds a million nodes in 20 s to 2.5 min on one core, and
+  of centralities to larger graphs, embeds a million nodes in 20 s to 2.5 min on one core (under 4 min with a certified 1% mass budget), and
   shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
 
@@ -927,7 +927,12 @@ seconds at 50k nodes; threshold pruning buys up to 8$times$ in time at a
 small median but large worst-case error, and a budget buys certified,
 near-exact features at about the exact cost. The library returns each
 node's missing masses and certificate, so a user can check the worst case
-of a pruned run instead of trusting the median.
+of a pruned run instead of trusting the median. At a million nodes
+(Barabási-Albert, one core, tol $10^(-4)$; `certified_scale.csv`), threshold
+pruning alone takes 173 s but leaves 69% of the rows missing more than 1%
+of their mass (some all of it; largest certificate 366); a budget of 1%
+takes 227 s (1.3$times$) and 1.7 GB, with every certificate below 3.9. On
+Watts-Strogatz graphs no mass is lost (17 s at a million nodes).
 
 #figure(caption: [Certified pruning as a setting (curvature-free): one core, peak memory of the process (graph included), relative error of each node's embedding against the exact one (median and worst node, %), and the largest per-node certificate (`RoleWalk.certificate_`, absolute; $norm(X_u)$ is a few hundred). Directed SF: directed scale-free graph (Bollobás et al.), mixed probes included. `pruning_frontier.csv`.])[
   #table(columns: 7, align: (left, left) + (center,) * 5,
