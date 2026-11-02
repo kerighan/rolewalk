@@ -439,3 +439,27 @@ def test_models_saved_before_mean_edge_loops_keep_unit_loops(tmp_path):
     np.savez(path, params=json.dumps(params), theta=theta)
     assert RoleWalk.load(path).walk == "unit_loops"
     assert RoleWalk.load(path).mixed is True
+
+
+def test_extreme_weights_give_the_unit_walk():
+    reference = None
+    for w in (1.0, 1e300, 1e-320, 2 ** 62):
+        G = nx.Graph()
+        G.add_edge(0, 1, weight=w)
+        G.add_edge(1, 2, weight=w)
+        X = RoleWalk(curvature=True).transform(G)
+        assert np.isfinite(X).all()
+        if reference is None:
+            reference = X
+        np.testing.assert_allclose(X, reference, rtol=1e-5, atol=1e-5)
+
+
+def test_invalid_parameters_rejected():
+    for kw in (dict(bounds=(0, 100)), dict(bounds=(10, 1)), dict(block_work=np.inf),
+               dict(n_jobs=0), dict(embedding_dim=0), dict(n_samples=2.5)):
+        try:
+            RoleWalk(**kw)
+        except ValueError:
+            continue
+        raise AssertionError(f"{kw} must be rejected")
+    assert RoleWalk(n_samples=10.0).theta.shape == (1, 10)

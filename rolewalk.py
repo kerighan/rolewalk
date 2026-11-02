@@ -289,8 +289,8 @@ def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
                             n_jobs=1, return_missing=False):
     """compute_embedding (aggregate="sum") with the fused Numba kernel:
     a few times faster and with O(n) memory per thread. Same features up
-    to float32 rounding and the Taylor truncation (relative error below
-    3e-12 for the default theta). With ``return_missing``, also return the
+    to float32 rounding and the Taylor truncation (absolute error below
+    3e-12 per coordinate and row for the default theta). With ``return_missing``, also return the
     mass each row misses at each step."""
     if numba is None:
         raise ImportError("compute_embedding_fused needs numba")
@@ -398,10 +398,10 @@ def lazy_walk(A, unit_loops=False):
     A.setdiag(0)
     A.eliminate_zeros()
     count = np.diff(A.indptr)
-    top = np.zeros(A.shape[0])
     if A.nnz:
-        top[count > 0] = np.maximum.reduceat(A.data, A.indptr[:-1][count > 0])
-    A = diags(1 / np.where(top > 0, top, 1)) @ A
+        # divide by the row maximum (no reciprocal: subnormal maxima)
+        top = np.maximum.reduceat(A.data, A.indptr[:-1][count > 0])
+        A.data = A.data / np.repeat(top, count[count > 0])
     strength = np.asarray(A.sum(axis=1)).ravel()
     stay = np.where(count > 0, strength / np.maximum(count, 1), 1.0)
     H = normalize(diags(stay) + A, norm="l1").tocsr()
@@ -433,7 +433,8 @@ def node_curvature(A, nodes=None):
     number of 2-paths from the nodes (quadratic on a star).
     """
     n = A.shape[0]
-    U = ((A + A.T) > 0).astype(np.float64).tocsr()
+    B = (csr_matrix(A) != 0).astype(np.float64)  # support first: no overflow
+    U = ((B + B.T) > 0).astype(np.float64).tocsr()
     U.setdiag(0)
     U.eliminate_zeros()
     deg = np.asarray(U.sum(axis=1)).ravel()
@@ -567,13 +568,14 @@ class RoleWalk:
     missing_ : ndarray of shape (n_nodes, n_blocks)
         After :meth:`transform`, the probability mass each embedded node
         lost to pruning at each step of each walk (out-walk then in-walk
-        steps, then the two mixed probes). 0 everywhere with ``tol=0``.
+        steps, then the two mixed probes). With ``tol=0``, only floating-point
+        residuals of the row sums (about 1e-16).
     certificate_ : ndarray of shape (n_nodes,) or None
         Bound on the distance between each embedded node's features and its
         exact features (``tol=0``), in exact arithmetic (see the paper,
         certified pruning): ``||theta|| sqrt(5 sum r^2 + 4 sum r_mixed^2)``
-        (4 instead of 5 without layers). None with curvature or more than
-        three steps, which it does not cover.
+        (4 instead of 5 without layers). None with curvature, more than
+        three steps, or aggregate="mean", which it does not cover.
 
     Notes
     -----
@@ -606,8 +608,14 @@ class RoleWalk:
         for name, value in (("walk_len", walk_len), ("n_samples", n_samples)):
             if int(value) != value or value < 1:
                 raise ValueError(f"{name} must be a positive integer")
-        if not block_work > 0:
-            raise ValueError("block_work must be positive")
+        if not 0 < block_work < np.inf:
+            raise ValueError("block_work must be positive and finite")
+        if int(n_jobs) != n_jobs or n_jobs < 1:
+            raise ValueError("n_jobs must be a positive integer")
+        if embedding_dim is not None and (int(embedding_dim) != embedding_dim
+                                          or embedding_dim < 1):
+            raise ValueError("embedding_dim must be a positive integer or None")
+        walk_len, n_samples = int(walk_len), int(n_samples)
         if max_missing is not None and not max_missing >= 0:
             raise ValueError("max_missing must be non-negative")
         default_bounds, spacing = THETA_SCHEMES[theta_scheme]
@@ -630,7 +638,11 @@ class RoleWalk:
         self.embedding_dim = embedding_dim
 
         # timesteps
+        if not (np.isfinite(bounds).all() and 0 < bounds[0] < bounds[1]):
+            raise ValueError("bounds must be finite with 0 < low < high")
         theta = spacing(bounds[0], bounds[1], n_samples)
+        if not np.isfinite(theta.astype(np.float32)).all():
+            raise ValueError("bounds overflow float32")
         theta = theta[None, :].astype(np.float32)
         self.theta = theta
 
@@ -662,7 +674,8 @@ class RoleWalk:
             near = None
             if rows is not None:
                 # the walks only land within walk_len steps of the rows
-                U = ((A + A.T) > 0).tocsr()
+                B = (A != 0).astype(np.float64)
+                U = ((B + B.T) > 0).tocsr()
                 reach = np.zeros(n, dtype=bool)
                 reach[rows] = True
                 for _ in range(self.walk_len):
