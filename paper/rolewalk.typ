@@ -49,7 +49,7 @@
   drop, the approximation error is certified. Empirically it matches or
   beats struc2vec, GraphWave, Role2Vec, RESD and ReFeX on role
   classification at a fraction of the cost of most learned and diffusion
-  baselines, has the best scores on a real directed-role dataset, transfers centralities
+  baselines, has the best scores on a real directed-role dataset and on the Enron network alignment of Digraphwave (with its protocol), transfers centralities
   to larger graphs as well as a dimension-matched top-$k$ summary of the same walks and better than the other baselines, embeds a million nodes in 20 s to 2.5 min on one core (under 4 min with a certified 1% mass budget), and
   shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
@@ -60,7 +60,7 @@ Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
 + Accuracy competitive with the state of the art on role classification (clearly ahead on one of six networks) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
-+ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs; on food webs, not distinguishable from local statistics or Digraphwave (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
++ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks; on the network-alignment benchmark of Digraphwave (Enron, its protocol and published numbers), ahead of Digraphwave at every noise level (@tab-align); best retrieval and competitive clustering on synthetic directed motifs; on food webs, not distinguishable from local statistics or Digraphwave (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
 + Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger as well as the top-$k$ probabilities of the same walks (a tie: the law of the distance carries most of it) and better than every other baseline; under a change of generator parameters it stays ahead of every embedding, but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
@@ -672,6 +672,19 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   )
   #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826. Paired over the 50 splits (Nadeau–Bengio, `paired_rfa.csv`), RoleWalk + curv. is significantly better than every other method on A (local statistics $+0.012$ $[0.001, 0.022]$, Digraphwave $+0.019$ $[0.008, 0.029]$) and on B, except local statistics in accuracy ($+0.003$ $[-0.000, 0.006]$; macro-F1 $+0.007$ $[0.000, 0.014]$).]
 ] <tab-rfa>
+
+#figure(caption: [Network alignment with the protocol, data and published numbers of Digraphwave @ceylan2022. Enron: the internal 22,888-node subgraph of the email network is aligned to the full 91,685-node graph (directed, unweighted or weighted by email counts); arXiv: a 18,772-node collaboration graph is aligned to a permuted copy. A share $p$ of random edges is added to the union; each node of the second graph is matched to its nearest neighbours (euclidean) among the nodes of the first. Top-1 accuracy, mean of 5 noise draws (1 without noise for Enron, which is then deterministic). RoleWalk: defaults, raw coordinates, nothing tuned; the other rows are the authors' results with their settings (Digraphwave and GraphWave at radius 2, their best; ReFeX, their implementation, best tolerance), so noise draws are not paired. `digraphwave_protocols.py`, `digraphwave_protocols/`.])[
+  #table(columns: 13, align: (left,) + (center,) * 12,
+    [], table.cell(colspan: 4)[Enron, unweighted], table.cell(colspan: 4)[Enron, weighted], table.cell(colspan: 4)[arXiv (undirected)],
+    [$p$], [0], [0.01], [0.05], [0.1], [0], [0.01], [0.05], [0.1], [0], [0.01], [0.05], [0.1],
+    [*RoleWalk*], [*0.487*], [*0.406*], [*0.235*], [*0.125*], [*0.596*], [*0.515*], [*0.321*], [#underline[0.198]], [#underline[0.784]], [#underline[0.414]], [*0.158*], [*0.108*],
+    [Digraphwave / GraphWave], [#underline[0.398]], [#underline[0.331]], [#underline[0.170]], [#underline[0.085]], [#underline[0.536]], [#underline[0.447]], [0.248], [0.136], [*0.785*], [*0.416*], [#underline[0.139]], [#underline[0.088]],
+    [ReFeX], [0.151], [0.138], [0.098], [0.065], [0.335], [0.320], [#underline[0.270]], [*0.227*], [*0.785*], [0.360], [0.130], [0.086],
+    [EMBER], [0.027], [0.022], [0.011], [0.007], [0.000], [0.000], [0.000], [0.000], [0.779], [0.274], [0.053], [0.026],
+    [#emph[Degree]], [#emph[0.066]], [#emph[0.059]], [#emph[0.043]], [#emph[0.030]], [#emph[0.259]], [#emph[0.239]], [#emph[0.178]], [#emph[0.129]], [#emph[0.013]], [#emph[0.007]], [#emph[0.004]], [#emph[0.003]],
+  )
+  #text(size: 8pt)[On directed Enron, RoleWalk is ahead of Digraphwave at every noise level of the protocol (0 to 0.1), by 0.04 to 0.09 unweighted and 0.06 to 0.08 weighted; on weighted Enron, ReFeX, which combines weighted and unweighted features, degrades more slowly and leads at $p = 0.1$ ($0.227$ against $0.198$; at $0.075$, $0.245$ against $0.251$). On arXiv, the three methods tie without noise and RoleWalk leads from $p = 0.02$. Top-5 to top-50 accuracies follow the same order (CSV files).]
+] <tab-align>
 
 #figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes and self-loops removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), proxy labels given by LLMs from the compartment names and the ecosystem alone, without the graph (`foodweb_labels.py`): GPT-6 (low effort), GPT-6 (high) and Claude Opus 5.5 (high) agree on 88.6% of the compartments (pairwise Cohen's $kappa$ 0.88–0.96); disagreements are ecologically ambiguous (oysters, copepods). Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together). Balanced accuracy, mean over ecosystems. `foodwebs*.csv`.])[
   #table(columns: 5, align: (left,) + (center,) * 4,
