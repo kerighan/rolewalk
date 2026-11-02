@@ -266,11 +266,16 @@ def test_max_missing_keeps_hub_rows():
 
 def test_layers_are_nonnegative_with_pruning():
     G = nx.barabasi_albert_graph(3000, 2, seed=1)
-    model = RoleWalk(walk_len=3)
-    X = model.transform(G)
+    import rolewalk
+    saved, rolewalk.numba = rolewalk.numba, None  # sparse powers
+    try:
+        model = RoleWalk(walk_len=5, tol=1e-3)
+        X = model.transform(G)
+    finally:
+        rolewalk.numba = saved
     m = model.theta.shape[1]
     start, layers = 0, []
-    for w in range(1, 4):
+    for w in range(1, 6):
         start += 2 * m
         layers.append(X[:, start:start + w + 1])
         start += w + 1
@@ -300,7 +305,8 @@ def test_fused_kernel_matches_sparse_powers():
     D = nx.gnp_random_graph(300, 0.03, seed=3, directed=True)
     for graph in (G, D):
         for kw in (dict(tol=0), dict(tol=1e-4), dict(tol=1e-3, max_missing=0.05),
-                   dict(curvature=True), dict(shells=False)):
+                   dict(curvature=True), dict(shells=False),
+                   dict(walk_len=5, tol=1e-3)):
             fused = RoleWalk(**kw).transform(graph)
             saved, rolewalk.numba = rolewalk.numba, None
             try:
@@ -331,3 +337,25 @@ def test_triangle_curvature_linear_on_stars():
     kappa = node_curvature(A)
     assert time.perf_counter() - start < 5
     np.testing.assert_allclose(kappa[1:], 2 / 200001)
+    # a subset of nodes: intersections of neighbour lists, linear too
+    leaves = np.arange(1, 200001)
+    start = time.perf_counter()
+    sub = node_curvature(A, leaves)
+    assert time.perf_counter() - start < 5
+    np.testing.assert_allclose(sub[leaves], kappa[leaves])
+
+
+def test_subset_curvature_matches_full_graph():
+    A = nx.to_scipy_sparse_array(nx.powerlaw_cluster_graph(500, 3, 0.4, seed=4),
+                                 format="csr")
+    nodes = np.arange(0, 500, 3)
+    np.testing.assert_allclose(node_curvature(A, nodes)[nodes], node_curvature(A)[nodes])
+
+
+def test_invalid_pruning_parameters():
+    for kw in (dict(tol=-1e-4), dict(max_missing=-0.1)):
+        try:
+            RoleWalk(**kw)
+        except ValueError:
+            continue
+        raise AssertionError(f"{kw} must be rejected")

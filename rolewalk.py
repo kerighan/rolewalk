@@ -85,9 +85,12 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     Mass that stays in inner layers reveals walks that loop back, which the
     characteristic function alone cannot place. A node lies within k steps
     when it is in the support of the k-th power, so the layers come from the
-    powers already computed, read before pruning, so that every retained
-    entry gets its exact distance up to three steps (the layer masses still
-    lose what pruning drops). Layer masses are multiplied by ``||theta||``:
+    powers already computed: a node's layer is the first step at which it
+    appears, read before pruning. Without pruning this is its distance.
+    With pruning, every retained entry still gets its exact distance up to
+    three steps (the layer masses lose what pruning drops); beyond, a node
+    first reached through a pruned entry is labelled later than its
+    distance. Layer masses are multiplied by ``||theta||``:
     for a small probability, the characteristic function is about
     ``i theta p``, so this puts a unit of mass on the same scale as in the
     characteristic function. Unscaled, they weigh ~0.02% of the variance and
@@ -112,6 +115,11 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
             # support before pruning: nodes within w + 1 steps
             S = T.copy()
             S.data[:] = 1
+            if shells and len(supports) > 1:
+                # nodes reached by any earlier step too: the supports stay
+                # nested once pruning drops entries
+                S = S + supports[-1]
+                S.data[:] = 1
         if w > 0 and tol:
             T = _prune(T, tol, max_missing)
         phi = compute_iter(T, theta, aggregate)
@@ -145,7 +153,8 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
     """Fused walk: for each root, propagate a sparse row step by step and
     summarise it on the fly (characteristic function, layers, curvature),
     without materialising the powers. Same features as compute_embedding
-    with aggregate="sum"; each thread holds O(n) workspace."""
+    with aggregate="sum" (layers: step at which each node is first reached,
+    before pruning); each thread holds O(n) workspace."""
     n = len(indptr) - 1
     m = len(theta)
     use_kappa = len(kappa) > 0
@@ -154,7 +163,8 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
     out = np.zeros((len(rows), width), dtype=np.float32)
     scale = np.sqrt(np.sum(theta ** 2))
     # below this probability every angle is under 0.1: Taylor series from
-    # power sums instead of 2 m sines (error below 1e-12)
+    # power sums instead of 2 m sines (truncation below 3e-12 of the term;
+    # float32 rounding dominates)
     small_p = 0.1 / np.max(theta)
     chunks = np.linspace(0, len(rows), n_threads + 1).astype(np.int64)
     for c in numba.prange(n_threads):
@@ -267,9 +277,9 @@ def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
                             shells=False, curvature=None, max_missing=None,
                             n_jobs=1):
     """compute_embedding (aggregate="sum") with the fused Numba kernel:
-    a few times faster and with O(n) memory per thread. Layers use the
-    distance at which each node is first reached, which is what the
-    supports give, and stays nested beyond three steps."""
+    a few times faster and with O(n) memory per thread. Same features up
+    to float32 rounding and the Taylor truncation (relative error below
+    3e-12 for the default theta)."""
     if numba is None:
         raise ImportError("compute_embedding_fused needs numba")
     H = H.tocsr()
@@ -326,8 +336,35 @@ def _edge_triangles_kernel(indptr, indices, rank):
     return count
 
 
+def _edge_common_kernel(indptr, indices, xs):
+    """Common neighbours of the edges x-y of the given nodes x (sorted
+    CSR of a symmetric adjacency), in the order of their CSR positions: the
+    shorter neighbour list is scanned and searched in the longer one,
+    O(min(d_x, d_y) log d) per edge, O(|E|^1.5 log d) at most."""
+    out_ptr = np.zeros(len(xs) + 1, dtype=np.int64)
+    for i in range(len(xs)):
+        out_ptr[i + 1] = out_ptr[i] + indptr[xs[i] + 1] - indptr[xs[i]]
+    count = np.zeros(out_ptr[-1], dtype=np.int64)
+    for i in range(len(xs)):
+        x = xs[i]
+        for e in range(indptr[x], indptr[x + 1]):
+            y = indices[e]
+            a, b = x, y
+            if indptr[a + 1] - indptr[a] > indptr[b + 1] - indptr[b]:
+                a, b = y, x
+            lo, hi = indptr[b], indptr[b + 1]
+            c = 0
+            for f in range(indptr[a], indptr[a + 1]):
+                pos = lo + np.searchsorted(indices[lo:hi], indices[f])
+                if pos < hi and indices[pos] == indices[f]:
+                    c += 1
+            count[out_ptr[i] + e - indptr[x]] = c
+    return count
+
+
 if numba is not None:
     _edge_triangles_kernel = numba.njit(cache=True)(_edge_triangles_kernel)
+    _edge_common_kernel = numba.njit(cache=True)(_edge_common_kernel)
 
 
 def node_curvature(A, nodes=None):
@@ -346,9 +383,12 @@ def node_curvature(A, nodes=None):
 
     The two closed neighbourhoods are uniform and share the
     ``c(x, y) + 2`` nodes x, y and their common neighbours, so the overlap
-    is ``(c(x, y) + 2) / (max(d_x, d_y) + 1)``. Common neighbours come from
-    enumerating triangles along edges oriented by degree (with numba), or
-    from one sparse product (without numba, or for a subset of nodes).
+    is ``(c(x, y) + 2) / (max(d_x, d_y) + 1)``. With numba, common
+    neighbours come from enumerating triangles along edges oriented by
+    degree, O(|E|^1.5), or for a subset of nodes from intersecting the
+    neighbour lists of their edges, O(min(d_x, d_y) log d) per edge.
+    Without numba they come from one sparse product, whose cost is the
+    number of 2-paths from the nodes (quadratic on a star).
     """
     n = A.shape[0]
     U = ((A + A.T) > 0).astype(np.float64).tocsr()
@@ -370,6 +410,16 @@ def node_curvature(A, nodes=None):
         E = U.tocoo()  # same order as U.nonzero()
         overlap = (common + 2) / (np.maximum(deg[E.row], deg[E.col]) + 1)
         return np.bincount(E.row, overlap, minlength=n) / np.maximum(deg, 1)
+    if numba is not None:
+        U.sort_indices()
+        xs = np.asarray(nodes, dtype=np.int64)
+        count = _edge_common_kernel(U.indptr.astype(np.int64),
+                                    U.indices.astype(np.int64), xs)
+        x = np.repeat(xs, deg[xs].astype(np.int64))
+        y = np.concatenate([U.indices[U.indptr[v]:U.indptr[v + 1]] for v in xs]) \
+            if len(xs) else np.zeros(0, dtype=np.int64)
+        overlap = (count + 2) / (np.maximum(deg[x], deg[y]) + 1)
+        return np.bincount(x, overlap, minlength=n) / np.maximum(deg, 1)
     rows = U if nodes is None else U[nodes]
     common = (rows @ U).multiply(rows).tocoo()  # c(x, y) on the edges x-y
     E = rows.tocoo()  # edges with c = 0 are absent from ``common``
@@ -398,12 +448,14 @@ class RoleWalk:
     Each node is described, for each walk step, by the empirical
     characteristic function of its transition probabilities, sampled at
     ``n_samples`` values of theta, and by the mass it keeps at each
-    distance. Without curvature, squared distances between embeddings are
-    the MMD between the nodes' walk footprints (finite measures over
-    probabilities and layers) under the kernel
-    ``sum_theta [cos theta (a - b) - cos theta a - cos theta b + 1]
-    + ||theta||^2 a b [same layer]`` (see the paper), so ``theta_scheme``
-    and ``bounds`` set the kernel's shape and bandwidth.
+    distance. With aggregate="sum", without curvature, pruning or
+    projection, squared distances between embeddings are the MMD between
+    the nodes' walk footprints (finite measures over (block, probability,
+    layer), a block being a step and direction or a mixed probe) under the
+    kernel ``[same block] (sum_theta [cos theta (a - b) - cos theta a
+    - cos theta b + 1] + ||theta||^2 a b [same layer])``, with no layer
+    term for mixed probes (see the paper), so ``theta_scheme`` and
+    ``bounds`` set the kernel's shape and bandwidth.
 
     Parameters
     ----------
@@ -419,8 +471,9 @@ class RoleWalk:
         RoleWalk <= 1.1 behaviour.
     tol : float
         Transition probabilities below ``tol`` are dropped after each walk
-        step. 1e-4 is 2-3x faster on graphs with hubs, with no measurable
-        loss; 0 computes the walks exactly.
+        step. 1e-4 is 2-3x faster on graphs with hubs; on the role
+        benchmarks it changes accuracy by at most 0.005, but hubs' features
+        can move (see ``max_missing``). 0 computes the walks exactly.
     shells : bool
         Also describe, at each step, how the walk's probability mass splits
         over the "onion layers" around the node (distance 0, 1, ..., step).
@@ -482,6 +535,10 @@ class RoleWalk:
             raise ValueError(
                 f"Unknown aggregate {aggregate!r}, expected one of "
                 f"{list(AGGREGATES)}")
+        if not tol >= 0:
+            raise ValueError("tol must be non-negative")
+        if max_missing is not None and not max_missing >= 0:
+            raise ValueError("max_missing must be non-negative")
         default_bounds, spacing = THETA_SCHEMES[theta_scheme]
         if bounds is None:
             bounds = default_bounds
@@ -511,9 +568,11 @@ class RoleWalk:
     def transform(self, G, nodes=None):
         """Embed the nodes of ``G``, in ``G.nodes`` order.
 
-        With ``nodes``, only embed those nodes, in that order. This only
-        explores their ``walk_len``-step neighbourhoods, so it is cheap for
-        a few nodes of a large graph.
+        With ``nodes``, only embed those nodes, in that order. Their
+        features only depend on their ``walk_len``-step neighbourhoods
+        (2-step with mixed probes, ``walk_len`` + 2 with curvature), and only
+        those walks are computed; the graph is still converted and the
+        transition matrices built in full.
         """
         n = len(G.nodes)
         A = nx.to_scipy_sparse_array(G, format="csr")
@@ -555,22 +614,26 @@ class RoleWalk:
             X = X @ Q
         return X
 
-    def _row_blocks(self, H, rows):
+    def _row_blocks(self, H, rows, second=None):
         """Blocks of rows with about ``block_work`` neighbour visits for the
-        first two steps each."""
+        first two steps (``H`` then ``second``, default ``H``) each."""
         if rows is None:
             rows = np.arange(H.shape[0])
+        if second is None:
+            second = H
         B = H.copy()
         B.data[:] = 1
-        work = (B @ np.diff(H.indptr).astype(np.float64))[rows]
+        work = (B @ np.diff(second.indptr).astype(np.float64))[rows]
         cuts = np.searchsorted(np.cumsum(work),
                                np.arange(self.block_work, work.sum(), self.block_work))
         return np.split(rows, np.unique(cuts[(cuts > 0) & (cuts < len(rows))]))
 
     def _mixed_blocks(self, first, second, rows):
-        """Characteristic function of the rows of ``first @ second``."""
+        """Characteristic function of the rows of ``first @ second``, by
+        blocks whose product has at most about ``block_work`` entries before
+        pruning."""
         out = []
-        for block in self._row_blocks(first, rows):
+        for block in self._row_blocks(first, rows, second):
             T = (first[block] @ second).tocsr()
             if self.tol:
                 T = _prune(T, self.tol, self.max_missing)
