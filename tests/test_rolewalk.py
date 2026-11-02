@@ -405,3 +405,37 @@ def test_certificate_bounds_pruning_error():
     model.transform(G)
     assert model.missing_.max() < 1e-9
     assert RoleWalk(curvature=True).fit(G, n_roles=3).certificate_ is None
+
+
+def test_underflowing_weights_and_self_loops():
+    G = nx.Graph()
+    G.add_edge(0, 1, weight=1e300)
+    G.add_edge(0, 2, weight=1e-300)
+    G.add_edge(1, 2, weight=1e-300)
+    for tol in (0, 1e-4):
+        X = RoleWalk(tol=tol).transform(G)
+        assert np.isfinite(X).all()
+    # large finite weights do not overflow the row sums
+    H = nx.Graph()
+    H.add_edge(0, 1, weight=1.5e308)
+    H.add_edge(0, 2, weight=1.5e308)
+    assert np.isfinite(RoleWalk().transform(H)).all()
+    # self-loops of the graph are ignored by the default walk
+    K = nx.karate_club_graph()
+    L = K.copy()
+    L.add_edge(0, 0, weight=5.0)
+    np.testing.assert_array_equal(RoleWalk().transform(L), RoleWalk().transform(K))
+
+
+def test_models_saved_before_mean_edge_loops_keep_unit_loops(tmp_path):
+    import json
+    model = RoleWalk()
+    path = tmp_path / "model.npz"
+    model.save(path)
+    with np.load(path) as data:
+        params = json.loads(str(data["params"]))
+        theta = data["theta"]
+    del params["walk"]
+    np.savez(path, params=json.dumps(params), theta=theta)
+    assert RoleWalk.load(path).walk == "unit_loops"
+    assert RoleWalk.load(path).mixed is True

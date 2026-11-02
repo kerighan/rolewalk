@@ -15,7 +15,8 @@ def compute_iter(T, theta, aggregate="sum", chunk_size=2**20):
     Returns an array of shape (n, 2 * n_theta): real then imaginary parts.
     With ``aggregate="sum"``, row i gives ``sum_j (exp(i theta p_ij) - 1)``
     over the row's nonzeros, i.e. the characteristic function over all n
-    nodes (zeros included, as in GraphWave) rescaled by n. With "mean", it
+    nodes (zeros included, as in GraphWave), centred and rescaled:
+    ``n (chi - 1)``. With "mean", it
     is the average of ``exp(i theta p_ij)`` over the nonzeros only, which
     loses how many nodes a walk reaches.
 
@@ -177,6 +178,7 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
         acc = np.zeros(n)
         dist = np.full(n, -1, dtype=np.int64)
         touched = np.empty(n, dtype=np.int64)
+        listed = np.zeros(n, dtype=np.bool_)  # in ``touched``, whatever acc
         seen = np.empty(n, dtype=np.int64)
         cur_idx = np.empty(n, dtype=np.int64)
         cur_val = np.empty(n)
@@ -199,7 +201,8 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
                     p = cur_val[a]
                     for e in range(indptr[j], indptr[j + 1]):
                         k = indices[e]
-                        if acc[k] == 0.0:
+                        if not listed[k]:
+                            listed[k] = True
                             touched[n_touch] = k
                             n_touch += 1
                         acc[k] += p * data[e]
@@ -230,7 +233,8 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
                     k = touched[t]
                     p = acc[k]
                     acc[k] = 0.0
-                    if prune and p < tol:
+                    listed[k] = False
+                    if p == 0.0 or (prune and p < tol):  # underflow, or pruned
                         continue
                     cur_idx[n_cur] = k
                     cur_val[n_cur] = p
@@ -376,19 +380,33 @@ if numba is not None:
     _edge_common_kernel = numba.njit(cache=True)(_edge_common_kernel)
 
 
-def lazy_walk(A):
+def lazy_walk(A, unit_loops=False):
     """Transition matrix of the walk that stays put with the weight of an
     average edge of the node: ``(diag(s / d) + A)`` normalised by rows, with
     ``s`` the weighted and ``d`` the unweighted out-degree (1 without
     edges). On unweighted graphs this is ``D~^-1 (I + A)``; on weighted ones
     it stays put with probability ``1 / (d + 1)`` too, and does not depend on
-    the unit of the weights (nor on rescaling the edges of a node)."""
+    the unit of the weights (nor on rescaling the edges of a node). Self-loops
+    of ``A`` are ignored. Rows are scaled by their largest weight first, so
+    large finite weights cannot overflow.
+
+    With ``unit_loops``, the walk of RoleWalk <= 1.4 (models saved before
+    1.5): ``(I + A)`` normalised by rows, self-loops of ``A`` included."""
     A = csr_matrix(A, dtype=np.float64)
+    if unit_loops:
+        return normalize(identity(A.shape[0]) + A, norm="l1").tocsr()
+    A.setdiag(0)
     A.eliminate_zeros()
     count = np.diff(A.indptr)
+    top = np.zeros(A.shape[0])
+    if A.nnz:
+        top[count > 0] = np.maximum.reduceat(A.data, A.indptr[:-1][count > 0])
+    A = diags(1 / np.where(top > 0, top, 1)) @ A
     strength = np.asarray(A.sum(axis=1)).ravel()
     stay = np.where(count > 0, strength / np.maximum(count, 1), 1.0)
-    return normalize(diags(stay) + A, norm="l1").tocsr()
+    H = normalize(diags(stay) + A, norm="l1").tocsr()
+    H.eliminate_zeros()  # underflow
+    return H
 
 
 def node_curvature(A, nodes=None):
@@ -472,7 +490,7 @@ class RoleWalk:
     Each node is described, for each walk step, by the empirical
     characteristic function of its transition probabilities, sampled at
     ``n_samples`` values of theta, and by the mass it keeps at each
-    distance. With aggregate="sum", without curvature, pruning or
+    distance. With aggregate="sum" and shells, without curvature, pruning or
     projection, squared distances between embeddings are the MMD between
     the nodes' walk footprints (finite measures over (block, probability,
     layer), a block being a step and direction or a mixed probe) under the
@@ -520,14 +538,23 @@ class RoleWalk:
     max_missing : float, optional
         Budget of probability mass a row may lose to pruning. Without it,
         a hub's step-2 row can lose most of its mass, which returns to the
-        hub at step 3. Keeping it costs more time around hubs.
+        hub at step 3. Keeping it costs more time around hubs. Values of 1
+        or more allow any loss, as without a budget.
+    walk : {"mean_edge_loops", "unit_loops"}
+        The walk's self-loop weighs the node's mean edge weight (default
+        since 1.5.0: unit-invariant on weighted graphs), or 1 (before;
+        models saved before 1.5.0 load with it). The two agree on
+        unweighted graphs. Self-loops of the graph are ignored by the
+        default.
     n_jobs : int
         Threads for the fused walk (with numba). Rows are independent, so
         time scales down almost linearly.
     block_work : float
         Rows are embedded in blocks of about this many neighbour visits for
-        the first two steps, which bounds memory on large graphs. Results do
-        not depend on it.
+        the first two steps (plus at most one row's own work, as a row is
+        never split), which bounds memory on large graphs; later powers of
+        the sparse backend (without numba) are not bounded by it. Results
+        do not depend on it.
     embedding_dim : int, optional
         If set, randomly project the embedding to this many dimensions. Low
         values lose role information: keep None except for plotting.
@@ -562,7 +589,7 @@ class RoleWalk:
         embedding_dim=None, random_state=0, theta_scheme="geomspace",
         aggregate="sum", tol=1e-4, shells=True, curvature=False,
         role_names=None, max_missing=None, block_work=1e7, mixed=True,
-        n_jobs=1
+        n_jobs=1, walk="mean_edge_loops"
     ):
         if theta_scheme not in THETA_SCHEMES:
             raise ValueError(
@@ -574,6 +601,13 @@ class RoleWalk:
                 f"{list(AGGREGATES)}")
         if not tol >= 0:
             raise ValueError("tol must be non-negative")
+        if walk not in ("mean_edge_loops", "unit_loops"):
+            raise ValueError("walk must be 'mean_edge_loops' or 'unit_loops'")
+        for name, value in (("walk_len", walk_len), ("n_samples", n_samples)):
+            if int(value) != value or value < 1:
+                raise ValueError(f"{name} must be a positive integer")
+        if not block_work > 0:
+            raise ValueError("block_work must be positive")
         if max_missing is not None and not max_missing >= 0:
             raise ValueError("max_missing must be non-negative")
         default_bounds, spacing = THETA_SCHEMES[theta_scheme]
@@ -590,6 +624,7 @@ class RoleWalk:
         self.curvature = curvature
         self.max_missing = max_missing
         self.mixed = mixed
+        self.walk = walk
         self.n_jobs = n_jobs
         self.block_work = block_work
         self.embedding_dim = embedding_dim
@@ -620,7 +655,8 @@ class RoleWalk:
             index = {v: i for i, v in enumerate(G.nodes)}
             rows = np.array([index[v] for v in nodes], dtype=np.int64)
         # extract raw embedding from sampling the characteristic function
-        H = lazy_walk(A)
+        unit = self.walk == "unit_loops"
+        H = lazy_walk(A, unit)
         kappa = None
         if self.curvature:
             near = None
@@ -635,7 +671,7 @@ class RoleWalk:
             kappa = node_curvature(A, near)
         walks = [H]
         if nx.is_directed(G):
-            walks.append(lazy_walk(A.T))
+            walks.append(lazy_walk(A.T, unit))
         parts = [self._embed_blocks(W, rows, kappa) for W in walks]
         mixed = []
         if self.mixed and len(walks) == 2:
@@ -803,7 +839,7 @@ class RoleWalk:
             "theta_scheme": self.theta_scheme, "aggregate": self.aggregate,
             "tol": self.tol, "shells": self.shells,
             "curvature": self.curvature, "max_missing": self.max_missing,
-            "mixed": self.mixed,
+            "mixed": self.mixed, "walk": self.walk,
             "role_names": self.role_names,
         }
         arrays = {"theta": self.theta}
@@ -820,6 +856,7 @@ class RoleWalk:
             params.setdefault("shells", False)  # saved before 1.3.0
             params.setdefault("curvature", False)
             params.setdefault("mixed", False)  # saved before 1.4.0
+            params.setdefault("walk", "unit_loops")  # saved before 1.5.0
             model = cls(**params)
             model.theta = data["theta"]
             if "cluster_centers" in data:
@@ -972,7 +1009,8 @@ def role_summary(G, labels, X=None, n_examples=3, n_links=3):
           median falls in the top or bottom quarter of all nodes (e.g.
           "high degree (top 3%)");
         - ``links_to``: where the role's edges go, as shares of its edge
-          endpoints; ``self`` is the share staying inside the role;
+          endpoints, directions ignored; ``self`` is the share staying
+          inside the role;
         - ``examples``: representative nodes.
     """
     import pandas as pd
