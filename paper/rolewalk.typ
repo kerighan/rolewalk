@@ -84,7 +84,11 @@ Kernel mean embeddings and MMD: @gretton2012.
 
 *Walk.* $G = (V, E)$ with non-negative weights $A$ (directed or not),
 $tilde(D) = op("diag")((I + A) bold(1))$ and the self-loop-augmented walk
-$H = tilde(D)^(-1) (I + A)$. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
+$H = tilde(D)^(-1) (I + A)$. On weighted graphs the self-loop of $u$ weighs
+the mean $s_u \/ d_u$ of its edge weights ($s_u$ weighted, $d_u$ unweighted
+degree), which is 1 on unweighted graphs: the walk stays put with
+probability $1 \/ (d_u + 1)$ in both cases, and does not depend on the unit
+of the weights. For a node $u$ and a step $w$, $p^w_u = e_u^top H^w$
 is the distribution of the walk after $w$ steps. Directed graphs use the
 out-walk $H_+$ ($A$) and the in-walk $H_-$ ($A^top$), concatenate both
 embeddings, and add the characteristic functions of the rows of
@@ -662,21 +666,21 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked). Without layers, RoleWalk (3 steps) separates 203 pairs.]
 ] <tab-brec>
 
-#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 2 seeds. Path-based centralities and PageRank (top four rows) are where walks matter; 4 of the 84 graph–target pairs have a constant target ($k$-core on Barabási-Albert) and are left out. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen.  `centrality_transfer_x4.csv`.])[
+#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 10 independent pairs of graphs. Path-based centralities and PageRank (top four rows) are where walks matter; 20 of the 420 graph–target cells have a constant target ($k$-core on Barabási-Albert) and are left out. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. `centrality_transfer_x4_10seeds.csv`, `transfer_paired.csv`.])[
   #table(columns: 10, align: (left,) + (center,) * 9,
     [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]],
-    [Betweenness], [*0.865*], [*0.865*], [#underline[0.858]], [0.852], [0.845], [0.851], [0.438], [0.629], [#emph[0.622]],
-    [Closeness], [*0.776*], [#underline[0.767]], [0.738], [0.691], [0.695], [0.717], [0.452], [0.510], [#emph[0.384]],
-    [Harmonic], [*0.860*], [#underline[0.856]], [0.818], [0.772], [0.777], [0.803], [0.522], [0.595], [#emph[0.451]],
-    [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.983], [0.973], [0.987], [0.741], [0.643], [#emph[0.929]],
+    [Betweenness], [#underline[0.864]], [*0.866*], [0.862], [0.852], [0.845], [0.849], [0.412], [0.659], [#emph[0.623]],
+    [Closeness], [*0.797*], [#underline[0.793]], [0.761], [0.716], [0.725], [0.738], [0.464], [0.529], [#emph[0.407]],
+    [Harmonic], [*0.861*], [#underline[0.860]], [0.823], [0.778], [0.788], [0.806], [0.517], [0.597], [#emph[0.460]],
+    [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.984], [0.973], [0.986], [0.741], [0.611], [#emph[0.929]],
     table.hline(stroke: 0.4pt),
-    [Clustering], [0.806], [0.802], [0.803], [*0.840*], [#underline[0.809]], [0.790], [0.722], [0.352], [#emph[0.205]],
-    [k-core], [0.652], [*0.658*], [#underline[0.655]], [0.652], [0.635], [0.652], [0.509], [0.622], [#emph[0.618]],
-    [Eigenvector], [0.645], [0.648], [#underline[0.663]], [0.652], [*0.695*], [0.568], [0.347], [0.405], [#emph[0.450]],
+    [Clustering], [0.805], [0.802], [0.803], [*0.844*], [#underline[0.813]], [0.785], [0.723], [0.347], [#emph[0.201]],
+    [k-core], [#underline[0.651]], [*0.652*], [*0.652*], [0.650], [0.631], [0.647], [0.494], [0.594], [#emph[0.614]],
+    [Eigenvector], [#underline[0.673]], [0.671], [0.667], [0.661], [*0.700*], [0.586], [0.358], [0.415], [#emph[0.463]],
     table.hline(stroke: 0.4pt),
-    [Mean], [*0.799*], [#underline[0.798]], [0.789], [0.778], [0.776], [0.767], [0.533], [0.537], [#emph[0.523]],
+    [Mean], [*0.813*], [#underline[0.812]], [0.801], [0.790], [0.790], [0.777], [0.532], [0.533], [#emph[0.524]],
   )
-  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Test graphs of the training size give the same top two (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`). From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10. GraphWave's scale is chosen from each graph's spectrum (@prop-graphwave); RWSE's coordinates are local like RoleWalk's, so its drop is not a matter of coordinates, and we have not diagnosed it. Appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. Digraphwave does not transfer (mean 0.08; `centrality_transfer_x4_dgw.csv`): its coordinates are near 1 with spreads that shrink with the graph's size, so on the larger graph they fall outside the bins learned on the smaller one and the regressor predicts a constant on 25 of the 80 scored pairs (counted as 0). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
+  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Paired over the 60 pairs of graphs (RoleWalk minus other, mean over targets, 95% $t$-interval, share of pairs won): top-$k$ + layers $+0.013$ $[0.009, 0.018]$, 77%; local stats $+0.022$ $[0.016, 0.029]$, 80%; frozen ReFeX $+0.024$ $[0.018, 0.029]$, 82%; RW heat CF $+0.038$ $[0.030, 0.046]$, 98%. On closeness and harmonic, RoleWalk wins every pair against local stats and ReFeX ($+0.07$ to $+0.08$) and leads top-$k$ + layers, at the same dimension, by $+0.04$ $[0.03, 0.04]$; on betweenness it ties top-$k$ ($+0.002$ $[-0.003, 0.007]$); local stats win clustering ($-0.04$) and ReFeX eigenvector ($-0.03$). Per family, RoleWalk (with or without curvature) has the best mean on Barabási-Albert, random geometric and Watts-Strogatz, and is within 0.007 of the best on the other three. With 2 seeds, test graphs of the training size give the same top two (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`): from the same size to $4 times$ the size, RoleWalk's mean drops by 0.04, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10. GraphWave's scale is chosen from each graph's spectrum (@prop-graphwave); RWSE's coordinates are local like RoleWalk's, so its drop is not a matter of coordinates, and we have not diagnosed it. With 2 seeds, appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. Digraphwave does not transfer (2 seeds, mean 0.08; `centrality_transfer_x4_dgw.csv`): its coordinates are near 1 with spreads that shrink with the graph's size, so on the larger graph they fall outside the bins learned on the smaller one and the regressor predicts a constant on 25 of the 80 scored pairs (counted as 0). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
 ] <tab-centrality>
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
