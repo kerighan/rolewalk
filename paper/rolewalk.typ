@@ -844,7 +844,35 @@ the observed feature error is at most 0.51 of the certificate of
 @prop-prune everywhere. On the
 real networks the budget costs nothing measurable (3.3 s against 3.1 s in
 total); on the hub-heavy Barabási-Albert graph it doubles the time, as
-hub rows are kept whole.
+hub rows are kept whole. @tab-frontier measures the trade-off on hub-heavy
+and directed graphs. With the fused kernel, exact walks ($"tol" = 0$) take
+seconds at 50k nodes; threshold pruning buys up to 8$times$ in time at a
+small median but large worst-case error, and a budget buys certified,
+near-exact features at about the exact cost. The library returns each
+node's missing masses and certificate, so a user can check the worst case
+of a pruned run instead of trusting the median.
+
+#figure(caption: [Certified pruning as a setting: one core, peak memory of the process (graph included), relative error of each node's embedding against the exact one (median and worst node, %), and the largest per-node certificate (`RoleWalk.certificate_`, absolute; $norm(X_u)$ is a few hundred). Directed SF: directed scale-free graph (Bollobás et al.), mixed probes included. `pruning_frontier.csv`.])[
+  #table(columns: 7, align: (left, left) + (center,) * 5,
+    [], [tol, budget], [Time], [GB], [Median %], [Worst %], [Cert. max],
+    [BA 50k], [exact], [3.8 s], [0.29], [0.0], [0.0], [–],
+    [BA 50k], [$10^(-4)$], [3.0 s], [0.30], [1.3], [22.4], [188],
+    [BA 50k], [$10^(-3)$], [2.3 s], [0.32], [11.0], [48.1], [367],
+    [BA 50k], [$10^(-4)$, $delta = 0.01$], [3.6 s], [0.31], [0.0], [0.7], [4],
+    [BA 50k], [$10^(-3)$, $delta = 0.05$], [3.5 s], [0.32], [0.0], [3.9], [20],
+    [Directed SF 50k], [exact], [38.2 s], [0.71], [0.0], [0.0], [–],
+    [Directed SF 50k], [$10^(-4)$], [7.8 s], [0.61], [0.6], [44.9], [414],
+    [Directed SF 50k], [$10^(-3)$], [4.9 s], [0.53], [4.4], [46.7], [487],
+    [Directed SF 50k], [$10^(-4)$, $delta = 0.01$], [43.1 s], [0.76], [0.0], [0.6], [3],
+    [Directed SF 50k], [$10^(-3)$, $delta = 0.05$], [42.3 s], [0.76], [0.0], [3.4], [26],
+    [wiki-RfA], [exact], [4.1 s], [0.61], [0.0], [0.0], [–],
+    [wiki-RfA], [$10^(-4)$], [3.6 s], [0.58], [1.6], [6.7], [77],
+    [wiki-RfA], [$10^(-3)$], [2.2 s], [0.54], [11.2], [34.9], [424],
+    [wiki-RfA], [$10^(-4)$, $delta = 0.01$], [4.3 s], [0.59], [0.0], [0.5], [5],
+    [wiki-RfA], [$10^(-3)$, $delta = 0.05$], [4.3 s], [0.59], [0.0], [2.5], [20],
+  )
+  #text(size: 8pt)[Observed error over certificate: at most 0.64 on every node of every run (0.45 in all but one). With a budget, rows that would exceed it keep all their entries, so a budget of 1% is nearly exact at the cost of the exact time: on the directed graph, the budget is even slower than no pruning, as kept hub rows feed the mixed products. Threshold pruning alone is 1.2–8$times$ faster, with a small median error but up to 48% on the worst node.]
+] <tab-frontier>
 
 == Kernel scaling <sec-scaling>
 
