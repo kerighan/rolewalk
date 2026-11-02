@@ -714,7 +714,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[Distance-regular: 0 by @prop-drg. The 50 regular pairs missed are exactly the 50 strongly regular pairs, all with equal parameters (checked). Without layers, RoleWalk (3 steps) separates 203 pairs.]
 ] <tab-brec>
 
-#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 10 independent pairs of graphs. Path-based centralities and PageRank (top four rows) are where walks matter. #super[†] Not ranked: the clustering coefficient is one of the features of the local statistics and of ReFeX, as the degree is the degree baseline. 20 of the 420 test graph–target cells have a constant target ($k$-core: all 10 Barabási-Albert graphs, 9 powerlaw-cluster, 1 Watts-Strogatz) and are left out. Table means average the 400 valid cells; paired differences average the targets of each pair of graphs, then the pairs. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. `centrality_transfer_x4_10seeds.csv`, `transfer_paired.csv`.])[
+#figure(caption: [Centrality transfer to larger graphs: a gradient-boosting regressor from features to centrality is fitted on a 2,000-node graph and evaluated (Spearman) on a 8,000-node graph of the same family at the same mean degree (other seed); 6 families (Barabási-Albert, powerlaw-cluster, Watts-Strogatz, SBM, random geometric, motifs) × 10 independent pairs of graphs. Path-based centralities and PageRank (top four rows) are where walks matter. #super[†] The clustering coefficient is one of the features of the local statistics and of ReFeX (a base feature that ReFeX aggregates recursively), which explains their lead on this row. 20 of the 420 test graph–target cells have a constant target ($k$-core: all 10 Barabási-Albert graphs, 9 powerlaw-cluster, 1 Watts-Strogatz) and are left out. Table means average the 400 valid cells; paired differences average the targets of each pair of graphs, then the pairs. ReFeX's feature selection, scaling and bins are fitted on the training graph and frozen. `centrality_transfer_x4_10seeds.csv`, `transfer_paired.csv`.])[
   #table(columns: 10, align: (left,) + (center,) * 9,
     [], [RoleWalk], [\+ curv.], [Top-$k$ + layers], [Local stats], [ReFeX (frozen)], [RW heat CF], [RWSE], [GraphWave, no $1 \/ n$], [#emph[Degree]],
     [Betweenness], [#underline[0.864]], [*0.866*], [0.862], [0.852], [0.845], [0.849], [0.412], [0.659], [#emph[0.623]],
@@ -722,7 +722,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [Harmonic], [*0.861*], [#underline[0.860]], [0.823], [0.778], [0.788], [0.806], [0.517], [0.597], [#emph[0.460]],
     [PageRank], [*0.989*], [*0.989*], [#underline[0.988]], [0.984], [0.973], [0.986], [0.741], [0.611], [#emph[0.929]],
     table.hline(stroke: 0.4pt),
-    [Clustering], [*0.805*], [0.802], [#underline[0.803]], [#emph[0.844]#super[†]], [#emph[0.813]#super[†]], [0.785], [0.723], [0.347], [#emph[0.201]],
+    [Clustering], [0.805], [0.802], [0.803], [*0.844*#super[†]], [#underline[0.813]#super[†]], [0.785], [0.723], [0.347], [#emph[0.201]],
     [k-core], [#underline[0.651]], [*0.652*], [*0.652*], [0.650], [0.631], [0.647], [0.494], [0.594], [#emph[0.614]],
     [Eigenvector], [#underline[0.673]], [0.671], [0.667], [0.661], [*0.700*], [0.586], [0.358], [0.415], [#emph[0.463]],
     table.hline(stroke: 0.4pt),
@@ -877,13 +877,13 @@ within-block probabilities doubled, random geometric radius $0.04 -> 0.06$
     [Harmonic], [*0.750*], [0.593], [0.657], [0.624], [#underline[0.663]], [0.367], [0.567], [#emph[0.496]],
     [PageRank], [0.893], [*0.926*], [#underline[0.923]], [0.831], [0.677], [0.625], [0.878], [#emph[0.886]],
     table.hline(stroke: 0.4pt),
-    [Clustering], [#underline[0.639]], [0.626], [#emph[0.959]#super[†]], [#emph[0.759]#super[†]], [0.539], [*0.640*], [0.040], [#emph[−0.000]],
+    [Clustering], [0.639], [0.626], [*0.959*#super[†]], [#underline[0.759]#super[†]], [0.539], [0.640], [0.040], [#emph[−0.000]],
     [k-core], [−0.017], [−0.106], [#underline[0.134]], [0.018], [−0.065], [0.012], [*0.235*], [#emph[0.485]],
     [Eigenvector], [*0.612*], [0.499], [#underline[0.605]], [0.554], [0.533], [0.360], [0.513], [#emph[0.514]],
     table.hline(stroke: 0.4pt),
     [Mean], [#underline[0.639]], [0.559], [*0.695*], [0.618], [0.543], [0.412], [0.492], [#emph[0.493]],
   )
-  #text(size: 8pt)[#super[†] Not ranked: clustering is one of these features. Without the clustering target, means: RoleWalk 0.639, local stats 0.647, frozen ReFeX 0.593, top-$k$ + layers 0.547; paired, RoleWalk minus local stats $-0.008$ $[-0.033, 0.017]$, minus frozen ReFeX $+0.049$ $[0.020, 0.078]$.]
+  #text(size: 8pt)[#super[†] Clustering is one of the features of these methods, which explains their lead on this row. Without the clustering target, means: RoleWalk 0.639, local stats 0.647, frozen ReFeX 0.593, top-$k$ + layers 0.547; paired, RoleWalk minus local stats $-0.008$ $[-0.033, 0.017]$, minus frozen ReFeX $+0.049$ $[0.020, 0.078]$.]
 ] <tab-shift>
 
 RoleWalk has the highest mean among the embedding baselines. Paired over
