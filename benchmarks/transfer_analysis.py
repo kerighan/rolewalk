@@ -26,7 +26,7 @@ from scipy import stats
 TARGETS = ["betweenness", "closeness", "harmonic", "pagerank",
            "clustering", "core_number", "eigenvector"]
 REFERENCE = "rolewalk"
-OTHERS = ["rolewalk_curvature", "topk_layers", "local_stats", "refex_frozen",
+OTHERS = ["rolewalk_curvature", "topk_layers", "topk_layers4", "local_stats", "refex_frozen",
           "heat_cf", "rwse", "graphwave_centered", "degree"]
 
 

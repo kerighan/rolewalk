@@ -102,6 +102,8 @@ if "graphwave" in rb.METHODS:
     FEATURES["graphwave_centered"] = rb.graphwave_centered
 FEATURES["heat_cf"] = rb.heat_cf
 FEATURES["topk_layers"] = topk_layers
+# matched to RoleWalk(walk_len=4) above: 4 x 20 + 14 features
+FEATURES["topk_layers4"] = lambda G: topk_layers(G, walk_len=4, tol=1e-5)
 FEATURES["local_stats"] = local_stats
 FEATURES["digraphwave"] = rb.digraphwave
 FEATURES["rolewalk_local"] = lambda G: np.hstack([FEATURES["rolewalk"](G), local_stats(G)])

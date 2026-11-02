@@ -57,10 +57,11 @@ def main():
                         default=["degree", "rolewalk", "rolewalk_curvature", "rwse",
                                  "graphwave_centered", "heat_cf", "topk_layers",
                                  "local_stats", "refex"])
+    parser.add_argument("--output-dir", default="transfer_shift")
     args = parser.parse_args()
     cb.SELECTED[:] = args.features
-    os.makedirs("transfer_shift", exist_ok=True)
-    output = os.path.join("transfer_shift", f"{args.shift}.csv")
+    os.makedirs(args.output_dir, exist_ok=True)
+    output = os.path.join(args.output_dir, f"{args.shift}.csv")
 
     train_graph, test_graph = SHIFTS[args.shift]
     rows, start = [], time.time()
