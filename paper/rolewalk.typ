@@ -70,12 +70,12 @@ Claims, each backed by a result below:
 
 Feature-based roles: ReFeX @henderson2011, RolX @henderson2012. Walks
 and word2vec: struc2vec @ribeiro2017, Role2Vec @ahmed2018; directed and
-weighted extensions of struc2vec @steenfatt2018 #todo[compare if code is
-available]. Diffusion: GraphWave @donnat2018, closest to RoleWalk
+weighted extension of struc2vec, struc2vec++ @steenfatt2018 (not evaluated
+here). Diffusion: GraphWave @donnat2018, closest to RoleWalk
 (@prop-graphwave), and Digraphwave @ceylan2022, its extension to directed
 and weighted graphs (heat diffusion on the out- and in-graph, timescales
-read from each graph, characteristic functions aggregated over neighbours). Deep role embeddings: RESD and the RONE benchmark
-@rone #todo[exact references]. Structural encodings for GNNs: RWSE
+read from each graph, characteristic functions aggregated over neighbours). Deep role embeddings: RESD @resd, from the RONE survey and benchmark
+@rone, whose code and Wikipedia talk datasets we use. Structural encodings for GNNs: RWSE
 @dwivedi2022, used by GPS @rampasek2022. Expressiveness: 1-WL @weisfeiler1968 @xu2019 @morris2019,
 CSL @murphy2019, BREC @wang2023. Curvature: Ollivier-Ricci @ollivier2009 @jost2014.
 Kernel mean embeddings and MMD: @gretton2012.
@@ -555,7 +555,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [Digraphwave], P, Y, Y, Y, P, Y, [1.1 s],
     [RWSE], Y, P, Y, Y, Y, Y, [1.7 s],
   )
-  #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #super[c] Scale chosen from the spectrum and $1 \/ n$ factor (@prop-graphwave). "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder. #todo[verify RESD, ReFeX, RWSE rows]]
+  #text(size: 8pt)[#super[a] struc2vec++ @steenfatt2018 extends it. #super[b] In the paper; the reference implementation is undirected. #super[c] Scale chosen from the spectrum and $1 \/ n$ factor (@prop-graphwave). "No training": struc2vec and Role2Vec fit skip-gram models, RESD a variational autoencoder.]
 ] <tab-props>
 
 #figure(caption: [Role classification accuracy. struc2vec is unseeded: mean ± std over 5 runs. The random-walk heat-kernel CF is RoleWalk's characteristic function on the rows of $exp(s (P - I))$, $s in {1, 2, 3}$, with the same frequencies: fixed scales and no $1 \/ n$, but a random-walk rather than GraphWave's spectral heat kernel. Top-$k$ + layers: the 20 largest probabilities at each step instead of the characteristic function, same layers, same dimension. Local statistics: see @tab-centrality. `roles.csv`, `roles_gw.csv`, `roles_matched.csv`, `struc2vec_runs.csv`.])[
