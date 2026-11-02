@@ -31,6 +31,7 @@ for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_var, "1")
 
 import argparse
+import time
 import warnings
 from typing import Callable, Dict
 
@@ -177,6 +178,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--transfer", action="store_true")
     parser.add_argument("--seeds", type=int, default=2)
+    parser.add_argument("--graphs", nargs="*", default=list(GRAPHS), choices=list(GRAPHS))
     parser.add_argument("--test-scale", type=int, default=1,
                         help="with --transfer, test graphs are this many times larger")
     parser.add_argument("--features", nargs="*", default=list(FEATURES),
@@ -185,8 +187,10 @@ def main():
     args = parser.parse_args()
     SELECTED[:] = args.features
 
-    rows = []
-    for name, make in GRAPHS.items():
+    output = args.output or ("centrality_transfer.csv" if args.transfer else "centrality.csv")
+    rows, done, total, start = [], 0, len(args.graphs) * args.seeds, time.time()
+    for name in args.graphs:
+        make = GRAPHS[name]
         for seed in range(args.seeds):
             G = largest_component(make(seed))
             if args.transfer:
@@ -194,11 +198,13 @@ def main():
                                  seed, args.test_scale)
             else:
                 rows += within_graph(name, G, seed)
-            print(f"{name} seed={seed} done", flush=True)
+            pd.DataFrame(rows).to_csv(output, index=False)  # partial results
+            done += 1
+            elapsed = time.time() - start
+            print(f"[{done}/{total}] {name} seed={seed}  elapsed {elapsed / 60:.1f} min"
+                  f"  ETA {elapsed / done * (total - done) / 60:.1f} min", flush=True)
 
     df = pd.DataFrame(rows)
-    output = args.output or ("centrality_transfer.csv" if args.transfer else "centrality.csv")
-    df.to_csv(output, index=False)
     with pd.option_context("display.width", 200, "display.max_rows", None):
         table = df.groupby(["target", "features"]).spearman.mean().unstack("features")
         print(table.round(3))
