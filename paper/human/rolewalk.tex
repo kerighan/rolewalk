@@ -44,7 +44,7 @@ We present \emph{RoleWalk}, a training-free embedding that follows a short lazy 
 On directed graphs, walks that go forward then backward add who shares a node's targets or sources.
 The embedding depends only on a node's neighbourhood within a fixed radius, so its coordinates mean the same thing in every graph.
 We show that, without curvature, it is the kernel mean embedding of the walk's footprint, that it separates graphs that the Weisfeiler--Leman test cannot, and that pruning small probabilities comes with a per-node error certificate.
-Empirically, RoleWalk is competitive with the best role embeddings on six classification benchmarks at a fraction of their cost, has the highest scores on real directed roles in Wikipedia adminship, exceeds the published accuracy of Digraphwave at every noise level of its own Enron network-alignment benchmark, transfers centrality predictors to graphs four times larger better than existing inductive embeddings, hand-made features and a trained GIN, and embeds a million nodes in 20\,s to 3\,min on one CPU core.
+Empirically, RoleWalk is competitive with the best role embeddings on five classification benchmarks at a fraction of their cost, has the highest scores on real directed roles in Wikipedia adminship, exceeds the published accuracy of Digraphwave at every noise level of its own Enron network-alignment benchmark, transfers centrality predictors to graphs four times larger better than existing inductive embeddings, hand-made features and a trained GIN, and embeds a million nodes in 20\,s to 3\,min on one CPU core.
 \end{abstract}
 
 % ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ We compare expressiveness with the 1-WL test \citep{weisfeiler1968,xu2019,morris
 
 \paragraph{Positioning.}
 Each ingredient of RoleWalk has precedents: characteristic functions of diffusion rows, return probabilities, distances under a walk, coupling and co-citation.
-What is new is their combination into fixed, local, training-free coordinates for directed and weighted graphs, with a kernel reading of the whole and certified pruning; and the empirical finding that the walker's distance law is the statistic that carries information across graphs of different sizes.
+What is new is their combination into fixed, local, training-free coordinates for directed and weighted graphs, with a kernel reading of the whole and certified pruning; and the empirical finding that its components matter for different tasks: the walker's distance law carries the transfer of centralities across graph sizes, while the characteristic function and the mixed probes carry network alignment.
 
 % ---------------------------------------------------------------------------
 \section{Method}\label{sec:method}
@@ -144,17 +144,17 @@ We therefore add the characteristic functions of the rows of $H_+H_-$ (one step 
 
 \paragraph{Optional curvature.}
 On the simple unweighted symmetrisation of the graph, for an edge $xy$, $\kappa(x,y) = \sum_z \min(m_x(z), m_y(z))$ with $m_x$ the one-step lazy walk from $x$, which upper-bounds Ollivier--Ricci curvature \citep{ollivier2009,jost2014} and equals $(c_{xy}+2)/(\max(d_x,d_y)+1)$ with $c_{xy}$ the number of common neighbours.
-Each node gets the mean $\kappa_x$ over its edges, and each step adds the mean and standard deviation of $\kappa$ under $p^w_u$ (75 coordinates undirected, 190 directed).
+Each node gets the mean $\kappa_x$ over its edges ($\kappa_x = 0$ at isolated nodes), and each step adds $\nTh$ times the mean and standard deviation of $\kappa$ under $p^w_u$ (75 coordinates undirected, 190 directed).
 
 \paragraph{Computation and pruning.}
 For each root, a single pass propagates a sparse row with a dense accumulator and summarises it without storing the matrix powers: memory is $O(n)$ per thread and rows are independent.
 Entries below $\tol = 10^{-4}$ are dropped after each product, except at the first step; the dropped mass $r$ is added back to $\operatorname{Im}\phi$ to first order ($\theta r$). Distances are read from supports before pruning, which keeps them exact up to three steps; beyond, a node first reached through a pruned entry can be assigned a later layer.
 Pruning is accurate on average but can be badly wrong on hubs, whose mass is spread over many tiny entries.
 With a \emph{mass budget} $\delta$, a row drops small entries only while the total mass it has lost stays below $\delta$.
-The library returns, for every node, the lost mass and the resulting error certificate of \cref{prop:prune}.
+The library returns, for every node, the lost mass and, when the conditions of \cref{prop:prune} hold, the resulting error certificate.
 
 \paragraph{Hyperparameters.}
-All experiments use the defaults ($L=3$, $m=10$, $\Th$ log-spaced in $[1,100]$, $\tol=10^{-4}$), except centrality transfer, which uses $L=4$ with exact walks ($\tol=0$) for RoleWalk and for its dimension-matched ablation alike.
+Unless stated otherwise, experiments use the defaults ($L=3$, $m=10$, $\Th$ log-spaced in $[1,100]$, $\tol=10^{-4}$). Centrality transfer uses four-step RoleWalk with exact walks ($\tol=0$); its dimension-matched top-$k$ ablation uses four steps pruned at $10^{-5}$. The four steps were fixed when the centrality benchmark was first written and have not been varied since. Expressiveness evaluations use exact walks, and the pruning and walk-length experiments vary these settings explicitly.
 The defaults were chosen on a grid of 48 configurations (frequency weighting, range, number of steps, layers) scored by unsupervised $k$-means agreement, with equal weight on synthetic motifs and on the airport, Reality-call and Actor networks; they remain the best whichever dataset is left out.
 These networks are also those of the classification table (with a different metric); wiki-RfA, network alignment, centrality transfer, BREC and ZINC played no part in the choice.
 
@@ -168,7 +168,7 @@ The embedding of $u$ is determined by the isomorphism class of the rooted graph 
 In particular it does not depend on the size of the graph, and nodes related by an automorphism get equal embeddings.
 \end{proposition}
 
-This is what makes transfer well defined: a coordinate means the same thing in every graph. GraphWave lacks this property because of its $1/n$ factor and spectral scale.
+This is what makes transfer well defined: a coordinate means the same thing in every graph. The finite walk length is essential: removing GraphWave's $1/n$ factor and spectral scale alone would not make heat diffusion local.
 
 \begin{proposition}[One kernel on the walk's footprint]\label{prop:mmd}
 Mark each node $j$ reached at step $w$ by $(w, p^w_{uj}, d(u,j))$, and let $\mu_u$ be the resulting finite measure (the \emph{footprint} of the walks from $u$).
@@ -222,7 +222,7 @@ In tables, the best embedding is in bold and the second underlined; the degree b
 \Cref{tab:roles} reports accuracy on three airport networks (labels: activity quartiles), on Reality-call and on Actor (RONE \citep{rone}).
 RoleWalk is in the leading group everywhere, with no method dominating; paired over the 50 splits, RoleWalk with curvature is significantly better than GraphWave, the heat-kernel characteristic function, ReFeX, RWSE and local statistics on USA, and no tested comparison shows it significantly worse on these five networks.
 Its advantage is cost (\cref{fig:speed}): it embeds the USA network in 0.2\,s, against 8\,s for RESD, 18\,s for GraphWave and 564\,s for struc2vec.
-On airports, Brazil and Europe are small (131 and 399 nodes), and differences there are within $\pm0.05$. The fixed-scale heat-kernel characteristic function, which shares RoleWalk's summary, is close on two airport networks. We leave out the Film network of RONE, where Role2Vec leads by a wide margin (0.743 against 0.581 for RoleWalk with curvature): one class is an independent set in a separate block of node identifiers, and no method predicts the other classes above the majority rate, so we read it as a node-type rather than a role task (supplementary report).
+On airports, Brazil and Europe are small (131 and 399 nodes), and paired intervals there have half-widths of about 0.05. The fixed-scale heat-kernel characteristic function, which shares RoleWalk's summary, is close on two airport networks. We leave out the Film network of RONE, where Role2Vec leads by a wide margin (0.743 against 0.581 for RoleWalk with curvature): one class is an independent set in a separate block of node identifiers, and no method does substantially better than the majority class on the others (0.637 at best against 0.623), so we read it as a node-type rather than a role task (supplementary report).
 
 \begin{table}[t]
 \centering
@@ -297,15 +297,15 @@ Network alignment is where structural embeddings must transfer: a node is matche
 We use the protocol and data of Digraphwave \citep{ceylan2022}: the internal 22,888-node subgraph of the Enron email network is aligned to the full 91,685-node graph, after adding a share $p$ of random edges to their union; each node of the subgraph is matched to its nearest neighbour (euclidean, raw coordinates) among the nodes of the full graph.
 This is the benchmark on which Digraphwave reports its largest gains.
 RoleWalk runs with its defaults, with no alignment-specific tuning.
-We reran Digraphwave with the authors' code and settings: without noise it reproduces their published accuracy exactly (0.398), and on shared noisy graphs ($p = 0.01, 0.05, 0.1$, two draws each) it matches their published values (0.321, 0.170, 0.088 against 0.331, 0.170, 0.085) while RoleWalk leads on every draw, by 0.08, 0.07 and 0.04.
+We reran Digraphwave with the authors' code and settings: without noise it reproduces their published accuracy at the reported precision (0.398), and on noisy graphs shared with RoleWalk ($p = 0.01, 0.05, 0.1$, two draws each) it agrees closely with their published values (0.321, 0.170, 0.088 against 0.331, 0.170, 0.085), while RoleWalk leads on all six draws, by 0.08, 0.07 and 0.04 on average.
 
-\Cref{tab:align} compares RoleWalk with its own ablations and with the baselines, all variants on the same noise draws.
+In \cref{tab:align}, RoleWalk, its ablations and the local statistics are evaluated on identical noise draws (5 per level at $p = 0.01, 0.02, 0.03, 0.04, 0.05, 0.075, 0.1$, i.e.\ 35 noisy draws, of which the table shows five levels); the starred rows are published results, not paired with these draws.
 Two components carry the result.
 The characteristic function is the key block here: with the same out- and in-walks and layers (and no mixed probes, which the top-$k$ ablation lacks), replacing it by the 20 largest probabilities at each step loses 8 points on average, on every one of the 35 noisy draws.
-The mixed probes add 3.7 points, again on every draw.
+The mixed probes improve every noisy draw, by 0.037 on average.
 Two findings temper it.
-The layers, scaled by $\nTh$ for raw-distance geometry, dilute nearest-neighbour matching on this task: the characteristic function alone is 0.02 above the full embedding on every draw.
-And the local statistics, our hand-made baseline, also beat Digraphwave and tie RoleWalk on average (RoleWalk minus local statistics $-0.006$, not significant): RoleWalk leads up to $p=0.03$, the local statistics beyond.
+The layers, scaled by $\nTh$ for raw-distance geometry, dilute nearest-neighbour matching on this task: removing them improves every noisy draw, by 0.020 on average.
+And the local statistics, our hand-made baseline, also beat Digraphwave, and their mean is close to RoleWalk's, with no detected difference (RoleWalk minus local statistics $-0.006$ over the 35 noisy draws, paired $t$-test $p = 0.27$): RoleWalk leads up to $p=0.03$, the local statistics beyond.
 With email counts as weights, RoleWalk is ahead of Digraphwave at every noise level (0.596 against 0.536 without noise, 0.198 against 0.136 at $p=0.1$), and ReFeX's published results lead at $p=0.1$ (0.227).
 On the undirected arXiv graph of the same protocol (aligned to a permuted copy), RoleWalk ties GraphWave and ReFeX without noise (0.784 against 0.785) and leads from $p=0.02$.
 
@@ -345,7 +345,7 @@ Only embeddings with fixed coordinates can enter: struc2vec, Role2Vec and RESD l
 
 \begin{table}[t]
 \centering
-\caption{Centrality transfer to graphs four times larger (Spearman, mean over 60 independent pairs of graphs; 20 cells with a constant $k$-core are left out). $^\dagger$The clustering coefficient is itself one of the features of the local statistics and of ReFeX. $^\ddagger$Without its $1/n$ factor. GIN: trained on the training graph (log-degree input).}
+\caption{Centrality transfer to graphs four times larger (Spearman). Table means average the 400 valid graph--target cells of the 60 independent pairs of graphs (20 cells with a constant $k$-core are left out); paired differences in the text first average the valid targets within each pair, then the pairs. $^\dagger$The clustering coefficient is itself one of the features of the local statistics and of ReFeX. $^\ddagger$Without its $1/n$ factor. GIN: trained on the training graph (log-degree input).}
 \label{tab:centrality}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -372,7 +372,7 @@ On closeness and harmonic centrality it wins every pair against local statistics
 GraphWave and RWSE lose more with size: going from test graphs of the training size to four times that size (2 seeds at equal size, so descriptively), RoleWalk's mean drops by 0.04, GraphWave's by 0.10 and RWSE's by 0.19.
 
 \paragraph{What carries the transfer?}
-Splitting RoleWalk into its two blocks shows that the law of the distance does most of the work: the layers alone reach 0.807 and the characteristic function alone 0.785, and the full embedding adds a small but consistent gain over the layers ($+0.007$ $[0.004,0.009]$).
+Splitting RoleWalk into its two blocks shows that the law of the distance does most of the work: the layers alone reach 0.807 and the characteristic function alone 0.785, and the full embedding adds a small but consistent gain over the layers ($+0.007$ $[0.004,0.009]$). The return probabilities alone of the same four-step lazy walk (a lazy RWSE) reach 0.753, against 0.807 for all the layers; the 0.532 of the RWSE column uses a different walk and 16 steps.
 Replacing the characteristic function by the 20 largest probabilities at each step, with the same layers and the same dimension, gives 0.812 --- a tie.
 What transfers, then, is the distance law of a short walk, which is the main new ingredient of RoleWalk relative to GraphWave-style signatures.
 
@@ -384,7 +384,7 @@ When the test graph instead comes from the same generator with one parameter cha
 
 \begin{table}[t]
 \centering
-\caption{Embedding time on one core (defaults; including the conversion of the networkx graph).}
+\caption{Embedding time on one core (defaults: $\tol=10^{-4}$ without budget; one run after compiling the kernel; including the conversion of the networkx graph).}
 \label{tab:scale}
 \small
 \begin{tabular}{lrrrrr}
@@ -399,7 +399,7 @@ Watts--Strogatz ($k=6$) & 0.1\,s & 0.5\,s & 1.8\,s & 5.1\,s & 18\,s \\
 \end{table}
 
 RoleWalk embeds a million-node graph in 18\,s to 3.2\,min on one core, with at most 2.5\,GB of peak memory, most of which holds the networkx graph (\cref{tab:scale}).
-Among the baselines, only ReFeX also reaches a million nodes (31\,s, faster than RoleWalk); RESD takes over an hour; 16-step RWSE, Role2Vec, the heat-kernel characteristic function and Digraphwave do not run at 100k nodes within an hour or 16\,GB, and GraphWave and struc2vec do not run on wiki-RfA (11k nodes).
+Among the baselines, only ReFeX also reaches a million nodes (31\,s, faster than RoleWalk); RESD takes over an hour; at 100k nodes, 16-step RWSE exceeds 16\,GB, Role2Vec 10\,GB, and the heat-kernel characteristic function and Digraphwave (on CPU) an hour, and GraphWave and struc2vec do not run on wiki-RfA (11k nodes).
 
 Threshold pruning reduces running time in our measurements but can produce large errors on the worst nodes: on the Barabási--Albert graph with a million nodes (a separate run, 173\,s), pruning at $\tol=10^{-4}$ leaves 69\% of the rows missing more than 1\% of their mass, and the worst certificate is 366.
 With a 1\% mass budget, the run takes 227\,s and every certificate is below 3.9, against embedding norms of a few hundred; exact computation at this scale was not timed.
@@ -418,8 +418,8 @@ As a structural encoding in GPS \citep{rampasek2022} on ZINC, adding RoleWalk wi
 Nothing in RoleWalk requires the walk to stay on one set of nodes.
 The characteristic function is defined for any row of a row-stochastic matrix, square or not, and the products that build the walk only need to compose: with $B$ the row-normalised incidence from nodes to edges, $B B'$ walks node $\to$ edge $\to$ node, and incidences between edges and faces walk across the ranks of a cell complex or a hypergraph; the distance law becomes the number of steps between cells.
 The mixed probes are already a case of this: $H_+H_-$ composes two different operators.
-Diffusion signatures such as GraphWave instead need a square symmetric operator to exponentiate and diagonalise; Hodge Laplacians are square at each rank but do not mix ranks.
-Walks between cells of different dimensions --- atoms, bonds and rings in molecules, for instance --- are therefore a direct extension of RoleWalk, which we leave to future work.
+Diffusion signatures need a square operator to exponentiate; walks across ranks can be written that way too, as one block operator on the disjoint union of all cells, so this is a convenience rather than a capability that diffusion lacks: RoleWalk composes the rectangular steps directly, with no spectral computation and the same locality.
+Walks between cells of different dimensions --- atoms, bonds and rings in molecules, for instance --- are a direct extension of RoleWalk, which we leave to future work.
 
 % ---------------------------------------------------------------------------
 \section{Limitations}
@@ -436,7 +436,7 @@ Walks between cells of different dimensions --- atoms, bonds and rings in molecu
 RoleWalk describes each node by two laws of a short lazy walk --- how concentrated it is and how far it goes --- with fixed functions that need no training and no graph-level quantity.
 This makes its coordinates comparable across graphs, which is what alignment and transfer need, and lets it read directions through walks that change direction.
 It is competitive with learned role embeddings at a small fraction of their cost, has the highest scores on wiki-RfA, exceeds Digraphwave on its own alignment benchmark, and scales to a million nodes on one core with certified pruning.
-The analysis points to the law of the walker's distance as the statistic that carries information across graphs, a simple ingredient that other structural encodings could adopt.
+The ablations show that its components serve different tasks: the law of the walker's distance carries centralities across graph sizes, a simple ingredient that other structural encodings could adopt, while the characteristic function and the mixed probes carry network alignment.
 
 \bibliographystyle{abbrvnat}
 \bibliography{refs}
@@ -490,7 +490,7 @@ GraphWave embeds $u$ by $\chi_u(t) = \frac1n\sum_j e^{it\Psi_{ju}}$ with $\Psi$ 
 \end{proposition}
 
 \begin{proposition}[Relation to RWSE]
-The distance-0 layer $s^w_u(0) = (H^w)_{uu}$ is the return probability of the lazy walk. On a $d$-regular graph, $\{(H^w)_{uu}\}_{w\le L}$ and the simple-walk RWSE $\{(P^k)_{uu}\}_{k\le L}$ determine each other, since $(H^w)_{uu} = (d+1)^{-w}\sum_{k}\binom{w}{k}d^k(P^k)_{uu}$ is triangular with nonzero diagonal.
+The distance-0 layer $s^w_u(0) = (H^w)_{uu}$ is the return probability of the lazy walk. On a simple, undirected, unweighted $d$-regular graph with $d>0$, $\{(H^w)_{uu}\}_{w\le L}$ and the simple-walk RWSE $\{(P^k)_{uu}\}_{k\le L}$ determine each other, since $(H^w)_{uu} = (d+1)^{-w}\sum_{k}\binom{w}{k}d^k(P^k)_{uu}$ is triangular with nonzero diagonal.
 \end{proposition}
 
 \section{Additional results}\label{app:results}

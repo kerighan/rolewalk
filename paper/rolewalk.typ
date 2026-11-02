@@ -49,7 +49,7 @@
   drop, the approximation error is certified. Empirically it matches or
   beats struc2vec, GraphWave, Role2Vec, RESD and ReFeX on role
   classification at a fraction of the cost of most learned and diffusion
-  baselines, has the best scores on a real directed-role dataset and on the Enron network alignment of Digraphwave (with its protocol), transfers centralities
+  baselines, has the highest scores on a real directed-role dataset (wiki-RfA), exceeds Digraphwave on its own Enron network-alignment protocol (where simple local statistics come close), transfers centralities
   to larger graphs as well as a dimension-matched top-$k$ summary of the same walks and better than the other baselines, embeds a million nodes in 20 s to 3 min on one core (under 4 min with a certified 1% mass budget), and
   shows a preliminary improvement of GPS on ZINC when combined with RWSE.
 ]
@@ -62,7 +62,7 @@ Claims, each backed by a result below:
 + Accuracy competitive with the state of the art on role classification (significantly ahead of most baselines on USA airports, no tested comparison significantly worse elsewhere) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks; on the network-alignment benchmark of Digraphwave (Enron, its protocol and published numbers), ahead of Digraphwave at every noise level (@tab-align); best retrieval and competitive clustering on synthetic directed motifs; on food webs, not distinguishable from local statistics or Digraphwave (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
-+ Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger as well as the top-$k$ probabilities of the same walks (a tie: the law of the distance carries most of it) and better than every other baseline; under a change of generator parameters it stays ahead of every embedding, but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
++ Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger as well as the top-$k$ probabilities of the same walks (a tie: the law of the distance carries most of it) and better than every other baseline; under a change of generator parameters it has the highest mean among embeddings (its advantage over frozen ReFeX is not established), but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
 + Useful as a structural encoding for graph transformers (@tab-zinc).
 
@@ -680,10 +680,10 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [#emph[In/out degree (baseline)]], [#emph[0.755]], [#emph[0.922]], [#emph[0 s]],
   )
-  #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826. Paired over the 50 splits (Nadeau–Bengio, `paired_rfa.csv`), RoleWalk + curv. is significantly better than every other method on A (local statistics $+0.012$ $[0.001, 0.022]$, Digraphwave $+0.019$ $[0.008, 0.029]$) and on B, except local statistics in accuracy ($+0.003$ $[-0.000, 0.006]$; macro-F1 $+0.007$ $[0.000, 0.014]$).]
+  #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Top-$k$ + layers reads the out- and in-walks without the mixed probes: compare it with RoleWalk without them. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826. Paired over the 50 splits (Nadeau–Bengio, `paired_rfa.csv`), RoleWalk + curv. is significantly better than every other method on A (local statistics $+0.012$ $[0.001, 0.022]$, Digraphwave $+0.019$ $[0.008, 0.029]$) and on B, except local statistics in accuracy ($+0.003$ $[-0.000, 0.006]$; macro-F1 $+0.007$ $[0.000, 0.014]$).]
 ] <tab-rfa>
 
-#figure(caption: [Network alignment with the protocol, data and published numbers of Digraphwave @ceylan2022. Enron: the internal 22,888-node subgraph of the email network is aligned to the full 91,685-node graph (directed, unweighted or weighted by email counts); arXiv: a 18,772-node collaboration graph is aligned to a permuted copy. A share $p$ of random edges is added to the union; each node of the second graph is matched to its nearest neighbours (euclidean) among the nodes of the first. Top-1 accuracy, mean of 5 noise draws (1 without noise for Enron, which is then deterministic). RoleWalk: defaults, raw coordinates, nothing tuned; the other rows are the authors' results with their settings (Digraphwave and GraphWave at radius 2, their best; ReFeX, their implementation, best tolerance), so noise draws are not paired. `digraphwave_protocols.py`, `digraphwave_protocols/`.])[
+#figure(caption: [Network alignment with the protocol, data and published numbers of Digraphwave @ceylan2022. Enron: the internal 22,888-node subgraph of the email network is aligned to the full 91,685-node graph (directed, unweighted or weighted by email counts); arXiv: a 18,772-node collaboration graph is aligned to a permuted copy. A share $p$ of random edges is added to the union; each node of the second graph is matched to its nearest neighbours (euclidean) among the nodes of the first. Top-1 accuracy, mean of 5 noise draws (1 without noise for Enron, which is then deterministic). RoleWalk: defaults, raw coordinates, no alignment-specific tuning; the other rows are the authors' results with their settings (Digraphwave and GraphWave at radius 2, their best; ReFeX, their implementation, best tolerance), so noise draws are not paired. `digraphwave_protocols.py`, `digraphwave_protocols/`.])[
   #table(columns: 13, align: (left,) + (center,) * 12,
     [], table.cell(colspan: 4)[Enron, unweighted], table.cell(colspan: 4)[Enron, weighted], table.cell(colspan: 4)[arXiv (undirected)],
     [$p$], [0], [0.01], [0.05], [0.1], [0], [0.01], [0.05], [0.1], [0], [0.01], [0.05], [0.1],
@@ -1031,8 +1031,10 @@ $B$ the row-normalised node-to-edge incidence, $B B'$ walks node → edge →
 node, and edge-to-face incidences walk across the ranks of a cell complex
 or hypergraph, the distance law counting steps between cells. Mixed probes
 already compose two operators ($H_+ H_-$). Diffusion signatures need a
-square symmetric operator to exponentiate; Hodge Laplacians are square per
-rank and do not mix ranks. Walks across cells (atoms, bonds, rings) are
+square operator to exponentiate; walks across ranks can also be written as
+one block operator on the disjoint union of cells, so this is a convenience
+(rectangular steps composed directly, no spectral computation, same
+locality) rather than a capability diffusion lacks. Walks across cells (atoms, bonds, rings) are
 future work.
 
 = Limitations
