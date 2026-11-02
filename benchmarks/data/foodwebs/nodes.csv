@@ -1,0 +1,1147 @@
+web,node,name,eco,biomass
+ChesLower,0,Net Phytoplankton,1,2112.0
+ChesLower,1,Picoplankton,1,373.0
+ChesLower,2,Free Bacteria,1,1258.0
+ChesLower,3,Particle Attached Bacteria,1,39.0
+ChesLower,4,Heteroflagellates,1,43.0
+ChesLower,5,Ciliates,1,87.0
+ChesLower,6,Rotifers,1,0.001
+ChesLower,7,Meroplankton,1,38.0
+ChesLower,8,Mesozooplankton,1,1073.0
+ChesLower,9,Ctenophores,1,108.0
+ChesLower,10,Chrysaora,1,0.001
+ChesLower,11,Microphytobenthos,1,293.0
+ChesLower,12,SAV,1,1986.0
+ChesLower,13,Benthic Bacteria,1,220.0
+ChesLower,14,Meiofauna,1,700.0
+ChesLower,15,Deposit Feeding Benthos,1,4089.0
+ChesLower,16,Suspension Feeding Benthos,1,6962.0
+ChesLower,17,Oysters,1,0.001
+ChesLower,18,Blue Crab,1,342.0
+ChesLower,19,Menhaden,1,2136.0
+ChesLower,20,Bay anchovy,1,381.0
+ChesLower,21,Herrings and Shads,1,0.001
+ChesLower,22,White Perch,1,0.001
+ChesLower,23,Spot,1,570.0
+ChesLower,24,Croaker,1,236.0
+ChesLower,25,Hogchoker,1,100.0
+ChesLower,26,American eel,1,0.001
+ChesLower,27,Catfish,1,0.001
+ChesLower,28,Striped Bass,1,172.0
+ChesLower,29,Bluefish,1,68.0
+ChesLower,30,Weakfish,1,211.0
+ChesLower,31,DOC,2,26915.0
+ChesLower,32,Sediment POC,2,76080.0
+ChesLower,33,POC,2,8309.0
+ChesLower,34,Input,3,0.0
+ChesLower,35,Output,4,0.0
+ChesLower,36,Respiration,5,0.0
+ChesMiddle,0,Net Phytoplankton,1,3326.0
+ChesMiddle,1,Picoplankton,1,587.0
+ChesMiddle,2,Free Bacteria,1,2415.0
+ChesMiddle,3,Particle Attached Bacteria,1,73.0
+ChesMiddle,4,Heteroflagellates,1,149.0
+ChesMiddle,5,Ciliates,1,147.0
+ChesMiddle,6,Rotifers,1,23.0
+ChesMiddle,7,Meroplankton,1,18.0
+ChesMiddle,8,Mesozooplankton,1,526.0
+ChesMiddle,9,Ctenophores,1,126.0
+ChesMiddle,10,Chrysaora,1,6.3
+ChesMiddle,11,Microphytobenthos,1,265.0
+ChesMiddle,12,SAV,1,1952.0
+ChesMiddle,13,Benthic Bacteria,1,298.0
+ChesMiddle,14,Meiofauna,1,494.0
+ChesMiddle,15,Deposit Feeding Benthos,1,1030.0
+ChesMiddle,16,Suspension Feeding Benthos,1,421.0
+ChesMiddle,17,Oysters,1,0.001
+ChesMiddle,18,Blue Crab,1,390.0
+ChesMiddle,19,Menhaden,1,2136.0
+ChesMiddle,20,Bay anchovy,1,381.0
+ChesMiddle,21,Herrings and Shads,1,0.001
+ChesMiddle,22,White Perch,1,29.0
+ChesMiddle,23,Spot,1,222.0
+ChesMiddle,24,Croaker,1,226.0
+ChesMiddle,25,Hogchoker,1,50.0
+ChesMiddle,26,American eel,1,9.0
+ChesMiddle,27,Catfish,1,45.0
+ChesMiddle,28,Striped Bass,1,172.0
+ChesMiddle,29,Bluefish,1,68.0
+ChesMiddle,30,Weakfish,1,67.0
+ChesMiddle,31,DOC,2,28207.0
+ChesMiddle,32,Sediment POC,2,201607.0
+ChesMiddle,33,POC,2,10324.0
+ChesMiddle,34,Input,3,0.0
+ChesMiddle,35,Output,4,0.0
+ChesMiddle,36,Respiration,5,0.0
+ChesUpper,0,Net Phytoplankton,1,1356.0
+ChesUpper,1,Picoplankton,1,239.0
+ChesUpper,2,Free Bacteria,1,649.0
+ChesUpper,3,Particle Attached Bacteria,1,36.0
+ChesUpper,4,Heteroflagellates,1,30.0
+ChesUpper,5,Ciliates,1,66.0
+ChesUpper,6,Rotifers,1,14.0
+ChesUpper,7,Meroplankton,1,3.2
+ChesUpper,8,Mesozooplankton,1,282.0
+ChesUpper,9,Ctenophores,1,17.0
+ChesUpper,10,Chrysaora,1,0.001
+ChesUpper,11,Microphytobenthos,1,293.0
+ChesUpper,12,SAV,1,2086.0
+ChesUpper,13,Benthic Bacteria,1,30.0
+ChesUpper,14,Meiofauna,1,700.0
+ChesUpper,15,Deposit Feeding Benthos,1,2368.0
+ChesUpper,16,Suspension Feeding Benthos,1,27232.0
+ChesUpper,17,Oysters,1,0.001
+ChesUpper,18,Blue Crab,1,610.0
+ChesUpper,19,Menhaden,1,2136.0
+ChesUpper,20,Bay anchovy,1,287.0
+ChesUpper,21,Herrings and Shads,1,212.0
+ChesUpper,22,White Perch,1,282.0
+ChesUpper,23,Spot,1,195.0
+ChesUpper,24,Croaker,1,50.0
+ChesUpper,25,Hogchoker,1,100.0
+ChesUpper,26,American Eel,1,35.0
+ChesUpper,27,Catfish,1,450.0
+ChesUpper,28,Striped Bass,1,172.0
+ChesUpper,29,Bluefish,1,68.0
+ChesUpper,30,Weakfish,1,67.0
+ChesUpper,31,DOC,2,12504.0
+ChesUpper,32,Sediment POC,2,201670.0
+ChesUpper,33,POC,2,5249.0
+ChesUpper,34,Input,3,0.0
+ChesUpper,35,Output,4,0.0
+ChesUpper,36,Respiration,5,0.0
+Chesapeake,0,phytoplankton,1,3480.0
+Chesapeake,1,bacteria in suspended poc,1,79.0
+Chesapeake,2,bacteria in sediment poc,1,600.0
+Chesapeake,3,benthic diatoms,1,177.25
+Chesapeake,4,free bacteria,1,390.5
+Chesapeake,5,heterotrophic microflagel,1,39.0
+Chesapeake,6,ciliates,1,148.75
+Chesapeake,7,zooplankton,1,197.5
+Chesapeake,8,ctenophores,1,19.25
+Chesapeake,9,sea nettle,1,1.750007
+Chesapeake,10,other suspension feeders,1,363.75
+Chesapeake,11,mya arenaria,1,110.0
+Chesapeake,12,oysters,1,1100.0
+Chesapeake,13,other polychaetes,1,1186.5
+Chesapeake,14,nereis,1,113.25
+Chesapeake,15,macoma spp.,1,1890.25
+Chesapeake,16,meiofauna,1,337.5
+Chesapeake,17,crustacean deposit feeder,1,228.0
+Chesapeake,18,blue crab,1,275.0
+Chesapeake,19,fish larvae,1,0.1000075
+Chesapeake,20,alewife & blue herring,1,1.15
+Chesapeake,21,bay anchovy,1,72.75
+Chesapeake,22,menhaden,1,31.525
+Chesapeake,23,shad,1,0.450005
+Chesapeake,24,croaker,1,0.9500025
+Chesapeake,25,hogchoker,1,9.0
+Chesapeake,26,spot,1,35.0
+Chesapeake,27,white perch,1,25.475
+Chesapeake,28,catfish,1,22.375
+Chesapeake,29,bluefish,1,2.250002
+Chesapeake,30,weakfish,1,6.300002
+Chesapeake,31,summer flounder,1,4.425002
+Chesapeake,32,striped bass,1,4.400002
+Chesapeake,33,dissolved organic carbon,2,21857.5
+Chesapeake,34,suspended particulate org,2,7631.0
+Chesapeake,35,sediment particulate orga,2,305000.0
+Chesapeake,36,Input,3,0.0
+Chesapeake,37,Output,4,0.0
+Chesapeake,38,Respiration,5,0.0
+CrystalC,0,microphytes,1,332.0
+CrystalC,1,macrophytes,1,446000.0
+CrystalC,2,zooplankton,1,261.0
+CrystalC,3,benthic invertebrates,1,14148.0
+CrystalC,4,blacktip shark,1,107.0
+CrystalC,5,stingray,1,40.0
+CrystalC,6,striped anchovy,1,4.0
+CrystalC,7,bay anchovy,1,15.0
+CrystalC,8,needlefish,1,46.0
+CrystalC,9,sheepshead killifish,1,16.0
+CrystalC,10,goldspotted killifish,1,27.0
+CrystalC,11,gulf killifish,1,156.0
+CrystalC,12,longnosed killifish,1,121.0
+CrystalC,13,silverside,1,246.0
+CrystalC,14,moharra,1,82.0
+CrystalC,15,silver jenny,1,2.0
+CrystalC,16,sheepshead,1,13.0
+CrystalC,17,pinfish,1,54.0
+CrystalC,18,mullet,1,864.0
+CrystalC,19,gulf flounder,1,2.0
+CrystalC,20,detritus,2,695000.0
+CrystalC,21,Input,3,0.0
+CrystalC,22,Output,4,0.0
+CrystalC,23,Respiration,5,0.0
+CrystalD,0,microphytes,1,335.0
+CrystalD,1,macrophytes,1,280000.0
+CrystalD,2,zooplankton,1,261.0
+CrystalD,3,benthic invertebrates,1,11258.0
+CrystalD,4,stingray,1,4.0
+CrystalD,5,bay anchovy,1,378.0
+CrystalD,6,catfish,1,9.6
+CrystalD,7,needlefish,1,12.0
+CrystalD,8,sheepshead killifish,1,6.8
+CrystalD,9,goldspotted killifish,1,8.6
+CrystalD,10,gulf killifish,1,60.0
+CrystalD,11,longnosed killifish,1,83.0
+CrystalD,12,molly,1,4.7
+CrystalD,13,silverside,1,14.0
+CrystalD,14,moharra,1,14.0
+CrystalD,15,pinfish,1,11.0
+CrystalD,16,spot,1,1.0
+CrystalD,17,black drum,1,68.0
+CrystalD,18,red drum,1,15.6
+CrystalD,19,mullet,1,868.0
+CrystalD,20,detritus,2,462000.0
+CrystalD,21,Input,3,0.0
+CrystalD,22,Output,4,0.0
+CrystalD,23,Respiration,5,0.0
+Maspalomas,0,Cyanobacteria,1,1.0
+Maspalomas,1,Eukaryotic Phyto,1,1.0
+Maspalomas,2,Chara globularis,1,1.0
+Maspalomas,3,Ruppia Maritima,1,1.0
+Maspalomas,4,Cladophora,1,1.0
+Maspalomas,5,Periphyton,1,1.0
+Maspalomas,6,Pelagic Bacteria,1,1.0
+Maspalomas,7,Microzooplankton,1,1.0
+Maspalomas,8,Mesozooplankton,1,1.0
+Maspalomas,9,Macrozooplankton,1,1.0
+Maspalomas,10,Benthic Microfauna,1,1.0
+Maspalomas,11,Benthic Suspension Feeder,1,1.0
+Maspalomas,12,Benthic Deposit Feeders,1,1.0
+Maspalomas,13,Benthic Invertebrate Car.,1,1.0
+Maspalomas,14,Liza Aurata,1,1.0
+Maspalomas,15,Gallinula chloropus,1,1.0
+Maspalomas,16,Diplodus Sargus,1,1.0
+Maspalomas,17,Dicentratus punctatus,1,1.0
+Maspalomas,18,DOC,2,1.0
+Maspalomas,19,Suspended POC,2,1.0
+Maspalomas,20,Sedimented POC,2,1.0
+Maspalomas,21,Input,3,0.0
+Maspalomas,22,Output,4,0.0
+Maspalomas,23,Respiration,5,0.0
+Michigan,0,Flagellates,1,10.28552
+Michigan,1,Blue-greenGree,1,2.181199
+Michigan,2,Diatoms,1,24.41444
+Michigan,3,Rotifers,1,0.4581332
+Michigan,4,Cyclopoids,1,7.557615
+Michigan,5,Calanoids,1,18.26558
+Michigan,6,Cladocerans,1,7.327398
+Michigan,7,Leptodora,1,0.1350445
+Michigan,8,Bythotrephes,1,1e-09
+Michigan,9,Diporeia,1,31.31966
+Michigan,10,Mysis,1,3.931475
+Michigan,11,Oligoch/Chiron,1,19.13253
+Michigan,12,Sphae/Gast,1,2.002653
+Michigan,13,Zebra mussels,1,0.0
+Michigan,14,Benthic microin,1,1.605882
+Michigan,15,Other fish,1,1.365966
+Michigan,16,Alewife,1,1.717724
+Michigan,17,Bloater,1,4.399035
+Michigan,18,Rainbow smelt,1,0.469202
+Michigan,19,Slimy sculpin,1,0.07814285
+Michigan,20,Deepwater sculp,1,1.975703
+Michigan,21,Lake Whitefish,1,0.1809632
+Michigan,22,Yellow perch,1,0.02465088
+Michigan,23,Juv. Brown trou,1,0.004157179
+Michigan,24,Juv. Steelhead,1,0.04978129
+Michigan,25,Juv. Coho,1,0.0005950275
+Michigan,26,Juv. Chinook,1,0.09895137
+Michigan,27,Juv. Lake Trout,1,0.1025359
+Michigan,28,Burbot,1,0.007273509
+Michigan,29,Brown trout,1,0.03598027
+Michigan,30,Steelhead,1,0.05684491
+Michigan,31,Coho,1,0.04091704
+Michigan,32,Chinook,1,0.1146722
+Michigan,33,Lake trout,1,0.05604668
+Michigan,34,Sea lamprey,1,0.0004611243
+Michigan,35,Detritus,2,69.67728
+Michigan,36,Input,3,0.0
+Michigan,37,Output,4,0.0
+Michigan,38,Respiration,5,0.0
+Mondego,0,Phytoplankton,1,0.336
+Mondego,1,Enteromorpha sp,1,1.8
+Mondego,2,Ulva lactuca,1,0.3727
+Mondego,3,Zostera,1,204.8365
+Mondego,4,Epiphytes,1,7.695
+Mondego,5,Gracilaria,1,16.08
+Mondego,6,Zooplankton,1,0.348
+Mondego,7,Hydrobia ulvae,1,54.75
+Mondego,8,Melita palmata,1,0.109221
+Mondego,9,Ampithoe ferox,1,0.236
+Mondego,10,Gibulla,1,0.071785
+Mondego,11,Littorina,1,2.48869
+Mondego,12,Cyathura carinata,1,0.056
+Mondego,13,Scrobicularia plana,1,3.2595
+Mondego,14,Cerastoderma edule,1,5.2209
+Mondego,15,Modiolus,1,0.022
+Mondego,16,Amage adspersa,1,0.008
+Mondego,17,Capitella capitata,1,0.006
+Mondego,18,Heteromastus filifor,1,0.61
+Mondego,19,Oligochaeta,1,0.1273
+Mondego,20,Other detrivors,1,0.6
+Mondego,21,Nephtys,1,0.052
+Mondego,22,Other predatory inve,1,0.3546
+Mondego,23,Idotea chelipes,1,0.04
+Mondego,24,Sphaeroma hookeri,1,0.0025
+Mondego,25,Nereis diversicolor,1,0.86575
+Mondego,26,Carcinus maenas,1,1.08978
+Mondego,27,Crangon crangon,1,0.1322
+Mondego,28,Lumbrineris impatien,1,0.13
+Mondego,29,Diopatra neapolitana,1,0.01929
+Mondego,30,Microalgae and detri,1,1.6848
+Mondego,31,Zooplankton consumer,1,0.3351
+Mondego,32,Endofauna consumers,1,0.06
+Mondego,33,Macrofauna predators,1,0.314
+Mondego,34,Trigla lucerna,1,0.02
+Mondego,35,Pomatoschistus minut,1,0.030517
+Mondego,36,Larus ridibundus,1,0.006
+Mondego,37,Larus fuscus,1,0.005
+Mondego,38,Kentish Plover,1,0.001
+Mondego,39,Ringed Plover,1,0.001
+Mondego,40,Grey Plover,1,0.001
+Mondego,41,Dunlin,1,0.001
+Mondego,42,Detritus,2,527.3057
+Mondego,43,Input,3,0.0
+Mondego,44,Output,4,0.0
+Mondego,45,Respiration,5,0.0
+Narragan,0,Bluefish,1,251.0
+Narragan,1,Striped Bass,1,141.0
+Narragan,2,Winter Flounder,1,149.0
+Narragan,3,Windowpane,1,31.0
+Narragan,4,Scup,1,160.0
+Narragan,5,Tautog,1,151.0
+Narragan,6,Dogfish,1,84.0
+Narragan,7,Skates,1,130.0
+Narragan,8,Longfin Squid,1,44.0
+Narragan,9,Butterfish,1,184.0
+Narragan,10,Menhaden,1,145.0
+Narragan,11,Bay Anchovy,1,40.0
+Narragan,12,Atl Silversides,1,135.0
+Narragan,13,Mummichog,1,200.0
+Narragan,14,Hard Clam,1,300.0
+Narragan,15,Cancer Crabs,1,393.0
+Narragan,16,Am. Lobster,1,120.0
+Narragan,17,Softshell Clam,1,244.0
+Narragan,18,Ben Macrofauna,1,4460.0
+Narragan,19,Ben Meiofauna,1,1140.0
+Narragan,20,"Shrimp(Pal,Crg)",1,1400.0
+Narragan,21,Ctenophores,1,106.0
+Narragan,22,Fish Larvae,1,16.7
+Narragan,23,Mesozooplankton,1,1510.45
+Narragan,24,Microzooplankto,1,362.0
+Narragan,25,Hetero Microflag,1,90.0
+Narragan,26,Pelag Bacteria,1,1000.0
+Narragan,27,SusPoc Bacteria,1,200.0
+Narragan,28,SedPOC Bacteria,1,600.0
+Narragan,29,Benthic Alage,1,330.0
+Narragan,30,Phytoplankton,1,3800.0
+Narragan,31,Detritus,2,253400.0
+Narragan,32,Input,3,0.0
+Narragan,33,Output,4,0.0
+Narragan,34,Respiration,5,0.0
+Rhode,0,crop land,2,1.0
+Rhode,1,pasture land,2,1.0
+Rhode,2,upland forest,2,1.0
+Rhode,3,riparian forest adj. crop,2,1.0
+Rhode,4,riparian forest adj. past,2,1.0
+Rhode,5,riparian forest adj. upla,2,1.0
+Rhode,6,flooded swamp forest,2,1.0
+Rhode,7,herbaceous wetland,2,1.0
+Rhode,8,floodplain forest,2,1.0
+Rhode,9,main fork,2,1.0
+Rhode,10,low marsh adj. north fork,2,1.0
+Rhode,11,low marsh adj. main fork,2,1.0
+Rhode,12,north fork,2,1.0
+Rhode,13,muddy creek,2,1.0
+Rhode,14,mud flat,2,1.0
+Rhode,15,high marsh,2,1.0
+Rhode,16,low marsh adj. muddy cree,2,1.0
+Rhode,17,Input,3,0.0
+Rhode,18,Output,4,0.0
+Rhode,19,Respiration,5,0.0
+StMarks,0,Phytoplankton,1,71.09999
+StMarks,1,Halodule,1,4963.0
+StMarks,2,Micro-epiphytes,1,230.9
+StMarks,3,Macro-epiphytes,1,94.58
+StMarks,4,Benthic algae,1,1073.5
+StMarks,5,Bacterio plankton,1,10.89
+StMarks,6,Micro protozoa,1,6.42
+StMarks,7,Zooplankton,1,2.779999
+StMarks,8,Epiphyte-graz amphipods,1,71.50008
+StMarks,9,suspension-feed molluscs,1,41.5
+StMarks,10,Suspension-feed polychts,1,7.459999
+StMarks,11,Benthic bact,1,262.251
+StMarks,12,Microfauna,1,90.13025
+StMarks,13,Meiofauna,1,1062.383
+StMarks,14,Deposit feed amphipods,1,34.41009
+StMarks,15,Detritus feed crust.,1,2.510006
+StMarks,16,Hermit crab,1,248.0105
+StMarks,17,Spider crab,1,37.02
+StMarks,18,Omnivorous crabs,1,226.9205
+StMarks,19,Blue crab,1,14.33001
+StMarks,20,Isopod,1,64.53
+StMarks,21,Brittle stars,1,375.0009
+StMarks,22,Herbivorous shrimp,1,28.32
+StMarks,23,Predatory shrimp,1,57.49007
+StMarks,24,Deposit-feed gastropod,1,1102.762
+StMarks,25,Deposit-feed polycht,1,54.63007
+StMarks,26,Predatory polycht,1,296.6806
+StMarks,27,Predatory gastropod,1,437.9904
+StMarks,28,Epiphyte-graz gastropod,1,6.81
+StMarks,29,Other gastropods,1,19.82
+StMarks,30,Catfish & stingrays,1,352.7301
+StMarks,31,Tongue fish,1,2.410003
+StMarks,32,Gulf flound & needle fish,1,59.02005
+StMarks,33,Southrn hake & sea robins,1,8.960002
+StMarks,34,Atl. silverside & bay anc,1,11.25001
+StMarks,35,Gobies & blennies,1,0.8100013
+StMarks,36,Pinfish,1,2.600004
+StMarks,37,Spot,1,89.03009
+StMarks,38,Pipefish & seahorses,1,2.350004
+StMarks,39,Sheepshead minnow,1,8.390004
+StMarks,40,Red Drum,1,35.36004
+StMarks,41,Killifish,1,2.260001
+StMarks,42,Herbivorous ducks,1,0.3500001
+StMarks,43,Benthos-eating birds,1,1.890003
+StMarks,44,Fish-eating birds,1,36.93001
+StMarks,45,Fish & crust. eating bird,1,1.17
+StMarks,46,Gulls,1,7.170002
+StMarks,47,Raptors,1,1.850001
+StMarks,48,DOC,2,4082.5
+StMarks,49,Suspended POC,2,669.7501
+StMarks,50,Sediment POC,2,364501.8
+StMarks,51,Input,3,0.0
+StMarks,52,Output,4,0.0
+StMarks,53,Respiration,5,0.0
+baydry,0,2um Spherical Phytoplankt,1,0.01802003
+baydry,1,Synedococcus,1,0.3133618
+baydry,2,Oscillatoria,1,0.002764012
+baydry,3,Small Diatoms (<20um),1,0.1763444
+baydry,4,Big Diatoms (>20um),1,0.1756672
+baydry,5,Dinoflagellates,1,0.00556402
+baydry,6,Other Phytoplankton,1,0.0001499894
+baydry,7,Benthic Phytoplankton,1,0.1556626
+baydry,8,Thalassia,1,16.5
+baydry,9,Halodule,1,1.8
+baydry,10,Syringodium,1,0.9999999
+baydry,11,Roots,1,74.0
+baydry,12,Drift Algae,1,2.76
+baydry,13,Epiphytes,1,22.99863
+baydry,14,Free Bacteria,1,0.1206985
+baydry,15,Water Flagellates,1,0.07412287
+baydry,16,Water Cilitaes,1,0.007951836
+baydry,17,Acartia Tonsa,1,0.004806444
+baydry,18,Oithona nana,1,0.02306698
+baydry,19,Paracalanus,1,0.0106929
+baydry,20,Other Copepoda,1,0.02143428
+baydry,21,Meroplankton,1,0.0003866404
+baydry,22,Other Zooplankton,1,0.02065326
+baydry,23,Benthic Flagellates,1,0.1150883
+baydry,24,Benthic Ciliates,1,0.0136171
+baydry,25,Meiofauna,1,0.4130688
+baydry,26,Sponges,1,0.1422168
+baydry,27,Coral,1,0.003674632
+baydry,28,Other Cnidaridae,1,0.004589745
+baydry,29,Echinoderma,1,0.2672399
+baydry,30,Bivalves,1,0.2678349
+baydry,31,Detritivorous Gastropods,1,0.0190204
+baydry,32,Epiphytic Gastropods,1,0.002681845
+baydry,33,Predatory Gastropods,1,0.002436125
+baydry,34,Detritivorous Polychaetes,1,0.1029489
+baydry,35,Predatory Polychaetes,1,0.09400757
+baydry,36,Suspension Feeding Polych,1,0.0483995
+baydry,37,Macrobenthos,1,0.02432888
+baydry,38,Benthic Crustaceans,1,0.003158498
+baydry,39,Detritivorous Amphipods,1,0.02411393
+baydry,40,Herbivorous Amphipods,1,0.03911885
+baydry,41,Isopods,1,0.06246698
+baydry,42,Herbivorous Shrimp,1,0.09008238
+baydry,43,Predatory Shrimp,1,0.04592236
+baydry,44,Pink Shrimp,1,0.06470793
+baydry,45,Thor Floridanus,1,0.002420578
+baydry,46,Lobster,1,0.006934919
+baydry,47,Detritivorous Crabs,1,0.002973886
+baydry,48,Omnivorous Crabs,1,0.03193685
+baydry,49,Predatory Crabs,1,0.0008769648
+baydry,50,Callinectus sapidus,1,0.0053859
+baydry,51,Stone Crab,1,0.0002155191
+baydry,52,Sharks,1,9.19809e-05
+baydry,53,Rays,1,0.007831239
+baydry,54,Tarpon,1,0.0002613899
+baydry,55,Bonefish,1,0.000189551
+baydry,56,Sardines,1,0.002619605
+baydry,57,Anchovy,1,3.639291e-05
+baydry,58,Bay Anchovy,1,0.0113279
+baydry,59,Lizardfish,1,0.001257074
+baydry,60,Catfish,1,0.002079839
+baydry,61,Eels,1,0.001651523
+baydry,62,Toadfish,1,0.0009229606
+baydry,63,Brotalus,1,0.0005615189
+baydry,64,Halfbeaks,1,0.001259124
+baydry,65,Needlefish,1,0.004822961
+baydry,66,Other Killifish,1,0.0003733299
+baydry,67,Goldspotted killifish,1,0.01429761
+baydry,68,Rainwater killifish,1,0.00326106
+baydry,69,Snook,1,0.0001075326
+baydry,70,Sailfin Molly,1,0.0002442069
+baydry,71,Silverside,1,0.0014678
+baydry,72,Other Horsefish,1,0.001361575
+baydry,73,Gulf Pipefish,1,0.001943366
+baydry,74,Dwarf Seahorse,1,0.0005096441
+baydry,75,Grouper,1,6.208884e-06
+baydry,76,Jacks,1,0.000169284
+baydry,77,Pompano,1,0.0002560978
+baydry,78,Other Snapper,1,0.001482897
+baydry,79,Gray Snapper,1,0.0009490504
+baydry,80,Mojarra,1,0.002206859
+baydry,81,Grunt,1,0.005425988
+baydry,82,Porgy,1,0.0003701672
+baydry,83,Pinfish,1,0.01106081
+baydry,84,Scianids,1,0.005267581
+baydry,85,Spotted Seatrout,1,0.002458774
+baydry,86,Red Drum,1,0.0001698695
+baydry,87,Spadefish,1,0.004587609
+baydry,88,Parrotfish,1,0.0003750538
+baydry,89,Mackerel,1,1.189805e-05
+baydry,90,Mullet,1,0.00479155
+baydry,91,Barracuda,1,0.003158252
+baydry,92,Blennies,1,0.001242826
+baydry,93,Code Goby,1,0.007927809
+baydry,94,Clown Goby,1,0.001035947
+baydry,95,Flatfish,1,0.001994787
+baydry,96,Filefishes,1,0.004329008
+baydry,97,Puffer,1,0.004706684
+baydry,98,Other Pelagic Fishes,1,6.488979e-05
+baydry,99,Other Demersal Fishes,1,0.002486486
+baydry,100,Loon,1,3.573561e-07
+baydry,101,Greeb,1,6.636811e-06
+baydry,102,Pelican,1,0.0008849213
+baydry,103,Comorant,1,0.0001557448
+baydry,104,Big Herons & Egrets,1,0.000336176
+baydry,105,Small Herons & Egrets,1,0.0002166618
+baydry,106,Ibis,1,0.0001024254
+baydry,107,Roseate Spoonbill,1,0.0001228198
+baydry,108,Herbivorous Ducks,1,7.748776e-05
+baydry,109,Omnivorous Ducks,1,0.0001579732
+baydry,110,Predatory Ducks,1,1.555444e-05
+baydry,111,Raptors,1,1.831346e-05
+baydry,112,Gruiformes,1,0.0001103918
+baydry,113,Small Shorebirds,1,3.375154e-05
+baydry,114,Gulls & Terns,1,0.0001025684
+baydry,115,Kingfisher,1,1.231293e-06
+baydry,116,Crocodiles,1,0.0008097788
+baydry,117,Loggerhead Turtle,1,3.65416e-07
+baydry,118,Green Turtle,1,1.796408e-07
+baydry,119,Hawksbill Turtle,1,1.28699e-09
+baydry,120,Dolphin,1,0.0003096134
+baydry,121,Manatee,1,0.0002885749
+baydry,122,Water POC,2,2.57985
+baydry,123,Benthic POC,2,608.6895
+baydry,124,DOC,2,17.80588
+baydry,125,Input,3,0.0
+baydry,126,Output,4,0.0
+baydry,127,Respiration,5,0.0
+baywet,0,2um Spherical Phytoplankt,1,0.06775698
+baywet,1,Synedococcus,1,0.959568
+baywet,2,Oscillatoria,1,0.001227893
+baywet,3,Small Diatoms (<20um),1,0.005784987
+baywet,4,Big Diatoms (>20um),1,0.008771067
+baywet,5,Dinoflagellates,1,0.010194
+baywet,6,Other Phytoplankton,1,0.0002200191
+baywet,7,Benthic Phytoplankton,1,0.1526864
+baywet,8,Thalassia,1,21.99955
+baywet,9,Halodule,1,2.499906
+baywet,10,Syringodium,1,1.799902
+baywet,11,Roots,1,100.0
+baywet,12,Drift Algae,1,2.129316
+baywet,13,Epiphytes,1,14.99963
+baywet,14,Free Bacteria,1,0.1350375
+baywet,15,Water Flagellates,1,0.1484085
+baywet,16,Water Cilitaes,1,0.0114329
+baywet,17,Acartia Tonsa,1,0.006593413
+baywet,18,Oithona nana,1,0.03082942
+baywet,19,Paracalanus,1,0.0005369086
+baywet,20,Other Copepoda,1,0.02247251
+baywet,21,Meroplankton,1,0.0003610944
+baywet,22,Other Zooplankton,1,0.02105311
+baywet,23,Benthic Flagellates,1,0.2298971
+baywet,24,Benthic Ciliates,1,0.02081003
+baywet,25,Meiofauna,1,0.7697498
+baywet,26,Sponges,1,0.1418624
+baywet,27,Coral,1,0.003685318
+baywet,28,Other Cnidaridae,1,0.004549906
+baywet,29,Echinoderma,1,0.2666524
+baywet,30,Bivalves,1,0.325812
+baywet,31,Detritivorous Gastropods,1,0.0207494
+baywet,32,Epiphytic Gastropods,1,0.00302957
+baywet,33,Predatory Gastropods,1,0.00258253
+baywet,34,Detritivorous Polychaetes,1,0.1164473
+baywet,35,Predatory Polychaetes,1,0.1038983
+baywet,36,Suspension Feeding Polych,1,0.05368321
+baywet,37,Macrobenthos,1,0.02687511
+baywet,38,Benthic Crustaceans,1,0.003390098
+baywet,39,Detritivorous Amphipods,1,0.02582126
+baywet,40,Herbivorous Amphipods,1,0.03474671
+baywet,41,Isopods,1,0.06876842
+baywet,42,Herbivorous Shrimp,1,0.09828813
+baywet,43,Predatory Shrimp,1,0.04864108
+baywet,44,Pink Shrimp,1,0.05855433
+baywet,45,Thor Floridanus,1,0.002163954
+baywet,46,Lobster,1,0.007568825
+baywet,47,Detritivorous Crabs,1,0.003265858
+baywet,48,Omnivorous Crabs,1,0.03552097
+baywet,49,Predatory Crabs,1,0.0009348626
+baywet,50,Callinectus sapidus,1,0.01375241
+baywet,51,Stone Crab,1,0.0002209385
+baywet,52,Sharks,1,9.19298e-05
+baywet,53,Rays,1,0.007790539
+baywet,54,Tarpon,1,0.0002001634
+baywet,55,Bonefish,1,0.0001510046
+baywet,56,Sardines,1,0.003483803
+baywet,57,Anchovy,1,5.426572e-05
+baywet,58,Bay Anchovy,1,0.01705914
+baywet,59,Lizardfish,1,0.001199957
+baywet,60,Catfish,1,0.002219855
+baywet,61,Eels,1,0.001635479
+baywet,62,Toadfish,1,0.0009215536
+baywet,63,Brotalus,1,0.0004000505
+baywet,64,Halfbeaks,1,0.00131788
+baywet,65,Needlefish,1,0.002787451
+baywet,66,Other Killifish,1,0.000160565
+baywet,67,Goldspotted killifish,1,0.02134502
+baywet,68,Rainwater killifish,1,0.004867587
+baywet,69,Snook,1,0.0001916656
+baywet,70,Sailfin Molly,1,0.0002428059
+baywet,71,Silverside,1,0.001495209
+baywet,72,Other Horsefish,1,0.001996018
+baywet,73,Gulf Pipefish,1,0.002921261
+baywet,74,Dwarf Seahorse,1,0.000748784
+baywet,75,Grouper,1,5.870419e-06
+baywet,76,Jacks,1,0.0001687322
+baywet,77,Pompano,1,0.0001019465
+baywet,78,Other Snapper,1,0.002519236
+baywet,79,Gray Snapper,1,0.0006565973
+baywet,80,Mojarra,1,0.003307781
+baywet,81,Grunt,1,0.007078468
+baywet,82,Porgy,1,0.0001014258
+baywet,83,Pinfish,1,0.01657959
+baywet,84,Scianids,1,0.005737497
+baywet,85,Spotted Seatrout,1,0.002962503
+baywet,86,Red Drum,1,0.0001482758
+baywet,87,Spadefish,1,0.004524271
+baywet,88,Parrotfish,1,0.0005626149
+baywet,89,Mackerel,1,4.660086e-06
+baywet,90,Mullet,1,0.0008002722
+baywet,91,Barracuda,1,0.003107268
+baywet,92,Blennies,1,0.001813985
+baywet,93,Code Goby,1,0.01148096
+baywet,94,Clown Goby,1,0.001376349
+baywet,95,Flatfish,1,0.002605435
+baywet,96,Filefishes,1,0.004467431
+baywet,97,Puffer,1,0.003523107
+baywet,98,Other Pelagic Fishes,1,6.371605e-05
+baywet,99,Other Demersal Fishes,1,0.001251331
+baywet,100,Loon,1,1.773518e-07
+baywet,101,Greeb,1,4.163966e-06
+baywet,102,Pelican,1,0.0004596953
+baywet,103,Comorant,1,0.0001029615
+baywet,104,Big Herons & Egrets,1,0.0002226856
+baywet,105,Small Herons & Egrets,1,0.0001423757
+baywet,106,Ibis,1,6.749943e-05
+baywet,107,Roseate Spoonbill,1,8.074069e-05
+baywet,108,Herbivorous Ducks,1,3.909933e-05
+baywet,109,Omnivorous Ducks,1,7.839679e-05
+baywet,110,Predatory Ducks,1,7.683812e-06
+baywet,111,Raptors,1,1.20408e-05
+baywet,112,Gruiformes,1,5.460505e-05
+baywet,113,Small Shorebirds,1,1.796514e-05
+baywet,114,Gulls & Terns,1,6.522323e-05
+baywet,115,Kingfisher,1,5.832647e-07
+baywet,116,Crocodiles,1,0.0005421251
+baywet,117,Loggerhead Turtle,1,7.064804e-07
+baywet,118,Green Turtle,1,3.559831e-07
+baywet,119,Hawksbill Turtle,1,2.54712e-09
+baywet,120,Dolphin,1,0.0001527778
+baywet,121,Manatee,1,0.0001447801
+baywet,122,Water POC,2,2.704455
+baywet,123,Benthic POC,2,619.1941
+baywet,124,DOC,2,19.70461
+baywet,125,Input,3,0.0
+baywet,126,Output,4,0.0
+baywet,127,Respiration,5,0.0
+cypdry,0,Living POC,1,0.007764749
+cypdry,1,Living sediment,1,2.318836
+cypdry,2,Phytoplankton,1,0.111162
+cypdry,3,Float. vegetation,1,53.0485
+cypdry,4,Periphyton/Macroalgae,1,110.4234
+cypdry,5,Macrophytes,1,46.10676
+cypdry,6,Epiphytes,1,0.02800867
+cypdry,7,Understory,1,47.35999
+cypdry,8,Vine Leaves,1,0.3429814
+cypdry,9,Hardwoods Leaves,1,26.51985
+cypdry,10,Cypress Leaves,1,15.37547
+cypdry,11,Cypress Wood,1,10693.75
+cypdry,12,HW Wood,1,800.9207
+cypdry,13,Roots,1,469.4484
+cypdry,14,Crayfish,1,1.57471
+cypdry,15,Apple Snail,1,0.07122805
+cypdry,16,Prawn,1,1.150072
+cypdry,17,Aquatic Invertebrates,1,0.3096738
+cypdry,18,Ter. Invertebrates,1,0.6065807
+cypdry,19,"Small Fish, herb + omniv",1,0.1164369
+cypdry,20,"Small Fish, prim. carniv",1,0.01508307
+cypdry,21,Large Fish,1,0.009634848
+cypdry,22,Alligators,1,0.1726627
+cypdry,23,Turtles,1,0.1182843
+cypdry,24,Lizards,1,0.02932683
+cypdry,25,Snakes,1,0.1059386
+cypdry,26,Salamanders,1,0.03038893
+cypdry,27,Large Frogs,1,0.007177498
+cypdry,28,Medium Frogs,1,0.009852598
+cypdry,29,Small Frogs,1,0.002066344
+cypdry,30,Salamander L,1,0.0002216806
+cypdry,31,Tadpoles,1,0.0003205825
+cypdry,32,Pelecaniformes,1,0.0001554734
+cypdry,33,Anseriformes,1,1.193789e-05
+cypdry,34,Vultures,1,0.002297464
+cypdry,35,Kites & Hawks,1,0.0001129128
+cypdry,36,Galliformes,1,0.0008809511
+cypdry,37,Egrets,1,0.001756378
+cypdry,38,Great blue heron,1,0.0003478197
+cypdry,39,Other herons,1,0.001882014
+cypdry,40,Wood stork,1,0.002251927
+cypdry,41,White ibis,1,0.001960033
+cypdry,42,Gruiformes,1,2.231404e-05
+cypdry,43,Owls,1,0.0001986624
+cypdry,44,Caprimulgiformes,1,4.515779e-05
+cypdry,45,Hummingbirds,1,2.555351e-08
+cypdry,46,Woodpeckers,1,6.085262e-05
+cypdry,47,Passeriformes onniv.,1,3.342949e-05
+cypdry,48,Passeriformes pred.,1,2.631779e-05
+cypdry,49,Opossum,1,0.007554747
+cypdry,50,Shrews,1,8.346792e-06
+cypdry,51,Bats,1,1.521248e-08
+cypdry,52,Black Bear,1,0.0007702715
+cypdry,53,G. Fox,1,0.000880464
+cypdry,54,Raccoon,1,0.005301335
+cypdry,55,Mink,1,0.0001387758
+cypdry,56,Otter,1,0.01351624
+cypdry,57,Florida Panther,1,0.0002239769
+cypdry,58,Bobcat,1,0.0001228952
+cypdry,59,Squirrels,1,0.00115359
+cypdry,60,Mice & Rats,1,4.982359e-05
+cypdry,61,Rabbits,1,0.001504683
+cypdry,62,White-Tailed Deer,1,0.01153153
+cypdry,63,Hogs,1,0.0001984951
+cypdry,64,Armadillo,1,0.001033025
+cypdry,65,Refractory Det.,2,302.1322
+cypdry,66,Liable Det.,2,517.1664
+cypdry,67,Vertebrate Det.,2,0.06408651
+cypdry,68,Input,3,0.0
+cypdry,69,Output,4,0.0
+cypdry,70,Respiration,5,0.0
+cypwet,0,Living POC,1,0.0193
+cypwet,1,Living SED,1,2.65
+cypwet,2,Phytoplankton,1,0.0714
+cypwet,3,Float Veg.,1,55.0
+cypwet,4,Periphyton,1,89.9
+cypwet,5,Macrophytes,1,48.3
+cypwet,6,Epiphytes,1,0.0563
+cypwet,7,Understory,1,56.0
+cypwet,8,Vine L,1,0.686
+cypwet,9,Hardwood L,1,53.0
+cypwet,10,Cypress L,1,151.0
+cypwet,11,Cypress W,1,10700.0
+cypwet,12,Hardwood W,1,800.0
+cypwet,13,Roots,1,469.0
+cypwet,14,Crayfish,1,1.48
+cypwet,15,Apple Snail,1,0.135
+cypwet,16,Prawn,1,0.933
+cypwet,17,Aquatic I,1,0.311
+cypwet,18,Terrst. I,1,0.225
+cypwet,19,Fish HO,1,0.09
+cypwet,20,Fish PC,1,0.0149
+cypwet,21,L Fish,1,0.0113
+cypwet,22,Alligators,1,0.0827
+cypwet,23,Turtles,1,0.0592
+cypwet,24,Lizards,1,0.0193
+cypwet,25,Snakes,1,0.0491
+cypwet,26,Salamanders,1,0.0268
+cypwet,27,L Frog,1,0.00772
+cypwet,28,M Frog,1,0.011
+cypwet,29,S Frog,1,0.0023
+cypwet,30,Salam. L,1,0.0006
+cypwet,31,Tadpoles,1,0.000912
+cypwet,32,Pelecaniformes,1,8.51e-06
+cypwet,33,Anseriformes,1,0.00103
+cypwet,34,Vultures,1,0.000513
+cypwet,35,Kites & Hawks,1,4.17e-05
+cypwet,36,Galliformes,1,0.000915
+cypwet,37,Egrets,1,0.000224
+cypwet,38,GB Heron,1,3.03e-05
+cypwet,39,Other Herons,1,2.27e-05
+cypwet,40,Wood stork,1,1.16e-06
+cypwet,41,White ibis,1,0.000425
+cypwet,42,Gruiformes,1,3.19e-06
+cypwet,43,Owls,1,0.000147
+cypwet,44,Caprimulgiformes,1,1.98e-05
+cypwet,45,Hummingbirds,1,1.58e-09
+cypwet,46,Woodpeckers,1,6.1e-05
+cypwet,47,Passeriformes onniv.,1,9.45e-06
+cypwet,48,Passeriformes pred.,1,1.49e-05
+cypwet,49,Opossum,1,0.00394
+cypwet,50,Shrews,1,2.68e-06
+cypwet,51,Bats,1,1.26e-08
+cypwet,52,Black Bear,1,0.000354
+cypwet,53,G Fox,1,7.09e-05
+cypwet,54,Raccoon,1,0.000334
+cypwet,55,Mink,1,1.38e-06
+cypwet,56,Otter,1,0.00495
+cypwet,57,Florida Panther,1,0.000101
+cypwet,58,Bobcat,1,6.18e-05
+cypwet,59,Squirrels,1,0.00101
+cypwet,60,Mice & Rats,1,0.000134
+cypwet,61,Rabbits,1,0.000213
+cypwet,62,White-Tailed Deer,1,0.00566
+cypwet,63,Hogs,1,0.000104
+cypwet,64,Armadillo,1,8.82e-05
+cypwet,65,Refractory Det.,2,403.0
+cypwet,66,Liable Det.,2,559.0
+cypwet,67,Vert. det,2,0.086
+cypwet,68,Input,3,0.0
+cypwet,69,Output,4,0.0
+cypwet,70,Respiration,5,0.0
+gramdry,0,Living Sediments,1,3.127183
+gramdry,1,Living POC,1,0.0162844
+gramdry,2,Periphyton,1,89.87196
+gramdry,3,Macrophytes,1,89.64646
+gramdry,4,Utricularia,1,5.328688
+gramdry,5,Floating Veg.,1,76.67382
+gramdry,6,Apple snail,1,0.0309755
+gramdry,7,Freshwater Prawn,1,0.0911419
+gramdry,8,Crayfish,1,0.0264895
+gramdry,9,Mesoinverts,1,0.132716
+gramdry,10,Other Macroinverts,1,0.0973519
+gramdry,11,Large Aquatic Insects,1,0.0109116
+gramdry,12,Terrestrial Inverts,1,0.0317435
+gramdry,13,Fishing spider,1,0.0025046
+gramdry,14,Gar,1,0.0020125
+gramdry,15,Shiners & Minnows,1,0.0016922
+gramdry,16,Chubsuckers,1,0.0214888
+gramdry,17,Catfish,1,0.0122907
+gramdry,18,Flagfish,1,0.064791
+gramdry,19,Topminnows,1,0.0087363
+gramdry,20,Bluefin killifish,1,0.205538
+gramdry,21,Killifishes,1,0.0168262
+gramdry,22,Mosquitofishes,1,0.0135413
+gramdry,23,Poecilids,1,0.0191279
+gramdry,24,Pigmy Sunfish,1,0.0008456
+gramdry,25,Bluespotted Sunfish,1,0.0003295
+gramdry,26,Warmouth,1,0.0372811
+gramdry,27,Dollar Sunfish,1,0.0389339
+gramdry,28,Redear Sunfish,1,0.0700925
+gramdry,29,Spotted sunfish,1,0.0219547
+gramdry,30,Other Centrarchids,1,0.0014475
+gramdry,31,Largemouth Bass,1,0.0415824
+gramdry,32,Cichlids,1,0.0133903
+gramdry,33,Other Large Fishes,1,0.0011462
+gramdry,34,Other Small Fishes,1,8.46e-05
+gramdry,35,Salamanders,1,0.0093291
+gramdry,36,Salamander larvae,1,0.0001898
+gramdry,37,Large frogs,1,0.0050597
+gramdry,38,Medium frogs,1,0.0049022
+gramdry,39,Small frogs,1,0.0012656
+gramdry,40,Tadpoles,1,0.001
+gramdry,41,Turtles,1,0.0237279
+gramdry,42,Snakes,1,0.0190055
+gramdry,43,Lizards,1,0.0226913
+gramdry,44,Alligators,1,0.0013064
+gramdry,45,Muskrats,1,0.0309105
+gramdry,46,Rats&Mice,1,0.0007028
+gramdry,47,Rabbits,1,0.0006113
+gramdry,48,Raccoons,1,0.0018991
+gramdry,49,Opossum,1,0.0068906
+gramdry,50,Otter,1,0.0020383
+gramdry,51,Mink,1,2.03e-05
+gramdry,52,W-T Deer,1,0.0041444
+gramdry,53,Bobcat,1,4.87e-05
+gramdry,54,Panthers,1,7.3e-06
+gramdry,55,Grebes,1,2e-07
+gramdry,56,Bitterns,1,1e-07
+gramdry,57,Ducks,1,1.28e-05
+gramdry,58,Snailkites,1,4e-07
+gramdry,59,Nighthawks,1,5.6e-06
+gramdry,60,Gruiformes,1,3.6e-06
+gramdry,61,CSSsparrow,1,6e-07
+gramdry,62,Passerines,1,8.82e-05
+gramdry,63,Sediment Carbon,2,3933.0
+gramdry,64,Labile Detritus,2,1.299493
+gramdry,65,Refractory Detritus,2,5.197972
+gramdry,66,Input,3,0.0
+gramdry,67,Output,4,0.0
+gramdry,68,Respiration,5,0.0
+gramwet,0,Living Sediments,1,3.127182
+gramwet,1,Living POC,1,0.014967
+gramwet,2,Periphyton,1,116.2688
+gramwet,3,Macrophytes,1,127.5253
+gramwet,4,Utricularia,1,40.31987
+gramwet,5,Floating Veg.,1,89.49
+gramwet,6,Apple snail,1,0.06790128
+gramwet,7,Freshwater Prawn,1,0.1364344
+gramwet,8,Crayfish,1,0.04589158
+gramwet,9,Mesoinverts,1,0.1716268
+gramwet,10,Other Macroinverts,1,0.1913203
+gramwet,11,Large Aquatic Insects,1,0.0122581
+gramwet,12,Terrestrial Inverts,1,0.06338722
+gramwet,13,Fishing spider,1,0.002504513
+gramwet,14,Gar,1,0.003119171
+gramwet,15,Shiners & Minnows,1,0.002622904
+gramwet,16,Chubsuckers,1,0.03330771
+gramwet,17,Catfish,1,0.01905039
+gramwet,18,Flagfish,1,0.1004261
+gramwet,19,Topminnows,1,0.0135412
+gramwet,20,Bluefin killifish,1,0.318584
+gramwet,21,Killifishes,1,0.0260807
+gramwet,22,Mosquitofishes,1,0.0209889
+gramwet,23,Poecilids,1,0.02964829
+gramwet,24,Pigmy Sunfish,1,0.001310696
+gramwet,25,Bluespotted Sunfish,1,0.000510699
+gramwet,26,Warmouth,1,0.05778403
+gramwet,27,Dollar Sunfish,1,0.06034759
+gramwet,28,Redear Sunfish,1,0.1086434
+gramwet,29,Spotted sunfish,1,0.03402969
+gramwet,30,Other Centrarchids,1,0.002243605
+gramwet,31,Largemouth Bass,1,0.06445113
+gramwet,32,Cichlids,1,0.02075489
+gramwet,33,Other Large Fishes,1,0.001776591
+gramwet,34,Other Small Fishes,1,0.0001311021
+gramwet,35,Salamanders,1,0.0241481
+gramwet,36,Salamander larvae,1,0.0004893952
+gramwet,37,Large frogs,1,0.01174921
+gramwet,38,Medium frogs,1,0.01563748
+gramwet,39,Small frogs,1,0.003737793
+gramwet,40,Tadpoles,1,0.002706261
+gramwet,41,Turtles,1,0.0622789
+gramwet,42,Snakes,1,0.04131278
+gramwet,43,Lizards,1,0.2244866
+gramwet,44,Alligators,1,0.001306395
+gramwet,45,Muskrats,1,0.022101
+gramwet,46,Rats&Mice,1,0.0001171001
+gramwet,47,Rabbits,1,0.0003056002
+gramwet,48,Raccoons,1,0.0004748011
+gramwet,49,Opossum,1,0.006890599
+gramwet,50,Otter,1,0.001477798
+gramwet,51,Mink,1,3.0042e-07
+gramwet,52,W-T Deer,1,0.004144401
+gramwet,53,Bobcat,1,1.219992e-05
+gramwet,54,Panthers,1,3.70336e-06
+gramwet,55,Grebes,1,1.099882e-06
+gramwet,56,Bitterns,1,3.71105e-10
+gramwet,57,Ducks,1,9.600274e-06
+gramwet,58,Snailkites,1,1.00357e-07
+gramwet,59,Nighthawks,1,5.599436e-06
+gramwet,60,Gruiformes,1,5.899958e-06
+gramwet,61,CSSsparrow,1,5.997621e-07
+gramwet,62,Passerines,1,7.2002e-06
+gramwet,63,Sediment Carbon,2,3932.999
+gramwet,64,Labile Detritus,2,1.194364
+gramwet,65,Refractory Detritus,2,4.777452
+gramwet,66,Input,3,0.0
+gramwet,67,Output,4,0.0
+gramwet,68,Respiration,5,0.0
+mangdry,0,PHY,1,0.1202758
+mangdry,1,OTH. PP,1,100.1511
+mangdry,2,LEAF,1,362.3783
+mangdry,3,WOOD,1,3389.438
+mangdry,4,ROOT,1,2249.623
+mangdry,5,MICR. H2O,1,0.01498995
+mangdry,6,ZOOPL.,1,0.004599685
+mangdry,7,BACT.SED.,1,0.7130042
+mangdry,8,FLA. SED.,1,0.2643506
+mangdry,9,CIL. SED.,1,0.2749721
+mangdry,10,MEIOF.,1,1.527917
+mangdry,11,MERO,1,3.929508e-05
+mangdry,12,EPIFN,1,0.02127695
+mangdry,13,POLY,1,0.009469117
+mangdry,14,TGAST,1,0.04324924
+mangdry,15,AGAST,1,0.007621715
+mangdry,16,BVLVS,1,0.01106234
+mangdry,17,MBENTH,1,0.0236325
+mangdry,18,SCRUST,1,0.002725766
+mangdry,19,AMPHI,1,0.01016536
+mangdry,20,PENAID,1,0.006970166
+mangdry,21,CARID,1,0.0477016
+mangdry,22,OSHMP,1,0.0564605
+mangdry,23,JLOBST,1,0.0003753779
+mangdry,24,OCRAB,1,0.1395637
+mangdry,25,TCRAB,1,0.01812118
+mangdry,26,DCRAB,1,0.003554026
+mangdry,27,PCRAB,1,0.007731521
+mangdry,28,FWINV,1,0.000800476
+mangdry,29,LARV,1,0.001332534
+mangdry,30,INSCT,1,0.04428364
+mangdry,31,SPIDR,1,0.000424803
+mangdry,32,SHRK,1,8.905044e-05
+mangdry,33,RAYS,1,2.572246e-06
+mangdry,34,TARP,1,0.0002008827
+mangdry,35,HERR,1,0.0003925885
+mangdry,36,ANCH,1,0.001725761
+mangdry,37,NEED,1,0.0013619
+mangdry,38,KILLI,1,0.00656627
+mangdry,39,POEC,1,0.0003363882
+mangdry,40,HRSE,1,0.0009787161
+mangdry,41,SLVR,1,0.002140372
+mangdry,42,SNOOK,1,0.0002548614
+mangdry,43,CUDA,1,0.0006053376
+mangdry,44,FWFSH,1,0.0001128148
+mangdry,45,BENTH,1,0.001549795
+mangdry,46,EFISH,1,0.0007036465
+mangdry,47,SNAP,1,0.0007911995
+mangdry,48,MOJA,1,0.01377227
+mangdry,49,SCIAE,1,0.01300934
+mangdry,50,PIN,1,0.01280642
+mangdry,51,MULL,1,0.0003838651
+mangdry,52,GOBY,1,0.0004375636
+mangdry,53,OFISH,1,0.0006118527
+mangdry,54,TURT,1,0.002477481
+mangdry,55,LZRD,1,0.0005315631
+mangdry,56,SNKS,1,0.001575311
+mangdry,57,COCO,1,0.001775288
+mangdry,58,AMPH,1,0.003383951
+mangdry,59,L & G,1,9.332339e-07
+mangdry,60,PELC,1,0.0001610099
+mangdry,61,CORM,1,2.838797e-05
+mangdry,62,BH & E,1,7.561313e-05
+mangdry,63,SE & E,1,3.842809e-05
+mangdry,64,IBIS,1,0.0003271909
+mangdry,65,DUCK1,1,2.63274e-05
+mangdry,66,DUCK2,1,5.37631e-05
+mangdry,67,DUCK3,1,4.928538e-06
+mangdry,68,VULT,1,2.849174e-05
+mangdry,69,K & H,1,2.617312e-06
+mangdry,70,MRAPT,1,6.945402e-06
+mangdry,71,GUIF,1,3.808463e-05
+mangdry,72,SSBIRDS,1,1.19372e-05
+mangdry,73,G & T,1,3.751131e-05
+mangdry,74,C & C,1,4.875831e-08
+mangdry,75,OWLS,1,8.967843e-07
+mangdry,76,WOODP,1,5.553806e-07
+mangdry,77,PASSOMN,1,2.098283e-06
+mangdry,78,PASSPERD,1,2.188336e-06
+mangdry,79,OPSU,1,0.0001095453
+mangdry,80,RABT,1,4.203677e-05
+mangdry,81,SQIUR,1,3.313351e-05
+mangdry,82,M & R,1,5.072285e-05
+mangdry,83,FOX,1,9.727568e-06
+mangdry,84,BEAR,1,9.968703e-06
+mangdry,85,RACO,1,0.0001252755
+mangdry,86,M & O,1,0.0001443602
+mangdry,87,CATS,1,4.576902e-06
+mangdry,88,DERS,1,0.000157278
+mangdry,89,DOLP,1,1.364939e-05
+mangdry,90,MANA,1,2.471072e-05
+mangdry,91,C in SED,2,1525.747
+mangdry,92,POC,2,1.301698
+mangdry,93,DOC,2,3.828976
+mangdry,94,Input,3,0.0
+mangdry,95,Output,4,0.0
+mangdry,96,Respiration,5,0.0
+mangwet,0,PHY,1,0.1201825
+mangwet,1,OTH. PP,1,100.116
+mangwet,2,LEAF,1,362.3762
+mangwet,3,WOOD,1,3389.489
+mangwet,4,ROOT,1,2249.656
+mangwet,5,MICR. H2O,1,0.01473321
+mangwet,6,ZOOPL.,1,0.004708876
+mangwet,7,BACT.SED.,1,0.7101315
+mangwet,8,FLA. SED.,1,0.2634484
+mangwet,9,CIL. SED.,1,0.274067
+mangwet,10,MEIOF.,1,1.524204
+mangwet,11,MERO,1,3.647788e-05
+mangwet,12,EPIFN,1,0.01583876
+mangwet,13,POLY,1,0.008293688
+mangwet,14,TGAST,1,0.04168543
+mangwet,15,AGAST,1,0.005013681
+mangwet,16,BVLVS,1,0.006030903
+mangwet,17,MBENTH,1,0.01664633
+mangwet,18,SCRUST,1,0.001883416
+mangwet,19,AMPHI,1,0.006530858
+mangwet,20,PENAID,1,0.004882803
+mangwet,21,CARID,1,0.04317391
+mangwet,22,OSHMP,1,0.04694165
+mangwet,23,JLOBST,1,0.0003471353
+mangwet,24,OCRAB,1,0.1195438
+mangwet,25,TCRAB,1,0.0175738
+mangwet,26,DCRAB,1,0.002668906
+mangwet,27,PCRAB,1,0.006943856
+mangwet,28,FWINV,1,0.08583316
+mangwet,29,LARV,1,0.001450376
+mangwet,30,INSCT,1,0.05177142
+mangwet,31,SPIDR,1,0.0005144029
+mangwet,32,SHRK,1,6.157655e-05
+mangwet,33,RAYS,1,1.924399e-06
+mangwet,34,TARP,1,0.0001731267
+mangwet,35,HERR,1,0.0003271762
+mangwet,36,ANCH,1,0.001362907
+mangwet,37,NEED,1,0.00116252
+mangwet,38,KILLI,1,0.005227767
+mangwet,39,POEC,1,0.0003408214
+mangwet,40,HRSE,1,0.0007337488
+mangwet,41,SLVR,1,0.00194657
+mangwet,42,SNOOK,1,0.0002140368
+mangwet,43,CUDA,1,0.0005351691
+mangwet,44,FWFSH,1,0.001145669
+mangwet,45,BENTH,1,0.001251194
+mangwet,46,EFISH,1,0.0005655051
+mangwet,47,SNAP,1,0.0003839421
+mangwet,48,MOJA,1,0.009752945
+mangwet,49,SCIAE,1,0.0111838
+mangwet,50,PIN,1,0.0101645
+mangwet,51,MULL,1,0.0005312816
+mangwet,52,GOBY,1,0.0003140041
+mangwet,53,OFISH,1,0.0003695227
+mangwet,54,TURT,1,0.001638684
+mangwet,55,LZRD,1,0.0004280522
+mangwet,56,SNKS,1,0.001165251
+mangwet,57,COCO,1,0.001923754
+mangwet,58,AMPH,1,0.00229012
+mangwet,59,L & G,1,5.221119e-07
+mangwet,60,PELC,1,4.827986e-05
+mangwet,61,CORM,1,1.858678e-05
+mangwet,62,BH & E,1,5.031403e-05
+mangwet,63,SE & E,1,2.611696e-05
+mangwet,64,IBIS,1,0.0002190264
+mangwet,65,DUCK1,1,1.090882e-05
+mangwet,66,DUCK2,1,1.357678e-05
+mangwet,67,DUCK3,1,1.203321e-06
+mangwet,68,VULT,1,1.889008e-05
+mangwet,69,K & H,1,1.62474e-06
+mangwet,70,MRAPT,1,4.25366e-06
+mangwet,71,GUIF,1,9.515818e-06
+mangwet,72,SSBIRDS,1,3.966302e-06
+mangwet,73,G & T,1,2.283099e-05
+mangwet,74,C & C,1,3.480683e-08
+mangwet,75,OWLS,1,5.946516e-07
+mangwet,76,WOODP,1,3.843968e-07
+mangwet,77,PASSOMN,1,1.295271e-06
+mangwet,78,PASSPERD,1,6.304677e-07
+mangwet,79,OPSU,1,5.560878e-05
+mangwet,80,RABT,1,4.238369e-06
+mangwet,81,SQIUR,1,2.865517e-05
+mangwet,82,M & R,1,2.31822e-05
+mangwet,83,FOX,1,1.004127e-06
+mangwet,84,BEAR,1,5.009085e-06
+mangwet,85,RACO,1,6.245979e-05
+mangwet,86,M & O,1,7.165013e-05
+mangwet,87,CATS,1,2.31963e-06
+mangwet,88,DERS,1,7.870676e-05
+mangwet,89,DOLP,1,6.625417e-06
+mangwet,90,MANA,1,1.223378e-05
+mangwet,91,C in SED,2,1519.576
+mangwet,92,POC,2,1.306091
+mangwet,93,DOC,2,3.686854
+mangwet,94,Input,3,0.0
+mangwet,95,Output,4,0.0
+mangwet,96,Respiration,5,0.0

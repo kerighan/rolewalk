@@ -1,0 +1,1087 @@
+web,node,name,expanded_name,guild,taxon,confidence
+ChesLower,0,Net Phytoplankton,Net-sized phytoplankton,primary_producer,plant_or_alga,high
+ChesLower,1,Picoplankton,Picophytoplankton,primary_producer,plant_or_alga,high
+ChesLower,2,Free Bacteria,Free-living bacteria,microbial,bacteria_or_protist,high
+ChesLower,3,Particle Attached Bacteria,Particle-attached bacteria,microbial,bacteria_or_protist,high
+ChesLower,4,Heteroflagellates,Heterotrophic flagellates,microbial,bacteria_or_protist,high
+ChesLower,5,Ciliates,Ciliates,microbial,bacteria_or_protist,high
+ChesLower,6,Rotifers,Rotifers,omnivore,invertebrate,medium
+ChesLower,7,Meroplankton,Meroplankton (planktonic larvae of benthic animals),omnivore,invertebrate,medium
+ChesLower,8,Mesozooplankton,Mesozooplankton,omnivore,invertebrate,medium
+ChesLower,9,Ctenophores,Ctenophores (comb jellies),invertivore,invertebrate,high
+ChesLower,10,Chrysaora,Chrysaora sea nettles,invertivore,invertebrate,high
+ChesLower,11,Microphytobenthos,Microphytobenthos (benthic microalgae),primary_producer,plant_or_alga,high
+ChesLower,12,SAV,Submerged aquatic vegetation,primary_producer,plant_or_alga,high
+ChesLower,13,Benthic Bacteria,Benthic bacteria,microbial,bacteria_or_protist,high
+ChesLower,14,Meiofauna,Meiofauna (small benthic invertebrates),detritivore,invertebrate,medium
+ChesLower,15,Deposit Feeding Benthos,Deposit-feeding benthic invertebrates,detritivore,invertebrate,high
+ChesLower,16,Suspension Feeding Benthos,Suspension-feeding benthic invertebrates,detritivore,invertebrate,medium
+ChesLower,17,Oysters,Eastern oysters (Crassostrea virginica),herbivore,invertebrate,medium
+ChesLower,18,Blue Crab,Blue crab (Callinectes sapidus),invertivore,invertebrate,high
+ChesLower,19,Menhaden,Atlantic menhaden (Brevoortia tyrannus),omnivore,fish,medium
+ChesLower,20,Bay anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+ChesLower,21,Herrings and Shads,Herrings and shads,invertivore,fish,medium
+ChesLower,22,White Perch,White perch (Morone americana),invertivore,fish,high
+ChesLower,23,Spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+ChesLower,24,Croaker,Atlantic croaker (Micropogonias undulatus),invertivore,fish,high
+ChesLower,25,Hogchoker,Hogchoker (Trinectes maculatus),invertivore,fish,high
+ChesLower,26,American eel,American eel (Anguilla rostrata),invertivore,fish,medium
+ChesLower,27,Catfish,Catfish,omnivore,fish,medium
+ChesLower,28,Striped Bass,Striped bass (Morone saxatilis),top_predator,fish,high
+ChesLower,29,Bluefish,Bluefish (Pomatomus saltatrix),top_predator,fish,high
+ChesLower,30,Weakfish,Weakfish (Cynoscion regalis),top_predator,fish,medium
+ChesLower,31,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+ChesLower,32,Sediment POC,Sediment particulate organic carbon,nonliving_detritus,nonliving,high
+ChesLower,33,POC,Particulate organic carbon,nonliving_detritus,nonliving,high
+ChesMiddle,0,Net Phytoplankton,Net-sized phytoplankton,primary_producer,plant_or_alga,high
+ChesMiddle,1,Picoplankton,Photosynthetic picoplankton,primary_producer,plant_or_alga,high
+ChesMiddle,2,Free Bacteria,Free-living bacterioplankton,microbial,bacteria_or_protist,high
+ChesMiddle,3,Particle Attached Bacteria,Particle-attached bacteria,microbial,bacteria_or_protist,high
+ChesMiddle,4,Heteroflagellates,Heterotrophic flagellates,microbial,bacteria_or_protist,high
+ChesMiddle,5,Ciliates,Heterotrophic ciliates,microbial,bacteria_or_protist,high
+ChesMiddle,6,Rotifers,Rotifers,herbivore,invertebrate,medium
+ChesMiddle,7,Meroplankton,Meroplankton (planktonic larvae of benthic animals),herbivore,invertebrate,medium
+ChesMiddle,8,Mesozooplankton,Mesozooplankton (principally copepods),omnivore,invertebrate,medium
+ChesMiddle,9,Ctenophores,Ctenophores (comb jellies),invertivore,invertebrate,high
+ChesMiddle,10,Chrysaora,Chrysaora sea nettles,invertivore,invertebrate,high
+ChesMiddle,11,Microphytobenthos,Microphytobenthos (benthic microalgae),primary_producer,plant_or_alga,high
+ChesMiddle,12,SAV,Submerged aquatic vegetation,primary_producer,plant_or_alga,high
+ChesMiddle,13,Benthic Bacteria,Benthic bacteria,microbial,bacteria_or_protist,high
+ChesMiddle,14,Meiofauna,Meiofauna (small benthic invertebrates),detritivore,invertebrate,medium
+ChesMiddle,15,Deposit Feeding Benthos,Deposit-feeding benthic invertebrates,detritivore,invertebrate,high
+ChesMiddle,16,Suspension Feeding Benthos,Suspension-feeding benthic invertebrates,detritivore,invertebrate,medium
+ChesMiddle,17,Oysters,Eastern oysters (Crassostrea virginica),herbivore,invertebrate,medium
+ChesMiddle,18,Blue Crab,Blue crab (Callinectes sapidus),invertivore,invertebrate,medium
+ChesMiddle,19,Menhaden,Atlantic menhaden (Brevoortia tyrannus),herbivore,fish,medium
+ChesMiddle,20,Bay anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+ChesMiddle,21,Herrings and Shads,Herrings and shads,invertivore,fish,medium
+ChesMiddle,22,White Perch,White perch (Morone americana),invertivore,fish,high
+ChesMiddle,23,Spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+ChesMiddle,24,Croaker,Atlantic croaker (Micropogonias undulatus),invertivore,fish,high
+ChesMiddle,25,Hogchoker,Hogchoker (Trinectes maculatus),invertivore,fish,high
+ChesMiddle,26,American eel,American eel (Anguilla rostrata),invertivore,fish,medium
+ChesMiddle,27,Catfish,Catfishes (family Ictaluridae),omnivore,fish,medium
+ChesMiddle,28,Striped Bass,Striped bass (Morone saxatilis),top_predator,fish,high
+ChesMiddle,29,Bluefish,Bluefish (Pomatomus saltatrix),top_predator,fish,high
+ChesMiddle,30,Weakfish,Weakfish (Cynoscion regalis),top_predator,fish,medium
+ChesMiddle,31,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+ChesMiddle,32,Sediment POC,Sediment particulate organic carbon,nonliving_detritus,nonliving,high
+ChesMiddle,33,POC,Suspended particulate organic carbon,nonliving_detritus,nonliving,high
+ChesUpper,0,Net Phytoplankton,Net-sized phytoplankton,primary_producer,plant_or_alga,high
+ChesUpper,1,Picoplankton,Picoplankton,primary_producer,plant_or_alga,medium
+ChesUpper,2,Free Bacteria,Free-living bacteria,microbial,bacteria_or_protist,high
+ChesUpper,3,Particle Attached Bacteria,Particle-attached bacteria,microbial,bacteria_or_protist,high
+ChesUpper,4,Heteroflagellates,Heterotrophic flagellates,microbial,bacteria_or_protist,high
+ChesUpper,5,Ciliates,Ciliates,microbial,bacteria_or_protist,high
+ChesUpper,6,Rotifers,Rotifers,herbivore,invertebrate,medium
+ChesUpper,7,Meroplankton,Meroplankton (planktonic larvae of benthic animals),herbivore,invertebrate,medium
+ChesUpper,8,Mesozooplankton,Mesozooplankton,omnivore,invertebrate,medium
+ChesUpper,9,Ctenophores,Ctenophores (comb jellies),invertivore,invertebrate,high
+ChesUpper,10,Chrysaora,Chrysaora sea nettles,invertivore,invertebrate,high
+ChesUpper,11,Microphytobenthos,Microphytobenthos (benthic microalgae),primary_producer,plant_or_alga,high
+ChesUpper,12,SAV,Submerged aquatic vegetation,primary_producer,plant_or_alga,high
+ChesUpper,13,Benthic Bacteria,Benthic bacteria,microbial,bacteria_or_protist,high
+ChesUpper,14,Meiofauna,Meiofauna (small benthic invertebrates),detritivore,invertebrate,medium
+ChesUpper,15,Deposit Feeding Benthos,Deposit-feeding benthic invertebrates,detritivore,invertebrate,high
+ChesUpper,16,Suspension Feeding Benthos,Suspension-feeding benthic invertebrates,detritivore,invertebrate,medium
+ChesUpper,17,Oysters,Eastern oysters (Crassostrea virginica),herbivore,invertebrate,medium
+ChesUpper,18,Blue Crab,Blue crab (Callinectes sapidus),invertivore,invertebrate,high
+ChesUpper,19,Menhaden,Atlantic menhaden (Brevoortia tyrannus),omnivore,fish,medium
+ChesUpper,20,Bay anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+ChesUpper,21,Herrings and Shads,Herrings and shads,invertivore,fish,medium
+ChesUpper,22,White Perch,White perch (Morone americana),invertivore,fish,high
+ChesUpper,23,Spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+ChesUpper,24,Croaker,Atlantic croaker (Micropogonias undulatus),invertivore,fish,high
+ChesUpper,25,Hogchoker,Hogchoker (Trinectes maculatus),invertivore,fish,high
+ChesUpper,26,American Eel,American eel (Anguilla rostrata),invertivore,fish,medium
+ChesUpper,27,Catfish,Catfishes,omnivore,fish,medium
+ChesUpper,28,Striped Bass,Striped bass (Morone saxatilis),top_predator,fish,high
+ChesUpper,29,Bluefish,Bluefish (Pomatomus saltatrix),top_predator,fish,high
+ChesUpper,30,Weakfish,Weakfish (Cynoscion regalis),top_predator,fish,high
+ChesUpper,31,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+ChesUpper,32,Sediment POC,Sediment particulate organic carbon,nonliving_detritus,nonliving,high
+ChesUpper,33,POC,Particulate organic carbon,nonliving_detritus,nonliving,high
+Chesapeake,0,phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+Chesapeake,1,bacteria in suspended poc,Bacteria associated with suspended particulate organic carbon,microbial,bacteria_or_protist,high
+Chesapeake,2,bacteria in sediment poc,Bacteria associated with sediment particulate organic carbon,microbial,bacteria_or_protist,high
+Chesapeake,3,benthic diatoms,Benthic diatoms,primary_producer,plant_or_alga,high
+Chesapeake,4,free bacteria,Free-living bacteria,microbial,bacteria_or_protist,high
+Chesapeake,5,heterotrophic microflagel,Heterotrophic microflagellates,microbial,bacteria_or_protist,high
+Chesapeake,6,ciliates,Ciliates,microbial,bacteria_or_protist,high
+Chesapeake,7,zooplankton,Zooplankton,herbivore,invertebrate,medium
+Chesapeake,8,ctenophores,Ctenophores (comb jellies),invertivore,invertebrate,high
+Chesapeake,9,sea nettle,Sea nettle jellyfish,invertivore,invertebrate,high
+Chesapeake,10,other suspension feeders,Other suspension-feeding invertebrates,detritivore,invertebrate,medium
+Chesapeake,11,mya arenaria,Soft-shell clam (Mya arenaria),herbivore,invertebrate,medium
+Chesapeake,12,oysters,Eastern oysters (Crassostrea virginica),herbivore,invertebrate,medium
+Chesapeake,13,other polychaetes,Other polychaete worms,detritivore,invertebrate,medium
+Chesapeake,14,nereis,Nereis ragworms,omnivore,invertebrate,high
+Chesapeake,15,macoma spp.,Macoma clams (Macoma species),detritivore,invertebrate,medium
+Chesapeake,16,meiofauna,Meiofauna (small benthic invertebrates),detritivore,invertebrate,medium
+Chesapeake,17,crustacean deposit feeder,Crustacean deposit feeders,detritivore,invertebrate,high
+Chesapeake,18,blue crab,Blue crab (Callinectes sapidus),invertivore,invertebrate,medium
+Chesapeake,19,fish larvae,Fish larvae,invertivore,fish,high
+Chesapeake,20,alewife & blue herring,Alewife (Alosa pseudoharengus) and blueback herring (Alosa aestivalis),invertivore,fish,high
+Chesapeake,21,bay anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+Chesapeake,22,menhaden,Atlantic menhaden (Brevoortia tyrannus),herbivore,fish,medium
+Chesapeake,23,shad,Shad (Alosa species),invertivore,fish,medium
+Chesapeake,24,croaker,Atlantic croaker (Micropogonias undulatus),invertivore,fish,high
+Chesapeake,25,hogchoker,Hogchoker (Trinectes maculatus),invertivore,fish,high
+Chesapeake,26,spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+Chesapeake,27,white perch,White perch (Morone americana),invertivore,fish,medium
+Chesapeake,28,catfish,Catfish,omnivore,fish,medium
+Chesapeake,29,bluefish,Bluefish (Pomatomus saltatrix),top_predator,fish,high
+Chesapeake,30,weakfish,Weakfish (Cynoscion regalis),top_predator,fish,medium
+Chesapeake,31,summer flounder,Summer flounder (Paralichthys dentatus),top_predator,fish,medium
+Chesapeake,32,striped bass,Striped bass (Morone saxatilis),top_predator,fish,high
+Chesapeake,33,dissolved organic carbon,Dissolved organic carbon,nonliving_detritus,nonliving,high
+Chesapeake,34,suspended particulate org,Suspended particulate organic carbon,nonliving_detritus,nonliving,high
+Chesapeake,35,sediment particulate orga,Sediment particulate organic carbon,nonliving_detritus,nonliving,high
+CrystalC,0,microphytes,Microphytes (microscopic algae),primary_producer,plant_or_alga,high
+CrystalC,1,macrophytes,Macrophytes (large aquatic plants and macroalgae),primary_producer,plant_or_alga,high
+CrystalC,2,zooplankton,Zooplankton,herbivore,invertebrate,medium
+CrystalC,3,benthic invertebrates,Benthic invertebrates,detritivore,invertebrate,medium
+CrystalC,4,blacktip shark,Blacktip shark,top_predator,fish,high
+CrystalC,5,stingray,Stingray,invertivore,fish,high
+CrystalC,6,striped anchovy,Striped anchovy,invertivore,fish,high
+CrystalC,7,bay anchovy,Bay anchovy,invertivore,fish,high
+CrystalC,8,needlefish,Needlefish,top_predator,fish,high
+CrystalC,9,sheepshead killifish,Sheepshead killifish (sheepshead minnow),omnivore,fish,medium
+CrystalC,10,goldspotted killifish,Goldspotted killifish (goldspotted topminnow),omnivore,fish,medium
+CrystalC,11,gulf killifish,Gulf killifish,invertivore,fish,high
+CrystalC,12,longnosed killifish,Longnosed killifish (longnose killifish),invertivore,fish,high
+CrystalC,13,silverside,Silverside,invertivore,fish,medium
+CrystalC,14,moharra,Mojarra,invertivore,fish,high
+CrystalC,15,silver jenny,Silver jenny mojarra,invertivore,fish,high
+CrystalC,16,sheepshead,Sheepshead,invertivore,fish,high
+CrystalC,17,pinfish,Pinfish,omnivore,fish,high
+CrystalC,18,mullet,Mullet,detritivore,fish,medium
+CrystalC,19,gulf flounder,Gulf flounder,top_predator,fish,medium
+CrystalC,20,detritus,Detritus (nonliving organic matter),nonliving_detritus,nonliving,high
+CrystalD,0,microphytes,Microphytes (microscopic algae),primary_producer,plant_or_alga,high
+CrystalD,1,macrophytes,Macrophytes (aquatic plants and large algae),primary_producer,plant_or_alga,high
+CrystalD,2,zooplankton,Zooplankton,herbivore,invertebrate,medium
+CrystalD,3,benthic invertebrates,Benthic invertebrates,detritivore,invertebrate,medium
+CrystalD,4,stingray,Stingray,invertivore,fish,high
+CrystalD,5,bay anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+CrystalD,6,catfish,Catfish (estuarine catfish),invertivore,fish,medium
+CrystalD,7,needlefish,Needlefish,top_predator,fish,high
+CrystalD,8,sheepshead killifish,Sheepshead killifish (Cyprinodon variegatus),omnivore,fish,medium
+CrystalD,9,goldspotted killifish,Goldspotted killifish (Floridichthys carpio),omnivore,fish,medium
+CrystalD,10,gulf killifish,Gulf killifish (Fundulus grandis),invertivore,fish,high
+CrystalD,11,longnosed killifish,Longnose killifish (Fundulus similis),invertivore,fish,high
+CrystalD,12,molly,Molly (Poecilia species),herbivore,fish,medium
+CrystalD,13,silverside,Silverside,invertivore,fish,high
+CrystalD,14,moharra,Mojarra (family Gerreidae),invertivore,fish,high
+CrystalD,15,pinfish,Pinfish (Lagodon rhomboides),omnivore,fish,high
+CrystalD,16,spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+CrystalD,17,black drum,Black drum (Pogonias cromis),invertivore,fish,high
+CrystalD,18,red drum,Red drum (Sciaenops ocellatus),invertivore,fish,medium
+CrystalD,19,mullet,Mullet,detritivore,fish,high
+CrystalD,20,detritus,Detritus (nonliving organic matter),nonliving_detritus,nonliving,high
+Maspalomas,0,Cyanobacteria,Cyanobacteria,primary_producer,plant_or_alga,high
+Maspalomas,1,Eukaryotic Phyto,Eukaryotic phytoplankton,primary_producer,plant_or_alga,high
+Maspalomas,2,Chara globularis,Chara globularis (stonewort),primary_producer,plant_or_alga,high
+Maspalomas,3,Ruppia Maritima,Ruppia maritima (widgeongrass),primary_producer,plant_or_alga,high
+Maspalomas,4,Cladophora,Cladophora (filamentous green algae),primary_producer,plant_or_alga,high
+Maspalomas,5,Periphyton,Periphyton (attached algal community),primary_producer,plant_or_alga,high
+Maspalomas,6,Pelagic Bacteria,Pelagic bacteria,microbial,bacteria_or_protist,high
+Maspalomas,7,Microzooplankton,Microzooplankton,microbial,bacteria_or_protist,medium
+Maspalomas,8,Mesozooplankton,Mesozooplankton,herbivore,invertebrate,medium
+Maspalomas,9,Macrozooplankton,Macrozooplankton,omnivore,invertebrate,low
+Maspalomas,10,Benthic Microfauna,Benthic microfauna,microbial,bacteria_or_protist,low
+Maspalomas,11,Benthic Suspension Feeder,Benthic suspension feeders,detritivore,invertebrate,medium
+Maspalomas,12,Benthic Deposit Feeders,Benthic deposit feeders,detritivore,invertebrate,high
+Maspalomas,13,Benthic Invertebrate Car.,Benthic invertebrate carnivores,invertivore,invertebrate,high
+Maspalomas,14,Liza Aurata,Liza aurata (golden grey mullet; currently Chelon auratus),detritivore,fish,medium
+Maspalomas,15,Gallinula chloropus,Gallinula chloropus (common moorhen),omnivore,bird,high
+Maspalomas,16,Diplodus Sargus,Diplodus sargus (white seabream),invertivore,fish,medium
+Maspalomas,17,Dicentratus punctatus,Dicentrarchus punctatus (spotted seabass),top_predator,fish,medium
+Maspalomas,18,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+Maspalomas,19,Suspended POC,Suspended particulate organic carbon,nonliving_detritus,nonliving,high
+Maspalomas,20,Sedimented POC,Sedimented particulate organic carbon,nonliving_detritus,nonliving,high
+Michigan,0,Flagellates,Flagellated phytoplankton,primary_producer,plant_or_alga,medium
+Michigan,1,Blue-greenGree,Blue-green algae (cyanobacteria) and green algae,primary_producer,plant_or_alga,high
+Michigan,2,Diatoms,Diatoms,primary_producer,plant_or_alga,high
+Michigan,3,Rotifers,Rotifers,herbivore,invertebrate,medium
+Michigan,4,Cyclopoids,Cyclopoid copepods,omnivore,invertebrate,high
+Michigan,5,Calanoids,Calanoid copepods,herbivore,invertebrate,medium
+Michigan,6,Cladocerans,Cladocerans (water fleas),herbivore,invertebrate,high
+Michigan,7,Leptodora,Leptodora kindtii (predatory water flea),invertivore,invertebrate,high
+Michigan,8,Bythotrephes,Bythotrephes longimanus (spiny water flea),invertivore,invertebrate,high
+Michigan,9,Diporeia,Diporeia amphipods,detritivore,invertebrate,high
+Michigan,10,Mysis,Mysis (opossum shrimp),omnivore,invertebrate,high
+Michigan,11,Oligoch/Chiron,Oligochaete worms and chironomid midge larvae,detritivore,invertebrate,high
+Michigan,12,Sphae/Gast,Sphaeriid clams and gastropod snails,detritivore,invertebrate,medium
+Michigan,13,Zebra mussels,Zebra mussels (Dreissena polymorpha),herbivore,invertebrate,medium
+Michigan,14,Benthic microin,Benthic microinvertebrates,detritivore,invertebrate,medium
+Michigan,15,Other fish,Other fish,invertivore,fish,low
+Michigan,16,Alewife,Alewife (Alosa pseudoharengus),invertivore,fish,high
+Michigan,17,Bloater,Bloater (Coregonus hoyi),invertivore,fish,high
+Michigan,18,Rainbow smelt,Rainbow smelt (Osmerus mordax),invertivore,fish,high
+Michigan,19,Slimy sculpin,Slimy sculpin (Cottus cognatus),invertivore,fish,high
+Michigan,20,Deepwater sculp,Deepwater sculpin (Myoxocephalus thompsonii),invertivore,fish,high
+Michigan,21,Lake Whitefish,Lake whitefish (Coregonus clupeaformis),invertivore,fish,high
+Michigan,22,Yellow perch,Yellow perch (Perca flavescens),invertivore,fish,medium
+Michigan,23,Juv. Brown trou,Juvenile brown trout (Salmo trutta),invertivore,fish,medium
+Michigan,24,Juv. Steelhead,Juvenile steelhead trout (Oncorhynchus mykiss),invertivore,fish,high
+Michigan,25,Juv. Coho,Juvenile coho salmon (Oncorhynchus kisutch),invertivore,fish,medium
+Michigan,26,Juv. Chinook,Juvenile Chinook salmon (Oncorhynchus tshawytscha),invertivore,fish,medium
+Michigan,27,Juv. Lake Trout,Juvenile lake trout (Salvelinus namaycush),invertivore,fish,medium
+Michigan,28,Burbot,Burbot (Lota lota),top_predator,fish,high
+Michigan,29,Brown trout,Brown trout (Salmo trutta),top_predator,fish,high
+Michigan,30,Steelhead,Steelhead trout (Oncorhynchus mykiss),top_predator,fish,medium
+Michigan,31,Coho,Coho salmon (Oncorhynchus kisutch),top_predator,fish,high
+Michigan,32,Chinook,Chinook salmon (Oncorhynchus tshawytscha),top_predator,fish,high
+Michigan,33,Lake trout,Lake trout (Salvelinus namaycush),top_predator,fish,high
+Michigan,34,Sea lamprey,Sea lamprey (Petromyzon marinus),top_predator,fish,high
+Michigan,35,Detritus,Detritus (nonliving organic matter),nonliving_detritus,nonliving,high
+Mondego,0,Phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+Mondego,1,Enteromorpha sp,Enteromorpha species (green macroalgae),primary_producer,plant_or_alga,high
+Mondego,2,Ulva lactuca,Ulva lactuca (sea lettuce),primary_producer,plant_or_alga,high
+Mondego,3,Zostera,Zostera noltii (dwarf eelgrass),primary_producer,plant_or_alga,high
+Mondego,4,Epiphytes,Epiphytic algae,primary_producer,plant_or_alga,high
+Mondego,5,Gracilaria,Gracilaria species (red macroalgae),primary_producer,plant_or_alga,high
+Mondego,6,Zooplankton,Zooplankton,herbivore,invertebrate,medium
+Mondego,7,Hydrobia ulvae,Hydrobia ulvae (laver spire shell),herbivore,invertebrate,medium
+Mondego,8,Melita palmata,Melita palmata (amphipod),detritivore,invertebrate,medium
+Mondego,9,Ampithoe ferox,Ampithoe ferox (amphipod),herbivore,invertebrate,high
+Mondego,10,Gibulla,Gibbula species (topshell snails),herbivore,invertebrate,high
+Mondego,11,Littorina,Littorina species (periwinkle snails),herbivore,invertebrate,high
+Mondego,12,Cyathura carinata,Cyathura carinata (isopod),omnivore,invertebrate,medium
+Mondego,13,Scrobicularia plana,Scrobicularia plana (peppery furrow shell),detritivore,invertebrate,high
+Mondego,14,Cerastoderma edule,Cerastoderma edule (common cockle),herbivore,invertebrate,medium
+Mondego,15,Modiolus,Modiolus species (horse mussels),detritivore,invertebrate,medium
+Mondego,16,Amage adspersa,Amage adspersa (ampharetid polychaete),detritivore,invertebrate,high
+Mondego,17,Capitella capitata,Capitella capitata (capitellid polychaete),detritivore,invertebrate,high
+Mondego,18,Heteromastus filifor,Heteromastus filiformis (capitellid polychaete),detritivore,invertebrate,high
+Mondego,19,Oligochaeta,Oligochaete worms,detritivore,invertebrate,high
+Mondego,20,Other detrivors,Other detritivorous invertebrates,detritivore,invertebrate,high
+Mondego,21,Nephtys,Nephtys species (predatory polychaetes),invertivore,invertebrate,high
+Mondego,22,Other predatory inve,Other predatory invertebrates,invertivore,invertebrate,high
+Mondego,23,Idotea chelipes,Idotea chelipes (isopod),herbivore,invertebrate,medium
+Mondego,24,Sphaeroma hookeri,Sphaeroma hookeri (isopod),detritivore,invertebrate,high
+Mondego,25,Nereis diversicolor,Nereis diversicolor (ragworm),omnivore,invertebrate,high
+Mondego,26,Carcinus maenas,Carcinus maenas (European green crab),invertivore,invertebrate,high
+Mondego,27,Crangon crangon,Crangon crangon (brown shrimp),invertivore,invertebrate,high
+Mondego,28,Lumbrineris impatien,Lumbrineris impatiens (lumbrinerid polychaete),invertivore,invertebrate,medium
+Mondego,29,Diopatra neapolitana,Diopatra neapolitana (tube-building onuphid polychaete),omnivore,invertebrate,medium
+Mondego,30,Microalgae and detri,Microalgae and detritus consumers (fish),detritivore,fish,medium
+Mondego,31,Zooplankton consumer,Zooplankton consumers (fish),invertivore,fish,medium
+Mondego,32,Endofauna consumers,Endofauna consumers (fish feeding on sediment-dwelling invertebrates),invertivore,fish,medium
+Mondego,33,Macrofauna predators,Macrofauna predators (fish),invertivore,fish,medium
+Mondego,34,Trigla lucerna,Trigla lucerna (tub gurnard),invertivore,fish,high
+Mondego,35,Pomatoschistus minut,Pomatoschistus minutus (sand goby),invertivore,fish,high
+Mondego,36,Larus ridibundus,Larus ridibundus (black-headed gull),omnivore,bird,medium
+Mondego,37,Larus fuscus,Larus fuscus (lesser black-backed gull),top_predator,bird,medium
+Mondego,38,Kentish Plover,Kentish plover (Charadrius alexandrinus),invertivore,bird,high
+Mondego,39,Ringed Plover,Common ringed plover (Charadrius hiaticula),invertivore,bird,high
+Mondego,40,Grey Plover,Grey plover (Pluvialis squatarola),invertivore,bird,high
+Mondego,41,Dunlin,Dunlin (Calidris alpina),invertivore,bird,high
+Mondego,42,Detritus,Detritus,nonliving_detritus,nonliving,high
+Narragan,0,Bluefish,Bluefish,top_predator,fish,high
+Narragan,1,Striped Bass,Striped bass,top_predator,fish,high
+Narragan,2,Winter Flounder,Winter flounder,invertivore,fish,high
+Narragan,3,Windowpane,Windowpane flounder,invertivore,fish,high
+Narragan,4,Scup,Scup,invertivore,fish,high
+Narragan,5,Tautog,Tautog,invertivore,fish,high
+Narragan,6,Dogfish,Dogfish sharks,top_predator,fish,medium
+Narragan,7,Skates,Skates,invertivore,fish,medium
+Narragan,8,Longfin Squid,Longfin inshore squid,top_predator,invertebrate,medium
+Narragan,9,Butterfish,Atlantic butterfish,invertivore,fish,high
+Narragan,10,Menhaden,Atlantic menhaden,herbivore,fish,medium
+Narragan,11,Bay Anchovy,Bay anchovy,invertivore,fish,high
+Narragan,12,Atl Silversides,Atlantic silversides,invertivore,fish,high
+Narragan,13,Mummichog,Mummichog,omnivore,fish,high
+Narragan,14,Hard Clam,Hard clam (northern quahog),herbivore,invertebrate,medium
+Narragan,15,Cancer Crabs,Cancer crabs (rock and Jonah crabs),invertivore,invertebrate,high
+Narragan,16,Am. Lobster,American lobster,invertivore,invertebrate,high
+Narragan,17,Softshell Clam,Soft-shell clam,herbivore,invertebrate,medium
+Narragan,18,Ben Macrofauna,Benthic macrofauna,detritivore,invertebrate,medium
+Narragan,19,Ben Meiofauna,Benthic meiofauna,detritivore,invertebrate,medium
+Narragan,20,"Shrimp(Pal,Crg)",Shrimp (Palaemonetes and Crangon),omnivore,invertebrate,medium
+Narragan,21,Ctenophores,Ctenophores (comb jellies),invertivore,invertebrate,high
+Narragan,22,Fish Larvae,Fish larvae,invertivore,fish,high
+Narragan,23,Mesozooplankton,Mesozooplankton,herbivore,invertebrate,medium
+Narragan,24,Microzooplankto,Microzooplankton,microbial,bacteria_or_protist,medium
+Narragan,25,Hetero Microflag,Heterotrophic microflagellates,microbial,bacteria_or_protist,high
+Narragan,26,Pelag Bacteria,Pelagic bacteria,microbial,bacteria_or_protist,high
+Narragan,27,SusPoc Bacteria,Suspended particulate organic carbon-associated bacteria,microbial,bacteria_or_protist,high
+Narragan,28,SedPOC Bacteria,Sediment particulate organic carbon-associated bacteria,microbial,bacteria_or_protist,high
+Narragan,29,Benthic Alage,Benthic algae,primary_producer,plant_or_alga,high
+Narragan,30,Phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+Narragan,31,Detritus,Detritus,nonliving_detritus,nonliving,high
+Rhode,0,crop land,Cropland,primary_producer,plant_or_alga,medium
+Rhode,1,pasture land,Pasture land,primary_producer,plant_or_alga,medium
+Rhode,2,upland forest,Upland forest,primary_producer,plant_or_alga,medium
+Rhode,3,riparian forest adj. crop,Riparian forest adjacent to cropland,primary_producer,plant_or_alga,medium
+Rhode,4,riparian forest adj. past,Riparian forest adjacent to pasture land,primary_producer,plant_or_alga,medium
+Rhode,5,riparian forest adj. upla,Riparian forest adjacent to upland forest,primary_producer,plant_or_alga,medium
+Rhode,6,flooded swamp forest,Flooded swamp forest,primary_producer,plant_or_alga,medium
+Rhode,7,herbaceous wetland,Herbaceous wetland,primary_producer,plant_or_alga,medium
+Rhode,8,floodplain forest,Floodplain forest,primary_producer,plant_or_alga,medium
+Rhode,9,main fork,Main Fork,nonliving_detritus,nonliving,low
+Rhode,10,low marsh adj. north fork,Low marsh adjacent to North Fork,primary_producer,plant_or_alga,medium
+Rhode,11,low marsh adj. main fork,Low marsh adjacent to Main Fork,primary_producer,plant_or_alga,medium
+Rhode,12,north fork,North Fork,nonliving_detritus,nonliving,low
+Rhode,13,muddy creek,Muddy Creek,nonliving_detritus,nonliving,low
+Rhode,14,mud flat,Mudflat,nonliving_detritus,nonliving,low
+Rhode,15,high marsh,High marsh,primary_producer,plant_or_alga,medium
+Rhode,16,low marsh adj. muddy cree,Low marsh adjacent to Muddy Creek,primary_producer,plant_or_alga,medium
+StMarks,0,Phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+StMarks,1,Halodule,Shoal grass (Halodule wrightii),primary_producer,plant_or_alga,high
+StMarks,2,Micro-epiphytes,Microepiphytic algae,primary_producer,plant_or_alga,high
+StMarks,3,Macro-epiphytes,Macroepiphytic algae,primary_producer,plant_or_alga,high
+StMarks,4,Benthic algae,Benthic algae,primary_producer,plant_or_alga,high
+StMarks,5,Bacterio plankton,Bacterioplankton,microbial,bacteria_or_protist,high
+StMarks,6,Micro protozoa,Microprotozoa,microbial,bacteria_or_protist,high
+StMarks,7,Zooplankton,Zooplankton,herbivore,invertebrate,medium
+StMarks,8,Epiphyte-graz amphipods,Epiphyte-grazing amphipods,herbivore,invertebrate,high
+StMarks,9,suspension-feed molluscs,Suspension-feeding molluscs,detritivore,invertebrate,medium
+StMarks,10,Suspension-feed polychts,Suspension-feeding polychaete worms,detritivore,invertebrate,medium
+StMarks,11,Benthic bact,Benthic bacteria,microbial,bacteria_or_protist,high
+StMarks,12,Microfauna,Benthic microfauna,microbial,bacteria_or_protist,medium
+StMarks,13,Meiofauna,Benthic meiofauna,detritivore,invertebrate,medium
+StMarks,14,Deposit feed amphipods,Deposit-feeding amphipods,detritivore,invertebrate,high
+StMarks,15,Detritus feed crust.,Detritus-feeding crustaceans,detritivore,invertebrate,high
+StMarks,16,Hermit crab,Hermit crabs,omnivore,invertebrate,medium
+StMarks,17,Spider crab,Spider crabs,omnivore,invertebrate,medium
+StMarks,18,Omnivorous crabs,Omnivorous crabs,omnivore,invertebrate,high
+StMarks,19,Blue crab,Blue crab (Callinectes sapidus),invertivore,invertebrate,medium
+StMarks,20,Isopod,Isopods,detritivore,invertebrate,medium
+StMarks,21,Brittle stars,Brittle stars,detritivore,invertebrate,medium
+StMarks,22,Herbivorous shrimp,Herbivorous shrimp,herbivore,invertebrate,high
+StMarks,23,Predatory shrimp,Predatory shrimp,invertivore,invertebrate,high
+StMarks,24,Deposit-feed gastropod,Deposit-feeding gastropods,detritivore,invertebrate,high
+StMarks,25,Deposit-feed polycht,Deposit-feeding polychaete worms,detritivore,invertebrate,high
+StMarks,26,Predatory polycht,Predatory polychaete worms,invertivore,invertebrate,high
+StMarks,27,Predatory gastropod,Predatory gastropods,invertivore,invertebrate,high
+StMarks,28,Epiphyte-graz gastropod,Epiphyte-grazing gastropods,herbivore,invertebrate,high
+StMarks,29,Other gastropods,Other gastropods,herbivore,invertebrate,low
+StMarks,30,Catfish & stingrays,Catfish and stingrays,invertivore,fish,medium
+StMarks,31,Tongue fish,Tonguefish,invertivore,fish,high
+StMarks,32,Gulf flound & needle fish,Gulf flounder and needlefish,top_predator,fish,medium
+StMarks,33,Southrn hake & sea robins,Southern hake and sea robins,invertivore,fish,medium
+StMarks,34,Atl. silverside & bay anc,Atlantic silverside and bay anchovy,invertivore,fish,high
+StMarks,35,Gobies & blennies,Gobies and blennies,invertivore,fish,medium
+StMarks,36,Pinfish,Pinfish (Lagodon rhomboides),omnivore,fish,high
+StMarks,37,Spot,Spot (Leiostomus xanthurus),invertivore,fish,high
+StMarks,38,Pipefish & seahorses,Pipefish and seahorses,invertivore,fish,high
+StMarks,39,Sheepshead minnow,Sheepshead minnow (Cyprinodon variegatus),omnivore,fish,medium
+StMarks,40,Red Drum,Red drum (Sciaenops ocellatus),invertivore,fish,medium
+StMarks,41,Killifish,Killifish,invertivore,fish,medium
+StMarks,42,Herbivorous ducks,Herbivorous ducks,herbivore,bird,high
+StMarks,43,Benthos-eating birds,Benthos-eating birds,invertivore,bird,high
+StMarks,44,Fish-eating birds,Fish-eating birds,top_predator,bird,high
+StMarks,45,Fish & crust. eating bird,Fish- and crustacean-eating birds,top_predator,bird,medium
+StMarks,46,Gulls,Gulls,omnivore,bird,medium
+StMarks,47,Raptors,Raptors,top_predator,bird,high
+StMarks,48,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+StMarks,49,Suspended POC,Suspended particulate organic carbon,nonliving_detritus,nonliving,high
+StMarks,50,Sediment POC,Sediment particulate organic carbon,nonliving_detritus,nonliving,high
+baydry,0,2um Spherical Phytoplankt,Spherical phytoplankton approximately 2 micrometers in diameter,primary_producer,plant_or_alga,high
+baydry,1,Synedococcus,Synechococcus cyanobacteria,primary_producer,bacteria_or_protist,high
+baydry,2,Oscillatoria,Oscillatoria cyanobacteria,primary_producer,bacteria_or_protist,high
+baydry,3,Small Diatoms (<20um),Small diatoms (less than 20 micrometers),primary_producer,plant_or_alga,high
+baydry,4,Big Diatoms (>20um),Large diatoms (greater than 20 micrometers),primary_producer,plant_or_alga,high
+baydry,5,Dinoflagellates,Dinoflagellate phytoplankton,primary_producer,plant_or_alga,medium
+baydry,6,Other Phytoplankton,Other phytoplankton,primary_producer,plant_or_alga,high
+baydry,7,Benthic Phytoplankton,Benthic microalgae,primary_producer,plant_or_alga,high
+baydry,8,Thalassia,Turtle grass (Thalassia testudinum),primary_producer,plant_or_alga,high
+baydry,9,Halodule,Shoal grass (Halodule wrightii),primary_producer,plant_or_alga,high
+baydry,10,Syringodium,Manatee grass (Syringodium filiforme),primary_producer,plant_or_alga,high
+baydry,11,Roots,Seagrass roots and belowground tissues,primary_producer,plant_or_alga,high
+baydry,12,Drift Algae,Drift macroalgae,primary_producer,plant_or_alga,high
+baydry,13,Epiphytes,Epiphytic algae,primary_producer,plant_or_alga,high
+baydry,14,Free Bacteria,Free-living water-column bacteria,microbial,bacteria_or_protist,high
+baydry,15,Water Flagellates,Water-column heterotrophic flagellates,microbial,bacteria_or_protist,high
+baydry,16,Water Cilitaes,Water-column ciliates,microbial,bacteria_or_protist,high
+baydry,17,Acartia Tonsa,Calanoid copepod Acartia tonsa,omnivore,invertebrate,high
+baydry,18,Oithona nana,Cyclopoid copepod Oithona nana,invertivore,invertebrate,medium
+baydry,19,Paracalanus,Calanoid copepods of the genus Paracalanus,herbivore,invertebrate,medium
+baydry,20,Other Copepoda,Other copepods,omnivore,invertebrate,medium
+baydry,21,Meroplankton,Meroplankton (planktonic larvae of benthic animals),herbivore,invertebrate,low
+baydry,22,Other Zooplankton,Other zooplankton,omnivore,invertebrate,low
+baydry,23,Benthic Flagellates,Benthic heterotrophic flagellates,microbial,bacteria_or_protist,high
+baydry,24,Benthic Ciliates,Benthic ciliates,microbial,bacteria_or_protist,high
+baydry,25,Meiofauna,Benthic meiofauna,detritivore,invertebrate,medium
+baydry,26,Sponges,Sponges,detritivore,invertebrate,medium
+baydry,27,Coral,Corals,invertivore,invertebrate,medium
+baydry,28,Other Cnidaridae,Other cnidarians,invertivore,invertebrate,high
+baydry,29,Echinoderma,Echinoderms,detritivore,invertebrate,low
+baydry,30,Bivalves,Bivalve mollusks,herbivore,invertebrate,medium
+baydry,31,Detritivorous Gastropods,Detritivorous gastropod mollusks,detritivore,invertebrate,high
+baydry,32,Epiphytic Gastropods,Epiphyte-grazing gastropod mollusks,herbivore,invertebrate,high
+baydry,33,Predatory Gastropods,Predatory gastropod mollusks,invertivore,invertebrate,high
+baydry,34,Detritivorous Polychaetes,Detritivorous polychaete worms,detritivore,invertebrate,high
+baydry,35,Predatory Polychaetes,Predatory polychaete worms,invertivore,invertebrate,high
+baydry,36,Suspension Feeding Polych,Suspension-feeding polychaete worms,detritivore,invertebrate,medium
+baydry,37,Macrobenthos,Other macrobenthic invertebrates,detritivore,invertebrate,low
+baydry,38,Benthic Crustaceans,Other benthic crustaceans,omnivore,invertebrate,low
+baydry,39,Detritivorous Amphipods,Detritivorous amphipods,detritivore,invertebrate,high
+baydry,40,Herbivorous Amphipods,Herbivorous amphipods,herbivore,invertebrate,high
+baydry,41,Isopods,Isopods,detritivore,invertebrate,medium
+baydry,42,Herbivorous Shrimp,Herbivorous shrimp,herbivore,invertebrate,high
+baydry,43,Predatory Shrimp,Predatory shrimp,invertivore,invertebrate,high
+baydry,44,Pink Shrimp,Pink shrimp (Farfantepenaeus duorarum),omnivore,invertebrate,medium
+baydry,45,Thor Floridanus,Florida grass shrimp (Thor floridanus),omnivore,invertebrate,medium
+baydry,46,Lobster,Caribbean spiny lobster (Panulirus argus),invertivore,invertebrate,high
+baydry,47,Detritivorous Crabs,Detritivorous crabs,detritivore,invertebrate,high
+baydry,48,Omnivorous Crabs,Omnivorous crabs,omnivore,invertebrate,high
+baydry,49,Predatory Crabs,Predatory crabs,invertivore,invertebrate,high
+baydry,50,Callinectus sapidus,Blue crab (Callinectes sapidus),invertivore,invertebrate,medium
+baydry,51,Stone Crab,Florida stone crab (Menippe mercenaria),invertivore,invertebrate,high
+baydry,52,Sharks,Sharks,top_predator,fish,high
+baydry,53,Rays,Rays,invertivore,fish,high
+baydry,54,Tarpon,Atlantic tarpon (Megalops atlanticus),top_predator,fish,high
+baydry,55,Bonefish,Bonefish (Albula vulpes),invertivore,fish,high
+baydry,56,Sardines,Sardines,omnivore,fish,medium
+baydry,57,Anchovy,Anchovies other than bay anchovy,invertivore,fish,high
+baydry,58,Bay Anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+baydry,59,Lizardfish,Lizardfishes,top_predator,fish,high
+baydry,60,Catfish,Marine catfishes,invertivore,fish,medium
+baydry,61,Eels,Eels,invertivore,fish,low
+baydry,62,Toadfish,Toadfishes,invertivore,fish,high
+baydry,63,Brotalus,Brotulas (cusk-eels),invertivore,fish,medium
+baydry,64,Halfbeaks,Halfbeaks,omnivore,fish,medium
+baydry,65,Needlefish,Needlefishes,top_predator,fish,high
+baydry,66,Other Killifish,Other killifishes,invertivore,fish,medium
+baydry,67,Goldspotted killifish,Goldspotted killifish (Floridichthys carpio),omnivore,fish,medium
+baydry,68,Rainwater killifish,Rainwater killifish (Lucania parva),invertivore,fish,high
+baydry,69,Snook,Snooks (Centropomus species),top_predator,fish,high
+baydry,70,Sailfin Molly,Sailfin molly (Poecilia latipinna),herbivore,fish,high
+baydry,71,Silverside,Silversides,invertivore,fish,high
+baydry,72,Other Horsefish,Other seahorses and pipefishes,invertivore,fish,low
+baydry,73,Gulf Pipefish,Gulf pipefish (Syngnathus scovelli),invertivore,fish,high
+baydry,74,Dwarf Seahorse,Dwarf seahorse (Hippocampus zosterae),invertivore,fish,high
+baydry,75,Grouper,Groupers,top_predator,fish,medium
+baydry,76,Jacks,Jacks,top_predator,fish,high
+baydry,77,Pompano,Florida pompano (Trachinotus carolinus),invertivore,fish,high
+baydry,78,Other Snapper,Other snappers,top_predator,fish,medium
+baydry,79,Gray Snapper,Gray snapper (Lutjanus griseus),top_predator,fish,medium
+baydry,80,Mojarra,Mojarras,invertivore,fish,high
+baydry,81,Grunt,Grunts,invertivore,fish,high
+baydry,82,Porgy,Porgies,invertivore,fish,high
+baydry,83,Pinfish,Pinfish (Lagodon rhomboides),omnivore,fish,high
+baydry,84,Scianids,Other sciaenids (drums and croakers),invertivore,fish,medium
+baydry,85,Spotted Seatrout,Spotted seatrout (Cynoscion nebulosus),top_predator,fish,high
+baydry,86,Red Drum,Red drum (Sciaenops ocellatus),invertivore,fish,medium
+baydry,87,Spadefish,Atlantic spadefish (Chaetodipterus faber),invertivore,fish,high
+baydry,88,Parrotfish,Parrotfishes,herbivore,fish,high
+baydry,89,Mackerel,Mackerels,top_predator,fish,high
+baydry,90,Mullet,Mullets,detritivore,fish,high
+baydry,91,Barracuda,Barracudas,top_predator,fish,high
+baydry,92,Blennies,Blennies,omnivore,fish,medium
+baydry,93,Code Goby,Code goby (Gobiosoma robustum),invertivore,fish,high
+baydry,94,Clown Goby,Clown goby (Microgobius gulosus),invertivore,fish,high
+baydry,95,Flatfish,Flatfishes,invertivore,fish,medium
+baydry,96,Filefishes,Filefishes,omnivore,fish,medium
+baydry,97,Puffer,Pufferfishes,invertivore,fish,high
+baydry,98,Other Pelagic Fishes,Other pelagic fishes,invertivore,fish,low
+baydry,99,Other Demersal Fishes,Other demersal fishes,invertivore,fish,low
+baydry,100,Loon,Loons,top_predator,bird,high
+baydry,101,Greeb,Grebes,top_predator,bird,medium
+baydry,102,Pelican,Pelicans,top_predator,bird,high
+baydry,103,Comorant,Cormorants,top_predator,bird,high
+baydry,104,Big Herons & Egrets,Large herons and egrets,top_predator,bird,high
+baydry,105,Small Herons & Egrets,Small herons and egrets,top_predator,bird,medium
+baydry,106,Ibis,Ibises,invertivore,bird,high
+baydry,107,Roseate Spoonbill,Roseate spoonbill (Platalea ajaja),top_predator,bird,medium
+baydry,108,Herbivorous Ducks,Herbivorous ducks,herbivore,bird,high
+baydry,109,Omnivorous Ducks,Omnivorous ducks,omnivore,bird,high
+baydry,110,Predatory Ducks,Predatory ducks,top_predator,bird,medium
+baydry,111,Raptors,Raptors (birds of prey),top_predator,bird,high
+baydry,112,Gruiformes,"Gruiform birds (rails, coots, and allies)",omnivore,bird,medium
+baydry,113,Small Shorebirds,Small shorebirds,invertivore,bird,high
+baydry,114,Gulls & Terns,Gulls and terns,top_predator,bird,medium
+baydry,115,Kingfisher,Belted kingfisher (Megaceryle alcyon),top_predator,bird,high
+baydry,116,Crocodiles,American crocodile (Crocodylus acutus),top_predator,reptile,high
+baydry,117,Loggerhead Turtle,Loggerhead sea turtle (Caretta caretta),invertivore,reptile,high
+baydry,118,Green Turtle,Green sea turtle (Chelonia mydas),herbivore,reptile,high
+baydry,119,Hawksbill Turtle,Hawksbill sea turtle (Eretmochelys imbricata),invertivore,reptile,high
+baydry,120,Dolphin,Common bottlenose dolphin (Tursiops truncatus),top_predator,mammal,high
+baydry,121,Manatee,Florida manatee (Trichechus manatus latirostris),herbivore,mammal,high
+baydry,122,Water POC,Water-column particulate organic carbon,nonliving_detritus,nonliving,high
+baydry,123,Benthic POC,Benthic particulate organic carbon,nonliving_detritus,nonliving,high
+baydry,124,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+baywet,0,2um Spherical Phytoplankt,Spherical phytoplankton approximately 2 micrometers in diameter,primary_producer,plant_or_alga,high
+baywet,1,Synedococcus,Synechococcus cyanobacteria,primary_producer,bacteria_or_protist,high
+baywet,2,Oscillatoria,Oscillatoria cyanobacteria,primary_producer,bacteria_or_protist,high
+baywet,3,Small Diatoms (<20um),Small diatoms (less than 20 micrometers),primary_producer,plant_or_alga,high
+baywet,4,Big Diatoms (>20um),Large diatoms (greater than 20 micrometers),primary_producer,plant_or_alga,high
+baywet,5,Dinoflagellates,Dinoflagellates,primary_producer,plant_or_alga,medium
+baywet,6,Other Phytoplankton,Other phytoplankton,primary_producer,plant_or_alga,high
+baywet,7,Benthic Phytoplankton,Benthic microalgae (benthic phytoplankton),primary_producer,plant_or_alga,high
+baywet,8,Thalassia,Turtle grass (Thalassia testudinum),primary_producer,plant_or_alga,high
+baywet,9,Halodule,Shoal grass (Halodule wrightii),primary_producer,plant_or_alga,high
+baywet,10,Syringodium,Manatee grass (Syringodium filiforme),primary_producer,plant_or_alga,high
+baywet,11,Roots,Seagrass roots,primary_producer,plant_or_alga,high
+baywet,12,Drift Algae,Drift macroalgae,primary_producer,plant_or_alga,high
+baywet,13,Epiphytes,Epiphytic algae,primary_producer,plant_or_alga,high
+baywet,14,Free Bacteria,Free-living bacterioplankton,microbial,bacteria_or_protist,high
+baywet,15,Water Flagellates,Water-column heterotrophic flagellates,microbial,bacteria_or_protist,high
+baywet,16,Water Cilitaes,Water-column ciliates,microbial,bacteria_or_protist,high
+baywet,17,Acartia Tonsa,Calanoid copepod Acartia tonsa,omnivore,invertebrate,high
+baywet,18,Oithona nana,Cyclopoid copepod Oithona nana,invertivore,invertebrate,medium
+baywet,19,Paracalanus,Calanoid copepods of the genus Paracalanus,herbivore,invertebrate,high
+baywet,20,Other Copepoda,Other copepods,omnivore,invertebrate,medium
+baywet,21,Meroplankton,Meroplankton (temporary planktonic stages of benthic animals),omnivore,invertebrate,low
+baywet,22,Other Zooplankton,Other zooplankton,omnivore,invertebrate,low
+baywet,23,Benthic Flagellates,Benthic heterotrophic flagellates,microbial,bacteria_or_protist,high
+baywet,24,Benthic Ciliates,Benthic ciliates,microbial,bacteria_or_protist,high
+baywet,25,Meiofauna,Meiofauna (small benthic animals),detritivore,invertebrate,medium
+baywet,26,Sponges,Sponges,detritivore,invertebrate,medium
+baywet,27,Coral,Corals,invertivore,invertebrate,medium
+baywet,28,Other Cnidaridae,Other cnidarians,invertivore,invertebrate,high
+baywet,29,Echinoderma,Echinoderms,detritivore,invertebrate,low
+baywet,30,Bivalves,Bivalve mollusks,detritivore,invertebrate,medium
+baywet,31,Detritivorous Gastropods,Detritivorous gastropod mollusks,detritivore,invertebrate,high
+baywet,32,Epiphytic Gastropods,Epiphyte-grazing gastropod mollusks,herbivore,invertebrate,high
+baywet,33,Predatory Gastropods,Predatory gastropod mollusks,invertivore,invertebrate,high
+baywet,34,Detritivorous Polychaetes,Detritivorous polychaete worms,detritivore,invertebrate,high
+baywet,35,Predatory Polychaetes,Predatory polychaete worms,invertivore,invertebrate,high
+baywet,36,Suspension Feeding Polych,Suspension-feeding polychaete worms,detritivore,invertebrate,medium
+baywet,37,Macrobenthos,Macrobenthos (large benthic invertebrates),detritivore,invertebrate,low
+baywet,38,Benthic Crustaceans,Benthic crustaceans,omnivore,invertebrate,medium
+baywet,39,Detritivorous Amphipods,Detritivorous amphipods,detritivore,invertebrate,high
+baywet,40,Herbivorous Amphipods,Herbivorous amphipods,herbivore,invertebrate,high
+baywet,41,Isopods,Isopod crustaceans,detritivore,invertebrate,medium
+baywet,42,Herbivorous Shrimp,Herbivorous shrimp,herbivore,invertebrate,high
+baywet,43,Predatory Shrimp,Predatory shrimp,invertivore,invertebrate,high
+baywet,44,Pink Shrimp,Pink shrimp (Farfantepenaeus duorarum),omnivore,invertebrate,high
+baywet,45,Thor Floridanus,Florida grass shrimp (Thor floridanus),omnivore,invertebrate,medium
+baywet,46,Lobster,Caribbean spiny lobster (Panulirus argus),invertivore,invertebrate,high
+baywet,47,Detritivorous Crabs,Detritivorous crabs,detritivore,invertebrate,high
+baywet,48,Omnivorous Crabs,Omnivorous crabs,omnivore,invertebrate,high
+baywet,49,Predatory Crabs,Predatory crabs,invertivore,invertebrate,high
+baywet,50,Callinectus sapidus,Blue crab (Callinectes sapidus),invertivore,invertebrate,medium
+baywet,51,Stone Crab,Florida stone crab (Menippe mercenaria),invertivore,invertebrate,high
+baywet,52,Sharks,Sharks,top_predator,fish,high
+baywet,53,Rays,Rays,invertivore,fish,high
+baywet,54,Tarpon,Atlantic tarpon (Megalops atlanticus),top_predator,fish,high
+baywet,55,Bonefish,Bonefish (Albula vulpes),invertivore,fish,high
+baywet,56,Sardines,Sardines,omnivore,fish,medium
+baywet,57,Anchovy,Anchovies,invertivore,fish,high
+baywet,58,Bay Anchovy,Bay anchovy (Anchoa mitchilli),invertivore,fish,high
+baywet,59,Lizardfish,Lizardfishes,top_predator,fish,high
+baywet,60,Catfish,Marine catfishes,invertivore,fish,medium
+baywet,61,Eels,Eels,invertivore,fish,low
+baywet,62,Toadfish,Toadfishes,invertivore,fish,high
+baywet,63,Brotalus,Brotulas (brotula-like cusk-eels),invertivore,fish,medium
+baywet,64,Halfbeaks,Halfbeaks,omnivore,fish,medium
+baywet,65,Needlefish,Needlefishes,top_predator,fish,high
+baywet,66,Other Killifish,Other killifishes,invertivore,fish,medium
+baywet,67,Goldspotted killifish,Goldspotted killifish (Floridichthys carpio),omnivore,fish,medium
+baywet,68,Rainwater killifish,Rainwater killifish (Lucania parva),invertivore,fish,high
+baywet,69,Snook,Snook (Centropomus species),top_predator,fish,high
+baywet,70,Sailfin Molly,Sailfin molly (Poecilia latipinna),herbivore,fish,high
+baywet,71,Silverside,Silversides,invertivore,fish,high
+baywet,72,Other Horsefish,Other seahorses and related syngnathid fishes,invertivore,fish,low
+baywet,73,Gulf Pipefish,Gulf pipefish (Syngnathus scovelli),invertivore,fish,high
+baywet,74,Dwarf Seahorse,Dwarf seahorse (Hippocampus zosterae),invertivore,fish,high
+baywet,75,Grouper,Groupers,top_predator,fish,medium
+baywet,76,Jacks,Jacks,top_predator,fish,high
+baywet,77,Pompano,Florida pompano (Trachinotus carolinus),invertivore,fish,high
+baywet,78,Other Snapper,Other snappers,invertivore,fish,medium
+baywet,79,Gray Snapper,Gray snapper (Lutjanus griseus),invertivore,fish,medium
+baywet,80,Mojarra,Mojarras,invertivore,fish,high
+baywet,81,Grunt,Grunts,invertivore,fish,high
+baywet,82,Porgy,Porgies,invertivore,fish,high
+baywet,83,Pinfish,Pinfish (Lagodon rhomboides),omnivore,fish,high
+baywet,84,Scianids,Sciaenids (drums and croakers),invertivore,fish,medium
+baywet,85,Spotted Seatrout,Spotted seatrout (Cynoscion nebulosus),top_predator,fish,high
+baywet,86,Red Drum,Red drum (Sciaenops ocellatus),invertivore,fish,medium
+baywet,87,Spadefish,Atlantic spadefish (Chaetodipterus faber),invertivore,fish,high
+baywet,88,Parrotfish,Parrotfishes,herbivore,fish,high
+baywet,89,Mackerel,Mackerels,top_predator,fish,high
+baywet,90,Mullet,Mullets,detritivore,fish,high
+baywet,91,Barracuda,Barracudas,top_predator,fish,high
+baywet,92,Blennies,Blennies,omnivore,fish,medium
+baywet,93,Code Goby,Code goby (Gobiosoma robustum),invertivore,fish,high
+baywet,94,Clown Goby,Clown goby (Microgobius gulosus),invertivore,fish,high
+baywet,95,Flatfish,Flatfishes,invertivore,fish,medium
+baywet,96,Filefishes,Filefishes,omnivore,fish,medium
+baywet,97,Puffer,Pufferfishes,invertivore,fish,high
+baywet,98,Other Pelagic Fishes,Other pelagic fishes,invertivore,fish,low
+baywet,99,Other Demersal Fishes,Other demersal fishes,invertivore,fish,medium
+baywet,100,Loon,Loons,top_predator,bird,high
+baywet,101,Greeb,Grebes,top_predator,bird,medium
+baywet,102,Pelican,Pelicans,top_predator,bird,high
+baywet,103,Comorant,Cormorants,top_predator,bird,high
+baywet,104,Big Herons & Egrets,Large herons and egrets,top_predator,bird,high
+baywet,105,Small Herons & Egrets,Small herons and egrets,top_predator,bird,medium
+baywet,106,Ibis,Ibises,invertivore,bird,high
+baywet,107,Roseate Spoonbill,Roseate spoonbill (Platalea ajaja),invertivore,bird,medium
+baywet,108,Herbivorous Ducks,Herbivorous ducks,herbivore,bird,high
+baywet,109,Omnivorous Ducks,Omnivorous ducks,omnivore,bird,high
+baywet,110,Predatory Ducks,Predatory ducks,invertivore,bird,low
+baywet,111,Raptors,Raptors (birds of prey),top_predator,bird,high
+baywet,112,Gruiformes,"Gruiform birds (rails, coots, and relatives)",omnivore,bird,medium
+baywet,113,Small Shorebirds,Small shorebirds,invertivore,bird,high
+baywet,114,Gulls & Terns,Gulls and terns,top_predator,bird,medium
+baywet,115,Kingfisher,Kingfishers,top_predator,bird,high
+baywet,116,Crocodiles,American crocodiles (Crocodylus acutus),top_predator,reptile,high
+baywet,117,Loggerhead Turtle,Loggerhead sea turtle (Caretta caretta),invertivore,reptile,high
+baywet,118,Green Turtle,Green sea turtle (Chelonia mydas),herbivore,reptile,high
+baywet,119,Hawksbill Turtle,Hawksbill sea turtle (Eretmochelys imbricata),invertivore,reptile,high
+baywet,120,Dolphin,Common bottlenose dolphin (Tursiops truncatus),top_predator,mammal,high
+baywet,121,Manatee,West Indian manatee (Trichechus manatus),herbivore,mammal,high
+baywet,122,Water POC,Water-column particulate organic carbon,nonliving_detritus,nonliving,high
+baywet,123,Benthic POC,Benthic particulate organic carbon,nonliving_detritus,nonliving,high
+baywet,124,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+cypdry,0,Living POC,Living particulate organic carbon (suspended microorganisms),microbial,bacteria_or_protist,medium
+cypdry,1,Living sediment,Living sediment microorganisms,microbial,bacteria_or_protist,medium
+cypdry,2,Phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+cypdry,3,Float. vegetation,Floating vegetation,primary_producer,plant_or_alga,high
+cypdry,4,Periphyton/Macroalgae,Periphyton and macroalgae,primary_producer,plant_or_alga,high
+cypdry,5,Macrophytes,Macrophytes,primary_producer,plant_or_alga,high
+cypdry,6,Epiphytes,Epiphytes,primary_producer,plant_or_alga,high
+cypdry,7,Understory,Understory vegetation,primary_producer,plant_or_alga,high
+cypdry,8,Vine Leaves,Vine leaves,primary_producer,plant_or_alga,high
+cypdry,9,Hardwoods Leaves,Hardwood tree leaves,primary_producer,plant_or_alga,high
+cypdry,10,Cypress Leaves,Cypress leaves,primary_producer,plant_or_alga,high
+cypdry,11,Cypress Wood,Cypress wood,primary_producer,plant_or_alga,high
+cypdry,12,HW Wood,Hardwood tree wood,primary_producer,plant_or_alga,high
+cypdry,13,Roots,Plant roots,primary_producer,plant_or_alga,high
+cypdry,14,Crayfish,Crayfish,omnivore,invertebrate,high
+cypdry,15,Apple Snail,Apple snails,herbivore,invertebrate,high
+cypdry,16,Prawn,Freshwater prawns,omnivore,invertebrate,medium
+cypdry,17,Aquatic Invertebrates,Aquatic invertebrates,detritivore,invertebrate,low
+cypdry,18,Ter. Invertebrates,Terrestrial invertebrates,herbivore,invertebrate,low
+cypdry,19,"Small Fish, herb + omniv",Small herbivorous and omnivorous fish,omnivore,fish,medium
+cypdry,20,"Small Fish, prim. carniv","Small fish, primary carnivores",invertivore,fish,high
+cypdry,21,Large Fish,Large fish,top_predator,fish,medium
+cypdry,22,Alligators,American alligators,top_predator,reptile,high
+cypdry,23,Turtles,Turtles,omnivore,reptile,medium
+cypdry,24,Lizards,Lizards,invertivore,reptile,high
+cypdry,25,Snakes,Snakes,top_predator,reptile,medium
+cypdry,26,Salamanders,Adult salamanders,invertivore,amphibian,high
+cypdry,27,Large Frogs,Large frogs,invertivore,amphibian,medium
+cypdry,28,Medium Frogs,Medium-sized frogs,invertivore,amphibian,high
+cypdry,29,Small Frogs,Small frogs,invertivore,amphibian,high
+cypdry,30,Salamander L,Salamander larvae,invertivore,amphibian,high
+cypdry,31,Tadpoles,Tadpoles,herbivore,amphibian,medium
+cypdry,32,Pelecaniformes,"Pelecaniform birds (pelicans, cormorants, and anhingas in the traditional classification)",top_predator,bird,high
+cypdry,33,Anseriformes,Anseriform birds (ducks and other waterfowl),omnivore,bird,medium
+cypdry,34,Vultures,Vultures,top_predator,bird,high
+cypdry,35,Kites & Hawks,Kites and hawks,top_predator,bird,medium
+cypdry,36,Galliformes,Galliform birds (turkeys and quail),omnivore,bird,medium
+cypdry,37,Egrets,Egrets,top_predator,bird,medium
+cypdry,38,Great blue heron,Great blue heron,top_predator,bird,high
+cypdry,39,Other herons,Other herons,top_predator,bird,medium
+cypdry,40,Wood stork,Wood stork,top_predator,bird,high
+cypdry,41,White ibis,White ibis,invertivore,bird,high
+cypdry,42,Gruiformes,"Gruiform birds (cranes, rails, gallinules, and coots)",omnivore,bird,medium
+cypdry,43,Owls,Owls,top_predator,bird,high
+cypdry,44,Caprimulgiformes,Caprimulgiform birds (nightjars and nighthawks),invertivore,bird,high
+cypdry,45,Hummingbirds,Hummingbirds,herbivore,bird,high
+cypdry,46,Woodpeckers,Woodpeckers,invertivore,bird,medium
+cypdry,47,Passeriformes onniv.,Omnivorous passerine birds,omnivore,bird,high
+cypdry,48,Passeriformes pred.,Predatory passerine birds,invertivore,bird,medium
+cypdry,49,Opossum,Virginia opossum,omnivore,mammal,high
+cypdry,50,Shrews,Shrews,invertivore,mammal,high
+cypdry,51,Bats,Bats,invertivore,mammal,high
+cypdry,52,Black Bear,American black bear,omnivore,mammal,high
+cypdry,53,G. Fox,Gray fox,omnivore,mammal,high
+cypdry,54,Raccoon,Raccoon,omnivore,mammal,high
+cypdry,55,Mink,American mink,top_predator,mammal,high
+cypdry,56,Otter,North American river otter,top_predator,mammal,high
+cypdry,57,Florida Panther,Florida panther,top_predator,mammal,high
+cypdry,58,Bobcat,Bobcat,top_predator,mammal,high
+cypdry,59,Squirrels,Squirrels,herbivore,mammal,high
+cypdry,60,Mice & Rats,Mice and rats,omnivore,mammal,medium
+cypdry,61,Rabbits,Rabbits,herbivore,mammal,high
+cypdry,62,White-Tailed Deer,White-tailed deer,herbivore,mammal,high
+cypdry,63,Hogs,Feral hogs,omnivore,mammal,high
+cypdry,64,Armadillo,Nine-banded armadillo,invertivore,mammal,high
+cypdry,65,Refractory Det.,Refractory detritus,nonliving_detritus,nonliving,high
+cypdry,66,Liable Det.,Labile detritus,nonliving_detritus,nonliving,high
+cypdry,67,Vertebrate Det.,Vertebrate detritus,nonliving_detritus,nonliving,high
+cypwet,0,Living POC,Living particulate organic carbon (suspended microorganisms),microbial,bacteria_or_protist,medium
+cypwet,1,Living SED,Living sediment microorganisms,microbial,bacteria_or_protist,medium
+cypwet,2,Phytoplankton,Phytoplankton,primary_producer,plant_or_alga,high
+cypwet,3,Float Veg.,Floating vegetation,primary_producer,plant_or_alga,high
+cypwet,4,Periphyton,Periphyton,primary_producer,plant_or_alga,high
+cypwet,5,Macrophytes,Macrophytes,primary_producer,plant_or_alga,high
+cypwet,6,Epiphytes,Epiphytes,primary_producer,plant_or_alga,high
+cypwet,7,Understory,Understory vegetation,primary_producer,plant_or_alga,high
+cypwet,8,Vine L,Vine leaves,primary_producer,plant_or_alga,high
+cypwet,9,Hardwood L,Hardwood leaves,primary_producer,plant_or_alga,high
+cypwet,10,Cypress L,Cypress leaves,primary_producer,plant_or_alga,high
+cypwet,11,Cypress W,Cypress wood,primary_producer,plant_or_alga,high
+cypwet,12,Hardwood W,Hardwood wood,primary_producer,plant_or_alga,high
+cypwet,13,Roots,Plant roots,primary_producer,plant_or_alga,high
+cypwet,14,Crayfish,Crayfish,omnivore,invertebrate,high
+cypwet,15,Apple Snail,Apple snails,herbivore,invertebrate,high
+cypwet,16,Prawn,Freshwater prawns,omnivore,invertebrate,medium
+cypwet,17,Aquatic I,Aquatic insects,detritivore,invertebrate,low
+cypwet,18,Terrst. I,Terrestrial insects,herbivore,invertebrate,low
+cypwet,19,Fish HO,Herbivorous and omnivorous fish,omnivore,fish,medium
+cypwet,20,Fish PC,Predatory carnivorous fish,invertivore,fish,medium
+cypwet,21,L Fish,Large fish,top_predator,fish,medium
+cypwet,22,Alligators,American alligators,top_predator,reptile,high
+cypwet,23,Turtles,Turtles,omnivore,reptile,medium
+cypwet,24,Lizards,Lizards,invertivore,reptile,high
+cypwet,25,Snakes,Snakes,top_predator,reptile,high
+cypwet,26,Salamanders,Adult salamanders,invertivore,amphibian,high
+cypwet,27,L Frog,Large frogs,invertivore,amphibian,medium
+cypwet,28,M Frog,Medium-sized frogs,invertivore,amphibian,high
+cypwet,29,S Frog,Small frogs,invertivore,amphibian,high
+cypwet,30,Salam. L,Salamander larvae,invertivore,amphibian,high
+cypwet,31,Tadpoles,Tadpoles,detritivore,amphibian,medium
+cypwet,32,Pelecaniformes,"Pelecaniform birds (pelicans, cormorants and anhingas)",top_predator,bird,high
+cypwet,33,Anseriformes,Anseriform birds (ducks and geese),omnivore,bird,medium
+cypwet,34,Vultures,Vultures,top_predator,bird,high
+cypwet,35,Kites & Hawks,Kites and hawks,top_predator,bird,medium
+cypwet,36,Galliformes,Galliform birds (quail and wild turkeys),omnivore,bird,medium
+cypwet,37,Egrets,Egrets,top_predator,bird,medium
+cypwet,38,GB Heron,Great blue heron,top_predator,bird,high
+cypwet,39,Other Herons,Other herons,top_predator,bird,medium
+cypwet,40,Wood stork,Wood stork,top_predator,bird,high
+cypwet,41,White ibis,White ibis,invertivore,bird,high
+cypwet,42,Gruiformes,"Gruiform birds (cranes, rails, gallinules and coots)",omnivore,bird,medium
+cypwet,43,Owls,Owls,top_predator,bird,high
+cypwet,44,Caprimulgiformes,Caprimulgiform birds (nightjars and nighthawks),invertivore,bird,high
+cypwet,45,Hummingbirds,Hummingbirds,herbivore,bird,medium
+cypwet,46,Woodpeckers,Woodpeckers,invertivore,bird,medium
+cypwet,47,Passeriformes onniv.,Omnivorous passerine birds,omnivore,bird,high
+cypwet,48,Passeriformes pred.,Predatory passerine birds,invertivore,bird,high
+cypwet,49,Opossum,Virginia opossum,omnivore,mammal,high
+cypwet,50,Shrews,Shrews,invertivore,mammal,high
+cypwet,51,Bats,Bats,invertivore,mammal,high
+cypwet,52,Black Bear,American black bear,omnivore,mammal,high
+cypwet,53,G Fox,Gray fox,omnivore,mammal,high
+cypwet,54,Raccoon,Raccoon,omnivore,mammal,high
+cypwet,55,Mink,American mink,top_predator,mammal,high
+cypwet,56,Otter,North American river otter,top_predator,mammal,high
+cypwet,57,Florida Panther,Florida panther,top_predator,mammal,high
+cypwet,58,Bobcat,Bobcat,top_predator,mammal,high
+cypwet,59,Squirrels,Squirrels,herbivore,mammal,high
+cypwet,60,Mice & Rats,Mice and rats,omnivore,mammal,medium
+cypwet,61,Rabbits,Rabbits,herbivore,mammal,high
+cypwet,62,White-Tailed Deer,White-tailed deer,herbivore,mammal,high
+cypwet,63,Hogs,Feral hogs,omnivore,mammal,high
+cypwet,64,Armadillo,Nine-banded armadillo,invertivore,mammal,high
+cypwet,65,Refractory Det.,Refractory detritus,nonliving_detritus,nonliving,high
+cypwet,66,Liable Det.,Labile detritus,nonliving_detritus,nonliving,high
+cypwet,67,Vert. det,Vertebrate detritus,nonliving_detritus,nonliving,high
+gramdry,0,Living Sediments,Living sediment microorganisms,microbial,bacteria_or_protist,medium
+gramdry,1,Living POC,Living particulate organic carbon (suspended microorganisms),microbial,bacteria_or_protist,medium
+gramdry,2,Periphyton,Periphyton,primary_producer,plant_or_alga,high
+gramdry,3,Macrophytes,Aquatic macrophytes,primary_producer,plant_or_alga,high
+gramdry,4,Utricularia,Bladderworts (Utricularia species),primary_producer,plant_or_alga,high
+gramdry,5,Floating Veg.,Floating aquatic vegetation,primary_producer,plant_or_alga,high
+gramdry,6,Apple snail,Florida apple snail,herbivore,invertebrate,high
+gramdry,7,Freshwater Prawn,Freshwater prawns,omnivore,invertebrate,medium
+gramdry,8,Crayfish,Crayfish,omnivore,invertebrate,high
+gramdry,9,Mesoinverts,Aquatic mesoinvertebrates,detritivore,invertebrate,low
+gramdry,10,Other Macroinverts,Other aquatic macroinvertebrates,detritivore,invertebrate,low
+gramdry,11,Large Aquatic Insects,Large aquatic insects,invertivore,invertebrate,medium
+gramdry,12,Terrestrial Inverts,Terrestrial invertebrates,omnivore,invertebrate,low
+gramdry,13,Fishing spider,Fishing spiders,invertivore,invertebrate,high
+gramdry,14,Gar,Gar,top_predator,fish,high
+gramdry,15,Shiners & Minnows,Shiners and minnows,omnivore,fish,medium
+gramdry,16,Chubsuckers,Chubsuckers,detritivore,fish,medium
+gramdry,17,Catfish,Catfish,omnivore,fish,medium
+gramdry,18,Flagfish,Florida flagfish,herbivore,fish,high
+gramdry,19,Topminnows,Topminnows,invertivore,fish,medium
+gramdry,20,Bluefin killifish,Bluefin killifish,omnivore,fish,medium
+gramdry,21,Killifishes,Killifishes,invertivore,fish,medium
+gramdry,22,Mosquitofishes,Mosquitofishes,invertivore,fish,high
+gramdry,23,Poecilids,Other poeciliid livebearing fishes,omnivore,fish,medium
+gramdry,24,Pigmy Sunfish,Pygmy sunfish,invertivore,fish,high
+gramdry,25,Bluespotted Sunfish,Bluespotted sunfish,invertivore,fish,high
+gramdry,26,Warmouth,Warmouth,invertivore,fish,medium
+gramdry,27,Dollar Sunfish,Dollar sunfish,invertivore,fish,high
+gramdry,28,Redear Sunfish,Redear sunfish,invertivore,fish,high
+gramdry,29,Spotted sunfish,Spotted sunfish,invertivore,fish,high
+gramdry,30,Other Centrarchids,Other centrarchid sunfishes,invertivore,fish,medium
+gramdry,31,Largemouth Bass,Largemouth bass,top_predator,fish,high
+gramdry,32,Cichlids,Cichlid fishes,omnivore,fish,medium
+gramdry,33,Other Large Fishes,Other large fishes,top_predator,fish,low
+gramdry,34,Other Small Fishes,Other small fishes,invertivore,fish,low
+gramdry,35,Salamanders,Adult salamanders,invertivore,amphibian,medium
+gramdry,36,Salamander larvae,Salamander larvae,invertivore,amphibian,high
+gramdry,37,Large frogs,Large frogs,invertivore,amphibian,medium
+gramdry,38,Medium frogs,Medium-sized frogs,invertivore,amphibian,high
+gramdry,39,Small frogs,Small frogs,invertivore,amphibian,high
+gramdry,40,Tadpoles,Frog tadpoles,herbivore,amphibian,medium
+gramdry,41,Turtles,Freshwater turtles,omnivore,reptile,medium
+gramdry,42,Snakes,Snakes,top_predator,reptile,medium
+gramdry,43,Lizards,Lizards,invertivore,reptile,high
+gramdry,44,Alligators,American alligators,top_predator,reptile,high
+gramdry,45,Muskrats,Muskrats,herbivore,mammal,high
+gramdry,46,Rats&Mice,Rats and mice,omnivore,mammal,medium
+gramdry,47,Rabbits,Rabbits,herbivore,mammal,high
+gramdry,48,Raccoons,Raccoons,omnivore,mammal,high
+gramdry,49,Opossum,Virginia opossum,omnivore,mammal,high
+gramdry,50,Otter,North American river otter,top_predator,mammal,high
+gramdry,51,Mink,American mink,top_predator,mammal,high
+gramdry,52,W-T Deer,White-tailed deer,herbivore,mammal,high
+gramdry,53,Bobcat,Bobcat,top_predator,mammal,high
+gramdry,54,Panthers,Florida panthers,top_predator,mammal,high
+gramdry,55,Grebes,Grebes,top_predator,bird,medium
+gramdry,56,Bitterns,Bitterns,top_predator,bird,medium
+gramdry,57,Ducks,Ducks,omnivore,bird,medium
+gramdry,58,Snailkites,Snail kites,invertivore,bird,high
+gramdry,59,Nighthawks,Nighthawks,invertivore,bird,high
+gramdry,60,Gruiformes,"Gruiform birds (rails, gallinules, coots, and cranes)",omnivore,bird,medium
+gramdry,61,CSSsparrow,Cape Sable seaside sparrow,invertivore,bird,medium
+gramdry,62,Passerines,Other passerine birds,omnivore,bird,low
+gramdry,63,Sediment Carbon,Sediment organic carbon,nonliving_detritus,nonliving,high
+gramdry,64,Labile Detritus,Labile detritus,nonliving_detritus,nonliving,high
+gramdry,65,Refractory Detritus,Refractory detritus,nonliving_detritus,nonliving,high
+gramwet,0,Living Sediments,Living sediment-associated microorganisms,microbial,bacteria_or_protist,medium
+gramwet,1,Living POC,Living particulate organic carbon (suspended microorganisms),microbial,bacteria_or_protist,medium
+gramwet,2,Periphyton,Periphyton,primary_producer,plant_or_alga,high
+gramwet,3,Macrophytes,Aquatic macrophytes,primary_producer,plant_or_alga,high
+gramwet,4,Utricularia,Bladderworts (Utricularia species),primary_producer,plant_or_alga,high
+gramwet,5,Floating Veg.,Floating vegetation,primary_producer,plant_or_alga,high
+gramwet,6,Apple snail,Apple snails,herbivore,invertebrate,high
+gramwet,7,Freshwater Prawn,Freshwater prawns,omnivore,invertebrate,medium
+gramwet,8,Crayfish,Crayfish,omnivore,invertebrate,high
+gramwet,9,Mesoinverts,Mesoinvertebrates (small aquatic invertebrates),detritivore,invertebrate,low
+gramwet,10,Other Macroinverts,Other aquatic macroinvertebrates,detritivore,invertebrate,low
+gramwet,11,Large Aquatic Insects,Large aquatic insects,invertivore,invertebrate,medium
+gramwet,12,Terrestrial Inverts,Terrestrial invertebrates,herbivore,invertebrate,low
+gramwet,13,Fishing spider,Fishing spiders,invertivore,invertebrate,high
+gramwet,14,Gar,Gars,top_predator,fish,high
+gramwet,15,Shiners & Minnows,Shiners and minnows,omnivore,fish,medium
+gramwet,16,Chubsuckers,Chubsuckers,invertivore,fish,medium
+gramwet,17,Catfish,Catfishes,omnivore,fish,medium
+gramwet,18,Flagfish,Florida flagfish (Jordanella floridae),herbivore,fish,medium
+gramwet,19,Topminnows,Topminnows,invertivore,fish,high
+gramwet,20,Bluefin killifish,Bluefin killifish (Lucania goodei),invertivore,fish,high
+gramwet,21,Killifishes,Killifishes,invertivore,fish,high
+gramwet,22,Mosquitofishes,Mosquitofishes (Gambusia species),invertivore,fish,high
+gramwet,23,Poecilids,Other poeciliid livebearing fishes,omnivore,fish,medium
+gramwet,24,Pigmy Sunfish,Pygmy sunfishes (Elassoma species),invertivore,fish,high
+gramwet,25,Bluespotted Sunfish,Bluespotted sunfish (Enneacanthus gloriosus),invertivore,fish,high
+gramwet,26,Warmouth,Warmouth (Lepomis gulosus),invertivore,fish,medium
+gramwet,27,Dollar Sunfish,Dollar sunfish (Lepomis marginatus),invertivore,fish,high
+gramwet,28,Redear Sunfish,Redear sunfish (Lepomis microlophus),invertivore,fish,high
+gramwet,29,Spotted sunfish,Spotted sunfish (Lepomis punctatus),invertivore,fish,high
+gramwet,30,Other Centrarchids,Other centrarchid sunfishes,invertivore,fish,medium
+gramwet,31,Largemouth Bass,Largemouth bass (Micropterus salmoides),top_predator,fish,high
+gramwet,32,Cichlids,Cichlid fishes,omnivore,fish,medium
+gramwet,33,Other Large Fishes,Other large fishes,top_predator,fish,low
+gramwet,34,Other Small Fishes,Other small fishes,invertivore,fish,low
+gramwet,35,Salamanders,Adult salamanders,invertivore,amphibian,high
+gramwet,36,Salamander larvae,Salamander larvae,invertivore,amphibian,high
+gramwet,37,Large frogs,Large frogs,invertivore,amphibian,medium
+gramwet,38,Medium frogs,Medium-sized frogs,invertivore,amphibian,high
+gramwet,39,Small frogs,Small frogs,invertivore,amphibian,high
+gramwet,40,Tadpoles,Tadpoles (frog larvae),herbivore,amphibian,medium
+gramwet,41,Turtles,Turtles,omnivore,reptile,medium
+gramwet,42,Snakes,Snakes,top_predator,reptile,medium
+gramwet,43,Lizards,Lizards,invertivore,reptile,high
+gramwet,44,Alligators,American alligators (Alligator mississippiensis),top_predator,reptile,high
+gramwet,45,Muskrats,Muskrats (Ondatra zibethicus),herbivore,mammal,high
+gramwet,46,Rats&Mice,Rats and mice,omnivore,mammal,medium
+gramwet,47,Rabbits,Rabbits,herbivore,mammal,high
+gramwet,48,Raccoons,Raccoons (Procyon lotor),omnivore,mammal,high
+gramwet,49,Opossum,Virginia opossum (Didelphis virginiana),omnivore,mammal,high
+gramwet,50,Otter,North American river otter (Lontra canadensis),top_predator,mammal,high
+gramwet,51,Mink,American mink (Neogale vison),top_predator,mammal,high
+gramwet,52,W-T Deer,White-tailed deer (Odocoileus virginianus),herbivore,mammal,high
+gramwet,53,Bobcat,Bobcat (Lynx rufus),top_predator,mammal,high
+gramwet,54,Panthers,Florida panthers (Puma concolor coryi),top_predator,mammal,high
+gramwet,55,Grebes,Grebes,top_predator,bird,medium
+gramwet,56,Bitterns,Bitterns,top_predator,bird,medium
+gramwet,57,Ducks,Ducks,omnivore,bird,medium
+gramwet,58,Snailkites,Snail kites (Rostrhamus sociabilis),invertivore,bird,high
+gramwet,59,Nighthawks,Nighthawks,invertivore,bird,high
+gramwet,60,Gruiformes,"Gruiform birds (rails, coots, gallinules and cranes)",omnivore,bird,medium
+gramwet,61,CSSsparrow,Cape Sable seaside sparrow (Ammospiza maritima mirabilis),invertivore,bird,medium
+gramwet,62,Passerines,Other passerine birds,invertivore,bird,medium
+gramwet,63,Sediment Carbon,Sediment organic carbon,nonliving_detritus,nonliving,high
+gramwet,64,Labile Detritus,Labile detritus,nonliving_detritus,nonliving,high
+gramwet,65,Refractory Detritus,Refractory detritus,nonliving_detritus,nonliving,high
+mangdry,0,PHY,Phytoplankton,primary_producer,plant_or_alga,high
+mangdry,1,OTH. PP,Other primary producers,primary_producer,plant_or_alga,high
+mangdry,2,LEAF,Mangrove leaves,primary_producer,plant_or_alga,high
+mangdry,3,WOOD,Mangrove wood,primary_producer,plant_or_alga,high
+mangdry,4,ROOT,Mangrove roots,primary_producer,plant_or_alga,high
+mangdry,5,MICR. H2O,Water-column microorganisms,microbial,bacteria_or_protist,high
+mangdry,6,ZOOPL.,Zooplankton,herbivore,invertebrate,medium
+mangdry,7,BACT.SED.,Sediment bacteria,microbial,bacteria_or_protist,high
+mangdry,8,FLA. SED.,Sediment flagellates,microbial,bacteria_or_protist,high
+mangdry,9,CIL. SED.,Sediment ciliates,microbial,bacteria_or_protist,high
+mangdry,10,MEIOF.,Meiofauna,detritivore,invertebrate,medium
+mangdry,11,MERO,Meroplankton,herbivore,invertebrate,medium
+mangdry,12,EPIFN,Epifauna,detritivore,invertebrate,medium
+mangdry,13,POLY,Polychaete worms,detritivore,invertebrate,medium
+mangdry,14,TGAST,Terrestrial gastropods,herbivore,invertebrate,medium
+mangdry,15,AGAST,Aquatic gastropods,herbivore,invertebrate,medium
+mangdry,16,BVLVS,Bivalves,detritivore,invertebrate,medium
+mangdry,17,MBENTH,Macrobenthos,detritivore,invertebrate,medium
+mangdry,18,SCRUST,Small crustaceans,omnivore,invertebrate,medium
+mangdry,19,AMPHI,Amphipods,detritivore,invertebrate,high
+mangdry,20,PENAID,Penaeid shrimp,omnivore,invertebrate,high
+mangdry,21,CARID,Caridean shrimp,omnivore,invertebrate,high
+mangdry,22,OSHMP,Other shrimp,omnivore,invertebrate,medium
+mangdry,23,JLOBST,Juvenile lobsters,invertivore,invertebrate,high
+mangdry,24,OCRAB,Omnivorous crabs,omnivore,invertebrate,medium
+mangdry,25,TCRAB,Tree crabs,herbivore,invertebrate,medium
+mangdry,26,DCRAB,Detritivorous crabs,detritivore,invertebrate,high
+mangdry,27,PCRAB,Predatory crabs,invertivore,invertebrate,high
+mangdry,28,FWINV,Freshwater invertebrates,omnivore,invertebrate,low
+mangdry,29,LARV,Insect larvae,detritivore,invertebrate,medium
+mangdry,30,INSCT,Insects,omnivore,invertebrate,medium
+mangdry,31,SPIDR,Spiders,invertivore,invertebrate,high
+mangdry,32,SHRK,Sharks,top_predator,fish,high
+mangdry,33,RAYS,Rays,invertivore,fish,high
+mangdry,34,TARP,Tarpon,top_predator,fish,high
+mangdry,35,HERR,Herrings,invertivore,fish,medium
+mangdry,36,ANCH,Anchovies,invertivore,fish,high
+mangdry,37,NEED,Needlefishes,top_predator,fish,high
+mangdry,38,KILLI,Killifishes,invertivore,fish,medium
+mangdry,39,POEC,Poeciliid fishes,omnivore,fish,medium
+mangdry,40,HRSE,Seahorses,invertivore,fish,high
+mangdry,41,SLVR,Silversides,invertivore,fish,high
+mangdry,42,SNOOK,Snooks,top_predator,fish,high
+mangdry,43,CUDA,Barracudas,top_predator,fish,high
+mangdry,44,FWFSH,Freshwater fishes,omnivore,fish,low
+mangdry,45,BENTH,Benthic fishes,invertivore,fish,medium
+mangdry,46,EFISH,Eels,invertivore,fish,low
+mangdry,47,SNAP,Snappers,invertivore,fish,medium
+mangdry,48,MOJA,Mojarras,invertivore,fish,high
+mangdry,49,SCIAE,Sciaenid fishes (drums and croakers),invertivore,fish,high
+mangdry,50,PIN,Pinfish,omnivore,fish,high
+mangdry,51,MULL,Mullets,detritivore,fish,high
+mangdry,52,GOBY,Gobies,invertivore,fish,high
+mangdry,53,OFISH,Other fishes,invertivore,fish,low
+mangdry,54,TURT,Turtles,omnivore,reptile,medium
+mangdry,55,LZRD,Lizards,invertivore,reptile,high
+mangdry,56,SNKS,Snakes,top_predator,reptile,high
+mangdry,57,COCO,Crocodilians,top_predator,reptile,high
+mangdry,58,AMPH,Amphibians,invertivore,amphibian,high
+mangdry,59,L & G,Loons and grebes,top_predator,bird,high
+mangdry,60,PELC,Pelicans,top_predator,bird,high
+mangdry,61,CORM,Cormorants,top_predator,bird,high
+mangdry,62,BH & E,Large herons and egrets,top_predator,bird,medium
+mangdry,63,SE & E,Small herons and egrets,top_predator,bird,low
+mangdry,64,IBIS,Ibises,invertivore,bird,high
+mangdry,65,DUCK1,"Ducks, group 1",omnivore,bird,low
+mangdry,66,DUCK2,"Ducks, group 2",omnivore,bird,low
+mangdry,67,DUCK3,"Ducks, group 3",omnivore,bird,low
+mangdry,68,VULT,Vultures,top_predator,bird,high
+mangdry,69,K & H,Kites and hawks,top_predator,bird,medium
+mangdry,70,MRAPT,Marine raptors,top_predator,bird,medium
+mangdry,71,GUIF,Guineafowl,omnivore,bird,low
+mangdry,72,SSBIRDS,Small shorebirds,invertivore,bird,medium
+mangdry,73,G & T,Gulls and terns,top_predator,bird,medium
+mangdry,74,C & C,Crows and cuckoos,omnivore,bird,low
+mangdry,75,OWLS,Owls,top_predator,bird,high
+mangdry,76,WOODP,Woodpeckers,invertivore,bird,high
+mangdry,77,PASSOMN,Omnivorous passerines,omnivore,bird,high
+mangdry,78,PASSPERD,Predatory passerines,invertivore,bird,high
+mangdry,79,OPSU,Opossums,omnivore,mammal,high
+mangdry,80,RABT,Rabbits,herbivore,mammal,high
+mangdry,81,SQIUR,Squirrels,herbivore,mammal,high
+mangdry,82,M & R,Mice and rats,omnivore,mammal,high
+mangdry,83,FOX,Foxes,omnivore,mammal,medium
+mangdry,84,BEAR,Bears,omnivore,mammal,high
+mangdry,85,RACO,Raccoons,omnivore,mammal,high
+mangdry,86,M & O,Minks and otters,top_predator,mammal,high
+mangdry,87,CATS,Cats,top_predator,mammal,high
+mangdry,88,DERS,Deer,herbivore,mammal,high
+mangdry,89,DOLP,Dolphins,top_predator,mammal,high
+mangdry,90,MANA,Manatees,herbivore,mammal,high
+mangdry,91,C in SED,Sediment organic carbon,nonliving_detritus,nonliving,high
+mangdry,92,POC,Particulate organic carbon,nonliving_detritus,nonliving,high
+mangdry,93,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
+mangwet,0,PHY,Phytoplankton,primary_producer,plant_or_alga,high
+mangwet,1,OTH. PP,Other primary producers,primary_producer,plant_or_alga,high
+mangwet,2,LEAF,Mangrove leaves,primary_producer,plant_or_alga,high
+mangwet,3,WOOD,Mangrove wood,primary_producer,plant_or_alga,high
+mangwet,4,ROOT,Mangrove roots,primary_producer,plant_or_alga,high
+mangwet,5,MICR. H2O,Water-column microorganisms,microbial,bacteria_or_protist,high
+mangwet,6,ZOOPL.,Zooplankton,herbivore,invertebrate,medium
+mangwet,7,BACT.SED.,Sediment bacteria,microbial,bacteria_or_protist,high
+mangwet,8,FLA. SED.,Sediment flagellates,microbial,bacteria_or_protist,high
+mangwet,9,CIL. SED.,Sediment ciliates,microbial,bacteria_or_protist,high
+mangwet,10,MEIOF.,Meiofauna,detritivore,invertebrate,medium
+mangwet,11,MERO,Meroplankton,herbivore,invertebrate,low
+mangwet,12,EPIFN,Epifauna,detritivore,invertebrate,medium
+mangwet,13,POLY,Polychaete worms,detritivore,invertebrate,medium
+mangwet,14,TGAST,Terrestrial gastropods,herbivore,invertebrate,medium
+mangwet,15,AGAST,Aquatic gastropods,herbivore,invertebrate,medium
+mangwet,16,BVLVS,Bivalve mollusks,detritivore,invertebrate,medium
+mangwet,17,MBENTH,Miscellaneous benthic invertebrates,detritivore,invertebrate,low
+mangwet,18,SCRUST,Small crustaceans,detritivore,invertebrate,medium
+mangwet,19,AMPHI,Amphipods,detritivore,invertebrate,high
+mangwet,20,PENAID,Penaeid shrimp,omnivore,invertebrate,medium
+mangwet,21,CARID,Caridean shrimp,omnivore,invertebrate,medium
+mangwet,22,OSHMP,Other shrimp,omnivore,invertebrate,medium
+mangwet,23,JLOBST,Juvenile lobsters,invertivore,invertebrate,high
+mangwet,24,OCRAB,Other crabs,omnivore,invertebrate,low
+mangwet,25,TCRAB,Tree crabs,herbivore,invertebrate,medium
+mangwet,26,DCRAB,Detritivorous crabs,detritivore,invertebrate,medium
+mangwet,27,PCRAB,Predatory crabs,invertivore,invertebrate,medium
+mangwet,28,FWINV,Freshwater invertebrates,detritivore,invertebrate,low
+mangwet,29,LARV,Insect larvae,detritivore,invertebrate,low
+mangwet,30,INSCT,Insects,omnivore,invertebrate,low
+mangwet,31,SPIDR,Spiders,invertivore,invertebrate,high
+mangwet,32,SHRK,Sharks,top_predator,fish,high
+mangwet,33,RAYS,Rays,invertivore,fish,high
+mangwet,34,TARP,Tarpon,top_predator,fish,high
+mangwet,35,HERR,Herrings,invertivore,fish,medium
+mangwet,36,ANCH,Anchovies,invertivore,fish,high
+mangwet,37,NEED,Needlefishes,top_predator,fish,high
+mangwet,38,KILLI,Killifishes,invertivore,fish,medium
+mangwet,39,POEC,Poeciliid fishes,omnivore,fish,medium
+mangwet,40,HRSE,Seahorses,invertivore,fish,medium
+mangwet,41,SLVR,Silversides,invertivore,fish,high
+mangwet,42,SNOOK,Snooks,top_predator,fish,high
+mangwet,43,CUDA,Barracudas,top_predator,fish,high
+mangwet,44,FWFSH,Freshwater fishes,omnivore,fish,low
+mangwet,45,BENTH,Benthic fishes,invertivore,fish,medium
+mangwet,46,EFISH,Epibenthic fishes,invertivore,fish,low
+mangwet,47,SNAP,Snappers,invertivore,fish,medium
+mangwet,48,MOJA,Mojarras,invertivore,fish,high
+mangwet,49,SCIAE,Sciaenid fishes (drums and croakers),invertivore,fish,high
+mangwet,50,PIN,Pinfish,omnivore,fish,high
+mangwet,51,MULL,Mullets,detritivore,fish,high
+mangwet,52,GOBY,Gobies,invertivore,fish,high
+mangwet,53,OFISH,Other fishes,invertivore,fish,low
+mangwet,54,TURT,Turtles,omnivore,reptile,medium
+mangwet,55,LZRD,Lizards,invertivore,reptile,high
+mangwet,56,SNKS,Snakes,top_predator,reptile,high
+mangwet,57,COCO,Crocodilians,top_predator,reptile,high
+mangwet,58,AMPH,Amphibians,invertivore,amphibian,high
+mangwet,59,L & G,Loons and grebes,top_predator,bird,high
+mangwet,60,PELC,Pelicans,top_predator,bird,high
+mangwet,61,CORM,Cormorants,top_predator,bird,high
+mangwet,62,BH & E,Big herons and egrets,top_predator,bird,medium
+mangwet,63,SE & E,Small herons and egrets,top_predator,bird,low
+mangwet,64,IBIS,Ibises,invertivore,bird,high
+mangwet,65,DUCK1,"Ducks, group 1 (unspecified)",omnivore,bird,low
+mangwet,66,DUCK2,"Ducks, group 2 (unspecified)",omnivore,bird,low
+mangwet,67,DUCK3,"Ducks, group 3 (unspecified)",omnivore,bird,low
+mangwet,68,VULT,Vultures,top_predator,bird,high
+mangwet,69,K & H,Kites and hawks,top_predator,bird,medium
+mangwet,70,MRAPT,Marine raptors,top_predator,bird,medium
+mangwet,71,GUIF,Gallinules (tentative expansion),omnivore,bird,low
+mangwet,72,SSBIRDS,Small shorebirds,invertivore,bird,high
+mangwet,73,G & T,Gulls and terns,top_predator,bird,medium
+mangwet,74,C & C,Cuckoos and coucals (tentative expansion),invertivore,bird,low
+mangwet,75,OWLS,Owls,top_predator,bird,high
+mangwet,76,WOODP,Woodpeckers,invertivore,bird,high
+mangwet,77,PASSOMN,Omnivorous passerine birds,omnivore,bird,high
+mangwet,78,PASSPERD,Predatory passerine birds,invertivore,bird,high
+mangwet,79,OPSU,Opossums,omnivore,mammal,high
+mangwet,80,RABT,Rabbits,herbivore,mammal,high
+mangwet,81,SQIUR,Squirrels,herbivore,mammal,high
+mangwet,82,M & R,Mice and rats,omnivore,mammal,high
+mangwet,83,FOX,Foxes,omnivore,mammal,medium
+mangwet,84,BEAR,Bears,omnivore,mammal,high
+mangwet,85,RACO,Raccoons,omnivore,mammal,high
+mangwet,86,M & O,Mink and otters,top_predator,mammal,high
+mangwet,87,CATS,Wild cats,top_predator,mammal,high
+mangwet,88,DERS,Deer,herbivore,mammal,high
+mangwet,89,DOLP,Dolphins,top_predator,mammal,high
+mangwet,90,MANA,Manatees,herbivore,mammal,high
+mangwet,91,C in SED,Sediment organic carbon,nonliving_detritus,nonliving,high
+mangwet,92,POC,Particulate organic carbon,nonliving_detritus,nonliving,high
+mangwet,93,DOC,Dissolved organic carbon,nonliving_detritus,nonliving,high
