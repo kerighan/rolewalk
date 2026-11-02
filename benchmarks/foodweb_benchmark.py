@@ -66,11 +66,15 @@ METHODS = {
     "rolewalk_curvature": lambda G: RoleWalk(curvature=True).transform(G),
     "rolewalk_unweighted": lambda G: RoleWalk().transform(unweighted(G)),
     "rolewalk_nomixed": lambda G: RoleWalk(mixed=False).transform(G),
+    "rolewalk_unweighted_nomixed": lambda G: RoleWalk(mixed=False).transform(unweighted(G)),
+    "rolewalk_unweighted_curvature": lambda G: RoleWalk(curvature=True).transform(unweighted(G)),
     "rolewalk_undirected": lambda G: RoleWalk().transform(G.to_undirected()),
     "topk_layers": topk_layers,
     "local_stats": local_stats,
     "rwse_inout": rb.rwse_inout,
     "digraphwave": rb.digraphwave,
+    "topk_layers_unweighted": lambda G: topk_layers(unweighted(G)),
+    "digraphwave_unweighted": lambda G: rb.digraphwave(unweighted(G)),
     "strength": strength,
 }
 
@@ -154,7 +158,9 @@ def main():
             print(f"\n{metric}\n{table.round(3).to_string()}")
         print("\nRoleWalk minus other, paired over held-out ecosystems (balanced accuracy)")
         wide = df.pivot(index="ecosystem", columns="method", values="balanced_accuracy")
-        for m in wide.columns.drop("rolewalk"):
+        for m in wide.columns.drop("rolewalk", errors="ignore"):
+            if "rolewalk" not in wide:
+                break
             d = wide["rolewalk"] - wide[m]
             half = stats.t.ppf(0.975, len(d) - 1) * d.std(ddof=1) / np.sqrt(len(d))
             print(f"  {m:22s} {d.mean():+.3f}  [{d.mean() - half:+.3f}, {d.mean() + half:+.3f}]"

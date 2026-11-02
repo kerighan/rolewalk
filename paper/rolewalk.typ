@@ -60,7 +60,7 @@ Claims, each backed by a result below:
 
 + All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
 + Accuracy at or above the state of the art on role classification at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
-+ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs (@tab-directed, @tab-rfa, @prop-mixed).
++ Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks, best retrieval and competitive clustering on synthetic directed motifs; on food webs, comparable to local statistics (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
 + Transfer: a regressor fitted on one graph predicts path-based centralities (betweenness, closeness, harmonic) of another, including one four times larger, better than every baseline (@tab-centrality; @prop-local).
 + Separates graphs that 1-WL cannot with 3 walk steps (the two are incomparable), close to 16-step RWSE on BREC; a provable failure class (@sec-theory, @tab-expr).
@@ -642,6 +642,23 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   #text(size: 8pt)[struc2vec and GraphWave do not run at this size. Ablations. Without the mixed probes: RoleWalk + curv. 0.823 / 0.943 (5 s), RoleWalk 0.808 / 0.938 (4 s); on the symmetrised graph: 0.814 / 0.900 and 0.791 / 0.863. RWSE on the out-walk only: 0.690 / 0.826.]
 ] <tab-rfa>
 
+#figure(caption: [Trophic roles in 20 real food webs @ulanowicz1998 (1,086 compartments, 20–125 per web; edge prey → predator, weighted by carbon flow; boundary nodes removed). Labels: 8 trophic guilds (producer, detritus, microbial, herbivore, detritivore, omnivore, invertivore, top predator), given by an LLM from the compartment names and the ecosystem alone, without the graph (`foodweb_labels.py`; 63% high confidence). Leave one ecosystem out (12 ecosystems; seasons and sub-webs of one ecosystem stay together): fitted on the others, tested on an unseen ecosystem. Balanced accuracy, mean over ecosystems. `foodwebs.csv`.])[
+  #table(columns: 3, align: (left, center, center),
+    [], [Carbon flows], [Unweighted],
+    [*RoleWalk*], [0.428], [0.524],
+    [RoleWalk, no mixed probes], [0.420], [0.459],
+    [RoleWalk + curv.], [0.413], [0.492],
+    [Top-$k$ + layers], [0.377], [0.489],
+    [Digraphwave], [0.429], [*0.559*],
+    [Local statistics (in / out)], [–], [#underline[0.527]],
+    [ReFeX (frozen)], [–], [0.232],
+    [RWSE, out + in], [0.214], [–],
+    table.hline(stroke: 0.4pt),
+    [#emph[In/out degree and flow (baseline)]], [#emph[0.436]], [–],
+  )
+  #text(size: 8pt)[Carbon flows span 19 orders of magnitude; read as transition weights they send walks along the few largest flows (to detritus), and every walk-based method is better on the unweighted web, where the guild is who eats whom. There, the mixed probes add 0.065 $[0.006, 0.124]$ (paired over ecosystems, better on 10 of 12): sharing prey or predators (competition) is a trophic role. RoleWalk ties the local statistics ($-0.003$ $[-0.08, 0.08]$) and is below Digraphwave on unweighted webs; RoleWalk on the symmetrised flow web: 0.361.]
+] <tab-foodweb>
+
 #figure(caption: [Expressiveness: pairs told apart (CSL: number of the 10 isomorphism classes told apart). Every set is 1-WL-indistinguishable. Two graphs are told apart when their multisets of node embeddings differ beyond float32 noise (sorted rows compared at a relative tolerance $10^(-4)$). No false difference on random relabellings. `expressiveness.csv`.])[
   #table(columns: 7, align: (left,) + (center,) * 6,
     [], [Atlas ≤ 7 (20)], [Regular (3,181)], [CSL (10 cl.)], [Decalin / bicyc.], [$2 C_3$ / $C_6$], [SRG pair#super[\*]],
@@ -879,7 +896,7 @@ benchmark.
 - ReFeX is faster (5× at a million nodes) and wins on noisy synthetic directed motifs in supervised accuracy (with logistic regression; comparable with gradient boosting); a fixed-scale heat-kernel CF matches RoleWalk on two of three airport networks.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
-- One real labelled directed benchmark.
+- Two real labelled directed settings (wiki-RfA, food webs); on food webs RoleWalk ties local statistics and is below Digraphwave, and raw flow weights hurt every walk-based method.
 - GPS on ZINC: 5 seeds; our RWSE reproduction (0.077) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, but the paired 95% interval just includes 0 (sign test $p = 0.06$).
 
 #bibliography("refs.bib", style: "ieee")
