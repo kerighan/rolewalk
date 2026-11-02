@@ -11,3 +11,5 @@ resd,100000,631.08,0.71,ok
 resd,1000000,,,timeout 3600s
 role2vec,10000,55.61,2.04,ok
 role2vec,100000,,,failed (exit 1; 10 GB cap)
+digraphwave,10000,184.45,0.21,ok
+digraphwave,100000,,,timeout 3600s

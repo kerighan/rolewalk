@@ -646,7 +646,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     table.hline(stroke: 0.4pt),
     [Mean], [*0.799*], [#underline[0.798]], [0.789], [0.778], [0.776], [0.767], [0.533], [0.537], [#emph[0.523]],
   )
-  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Test graphs of the training size give the same ranking (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`). From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10: their coordinates depend on the graph, RoleWalk's on the neighbourhood only (@prop-local). Appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
+  #text(size: 8pt)[Local stats: degree, neighbour-degree moments, triangles, egonet boundary, clustering, lazy-walk returns at steps 2 and 3. RW heat CF: random-walk heat-kernel characteristic function. Test graphs of the training size give the same ranking (means: RoleWalk 0.851, top-$k$ + layers 0.835, ReFeX 0.822, RW heat CF 0.819, local stats 0.817, RWSE 0.726, GraphWave 0.633; `centrality_transfer.csv`). From the same size to $4 times$ the size, RoleWalk's mean drops by 0.05, RWSE's by 0.19 and GraphWave's (no $1 \/ n$) by 0.10: their coordinates depend on the graph, RoleWalk's on the neighbourhood only (@prop-local). Appending the local statistics to RoleWalk gives 0.875 / 0.780 / 0.863 / 0.990 / 0.838 / 0.657 / 0.654, mean 0.808. Digraphwave does not transfer (mean 0.08; `centrality_transfer_x4_dgw.csv`): its coordinates are near 1 with spreads that shrink with the graph's size, so on the larger graph they fall outside the bins learned on the smaller one and the regressor predicts a constant on 34 of the 96 graph–target pairs (counted as 0). With an unfrozen ReFeX (only where feature counts happen to match), k-core reached 0.935 at the same size: an artefact of the subset.]
 ] <tab-centrality>
 
 #figure(caption: [Role transfer between airport networks: classifier fitted on one network, tested on another (6 ordered pairs, accuracy). Labels are activity quartiles, close to degree: this transfer is won by degree-level statistics, and the centrality transfer of @tab-centrality is the relevant test of what walks transfer. Removing GraphWave's $1 \/ n$ lifts it from chance to 0.455 (@prop-graphwave); fixed scales and a heat kernel instead of walk powers give 0.425. `role_transfer.csv`, `role_transfer_gw.csv`.])[
@@ -658,7 +658,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
   )
 ] <tab-airport-transfer>
 
-#figure(caption: [Structural encodings for GNNs on ZINC (test MAE at the best validation epoch). Top: GINE, 4 layers, ≈230k parameters, 300 epochs, 3 seeds. Bottom: GPS @rampasek2022 protocol, 10 layers, ≈470k parameters, 500 epochs, 4 seeds. `pe_zinc_v13.csv`, `pe_zinc_gps*.csv`.])[
+#figure(caption: [Structural encodings for GNNs on ZINC (test MAE at the best validation epoch). Top: GINE, 4 layers, ≈230k parameters, 300 epochs, 3 seeds. Bottom: GPS @rampasek2022 protocol, 10 layers, ≈470k parameters, 500 epochs, 5 seeds. `pe_zinc_v13.csv`, `pe_zinc_gps*.csv`.])[
   #table(columns: 3, align: (left, center, center),
     [GINE], [Test MAE], [],
     [none], [0.202 ± 0.010], [],
@@ -668,11 +668,11 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [*RoleWalk + curv. + RWSE*], [*0.095 ± 0.002*], [],
     table.hline(stroke: 0.6pt),
     [GPS], [Test MAE], [Val. MAE],
-    [RWSE (published: 0.070 ± 0.004)], [0.076 ± 0.004], [0.099 ± 0.006],
-    [RoleWalk + curv.], [#underline[0.075 ± 0.002]], [*0.092 ± 0.004*],
-    [*RoleWalk + curv. + RWSE*], [*0.072 ± 0.002*], [#underline[0.094 ± 0.006]],
+    [RWSE (published: 0.070 ± 0.004)], [#underline[0.077 ± 0.004]], [0.100 ± 0.005],
+    [RoleWalk + curv.], [0.078 ± 0.006], [#underline[0.093 ± 0.003]],
+    [*RoleWalk + curv. + RWSE*], [*0.072 ± 0.001*], [*0.092 ± 0.006*],
   )
-  #text(size: 8pt)[RoleWalk + curv. + RWSE is below RWSE on each of the 4 seeds (paired difference 0.004 ± 0.004; 0.0002 on the closest seed). #todo[5th seed running; Peptides (LRGB)]]
+  #text(size: 8pt)[RoleWalk + curv. + RWSE is below RWSE on each of the 5 seeds (paired difference 0.0045 ± 0.0037; 0.0001 on the closest seed). RoleWalk + curv. alone is unstable across seeds (0.073 to 0.089).]
 ] <tab-zinc>
 
 #figure(caption: [Embedding time against size with the fused kernel, defaults (tol $10^(-4)$, 3 steps, layers), including the conversion of the networkx graph. `scalability.csv`.])[
@@ -691,7 +691,7 @@ shows how far labels follow activity) is set apart and not ranked. Code and CSV 
     [  \+ curvature], ..sizes.map(n => cell("watts_strogatz", n, "True")),
     [  8 threads], ..sizes.map(n => cell("watts_strogatz", n, "False", jobs: "8")),
   )
-  #text(size: 8pt)[Peak memory 2.5 GB at a million nodes, of which 1.6 GB hold the networkx graph. Baselines on the same Barabási-Albert graphs, one core (`scalability_baselines.csv`): ReFeX 0.1 s / 1.8 s / 31 s at 10k / 100k / 1M nodes, faster than RoleWalk; 16-step RWSE 68 s at 10k and over 16 GB at 100k; the heat-kernel CF 196 s at 10k. At 1,190 nodes (USA airports): struc2vec 564 s, GraphWave 18 s, Role2Vec 10 s, RESD 8 s; struc2vec and GraphWave do not run on wiki-RfA (11k nodes).]
+  #text(size: 8pt)[Peak memory 2.5 GB at a million nodes, of which 1.6 GB hold the networkx graph. Baselines on the same Barabási-Albert graphs, one core (`scalability_baselines.csv`): ReFeX 0.1 s / 1.8 s / 31 s at 10k / 100k / 1M nodes, faster than RoleWalk; 16-step RWSE 68 s at 10k and over 16 GB at 100k; RESD 62 s / 631 s at 10k / 100k and over an hour at 1M; Role2Vec 56 s at 10k and over 10 GB at 100k; the heat-kernel CF 196 s and Digraphwave 184 s at 10k, both over an hour at 100k. RoleWalk is the only embedding evaluated, other than ReFeX, to reach a million nodes. At 1,190 nodes (USA airports): struc2vec 564 s, GraphWave 18 s, Role2Vec 10 s, RESD 8 s; struc2vec and GraphWave do not run on wiki-RfA (11k nodes).]
 ] <tab-scale>
 
 = Analysis
@@ -843,6 +843,6 @@ node-type task rather than a role benchmark.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
 - One real labelled directed benchmark.
-- GPS on ZINC: 4 seeds; our RWSE reproduction (0.076) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, by a margin of the size of the seed noise.
+- GPS on ZINC: 5 seeds; our RWSE reproduction (0.077) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, by a margin of the size of the seed noise.
 
 #bibliography("refs.bib", style: "ieee")
