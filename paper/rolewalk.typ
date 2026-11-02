@@ -58,8 +58,8 @@
 
 Claims, each backed by a result below:
 
-+ All of: inductive, directed, weighted, training-free, deterministic, online, fast (@tab-props).
-+ Accuracy competitive with the state of the art on role classification (clearly ahead on one of six networks) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
++ All of: inductive, directed, weighted, training-free, deterministic, fast (@tab-props).
++ Accuracy competitive with the state of the art on role classification (significantly ahead of most baselines on USA airports, no tested comparison significantly worse elsewhere) at a fraction of the cost; a million nodes in minutes on one core (@tab-roles, @fig-speed, @tab-scale).
 + Reads edge directions natively, including walks that change direction; highest scores on both wiki-RfA tasks; on the network-alignment benchmark of Digraphwave (Enron, its protocol and published numbers), ahead of Digraphwave at every noise level (@tab-align); best retrieval and competitive clustering on synthetic directed motifs; on food webs, not distinguishable from local statistics or Digraphwave (@tab-directed, @tab-rfa, @tab-foodweb, @prop-mixed).
 + Pruning with a certified error (@prop-prune).
 + Transfer: a regressor fitted on one graph predicts path-based centralities of another from the same generator four times larger as well as the top-$k$ probabilities of the same walks (a tie: the law of the distance carries most of it) and better than every other baseline; under a change of generator parameters it stays ahead of every embedding, but local statistics transfer better on average (@tab-centrality, @sec-shift; @prop-local).
@@ -1020,7 +1020,7 @@ benchmark.
 - ReFeX is faster (5× at a million nodes) and wins on noisy synthetic directed motifs in supervised accuracy (with logistic regression; comparable with gradient boosting); a fixed-scale heat-kernel CF matches RoleWalk on two of three airport networks.
 - Middle-tier roles on real networks often form a continuum; per-node stability should be reported next to roles.
 - Degree-like labels (airports) favour trivial baselines.
-- Under a change of generator parameters (@sec-shift), hand-made local statistics transfer better than RoleWalk on average (clustering, $k$-core, betweenness); RoleWalk still leads every embedding. Under a change of size, a dimension-matched top-$k$ summary of the same walks ties RoleWalk (@tab-centrality).
+- Under a change of generator parameters (@sec-shift), hand-made local statistics transfer better than RoleWalk on average (clustering, $k$-core, betweenness); RoleWalk has the highest mean among embeddings, but its advantage over frozen ReFeX is not established. Under a change of size, a dimension-matched top-$k$ summary of the same walks ties RoleWalk (@tab-centrality).
 - Two real labelled directed settings (wiki-RfA, food webs); on food webs (proxy labels from three LLMs, 88.6% unanimous) RoleWalk, local statistics and Digraphwave are not distinguishable, and raw flow weights hurt every walk-based method evaluated both ways.
 - GPS on ZINC: 5 seeds; our RWSE reproduction (0.077) is weaker than the published 0.070; RoleWalk + curvature + RWSE (0.072) is better on every seed, but the paired 95% interval just includes 0 (sign test $p = 0.06$).
 

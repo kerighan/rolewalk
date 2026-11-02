@@ -456,10 +456,13 @@ def test_extreme_weights_give_the_unit_walk():
 
 def test_invalid_parameters_rejected():
     for kw in (dict(bounds=(0, 100)), dict(bounds=(10, 1)), dict(block_work=np.inf),
-               dict(n_jobs=0), dict(embedding_dim=0), dict(n_samples=2.5)):
+               dict(n_jobs=0), dict(embedding_dim=0), dict(n_samples=2.5),
+               dict(bounds=(1e19, 3e19))):
         try:
             RoleWalk(**kw)
         except ValueError:
             continue
         raise AssertionError(f"{kw} must be rejected")
     assert RoleWalk(n_samples=10.0).theta.shape == (1, 10)
+    model = RoleWalk(n_jobs=2.0, embedding_dim=8.0)
+    assert type(model.n_jobs) is int and type(model.embedding_dim) is int

@@ -615,7 +615,9 @@ class RoleWalk:
         if embedding_dim is not None and (int(embedding_dim) != embedding_dim
                                           or embedding_dim < 1):
             raise ValueError("embedding_dim must be a positive integer or None")
-        walk_len, n_samples = int(walk_len), int(n_samples)
+        walk_len, n_samples, n_jobs = int(walk_len), int(n_samples), int(n_jobs)
+        if embedding_dim is not None:
+            embedding_dim = int(embedding_dim)
         if max_missing is not None and not max_missing >= 0:
             raise ValueError("max_missing must be non-negative")
         default_bounds, spacing = THETA_SCHEMES[theta_scheme]
@@ -641,7 +643,8 @@ class RoleWalk:
         if not (np.isfinite(bounds).all() and 0 < bounds[0] < bounds[1]):
             raise ValueError("bounds must be finite with 0 < low < high")
         theta = spacing(bounds[0], bounds[1], n_samples)
-        if not np.isfinite(theta.astype(np.float32)).all():
+        if not (np.isfinite(theta.astype(np.float32)).all()
+                and np.isfinite(np.linalg.norm(theta.astype(np.float32)))):
             raise ValueError("bounds overflow float32")
         theta = theta[None, :].astype(np.float32)
         self.theta = theta
