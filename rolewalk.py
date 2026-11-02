@@ -66,7 +66,7 @@ def _prune(T, tol, max_missing=None):
 
 def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
                       rows=None, shells=False, curvature=None,
-                      max_missing=None):
+                      max_missing=None, return_missing=False):
     """Stack ``compute_iter`` over the first ``walk_len`` powers of ``H``.
 
     With ``rows``, only those rows of the powers are computed, which only
@@ -100,9 +100,12 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
     With ``curvature``, an array of node curvatures (see
     :func:`node_curvature`), each step also gives the mean and standard
     deviation of the curvature where the walk lands, on the same scale.
+
+    With ``return_missing``, also return the mass each row misses at each
+    step (lost to pruning).
     """
     scale = np.float32(np.linalg.norm(theta))
-    features = []
+    features, missing = [], []
     T = H if rows is None else H[rows]
     if shells:
         supports = [identity(H.shape[0], format="csr")
@@ -123,8 +126,9 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
         if w > 0 and tol:
             T = _prune(T, tol, max_missing)
         phi = compute_iter(T, theta, aggregate)
+        pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
+        missing.append(np.maximum(pruned, 0))
         if tol and aggregate == "sum":
-            pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
             phi[:, theta.shape[1]:] += pruned[:, None] * theta
         features.append(phi)
         if shells:
@@ -139,7 +143,8 @@ def compute_embedding(H, theta, walk_len=3, aggregate="sum", tol=0.0,
             mean = T @ curvature
             std = np.sqrt(np.maximum(T @ curvature ** 2 - mean ** 2, 0))
             features.append(scale * np.column_stack([mean, std]).astype(np.float32))
-    return np.hstack(features)
+    X = np.hstack(features)
+    return (X, np.column_stack(missing)) if return_missing else X
 
 
 try:
@@ -161,6 +166,7 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
     per_step = 2 * m + 2 * use_kappa
     width = walk_len * per_step + (walk_len * (walk_len + 3) // 2 if shells else 0)
     out = np.zeros((len(rows), width), dtype=np.float32)
+    missing = np.zeros((len(rows), walk_len))
     scale = np.sqrt(np.sum(theta ** 2))
     # below this probability every angle is under 0.1: Taylor series from
     # power sums instead of 2 m sines (truncation below 3e-12 of the term;
@@ -252,6 +258,7 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
                         -M[6] / 720 + t2 * M[8] / 40320)))
                     out[r, col + m + i] += theta[i] * (M[1] + t2 * (-M[3] / 6 + t2 * (
                         M[5] / 120 - t2 * M[7] / 5040)))
+                missing[r, w] = max(1.0 - kept, 0.0)
                 if tol > 0.0:  # missing mass, to first order
                     for i in range(m):
                         out[r, col + m + i] += (1.0 - kept) * theta[i]
@@ -266,7 +273,7 @@ def _walk_rows_kernel(indptr, indices, data, rows, walk_len, theta, tol,
                     col += 2
             for t in range(n_seen):
                 dist[seen[t]] = -1
-    return out
+    return out, missing
 
 
 if numba is not None:
@@ -275,11 +282,12 @@ if numba is not None:
 
 def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
                             shells=False, curvature=None, max_missing=None,
-                            n_jobs=1):
+                            n_jobs=1, return_missing=False):
     """compute_embedding (aggregate="sum") with the fused Numba kernel:
     a few times faster and with O(n) memory per thread. Same features up
     to float32 rounding and the Taylor truncation (relative error below
-    3e-12 for the default theta)."""
+    3e-12 for the default theta). With ``return_missing``, also return the
+    mass each row misses at each step."""
     if numba is None:
         raise ImportError("compute_embedding_fused needs numba")
     H = H.tocsr()
@@ -287,12 +295,13 @@ def compute_embedding_fused(H, theta, walk_len=3, tol=0.0, rows=None,
     n_threads = max(1, min(n_jobs, len(rows)))
     numba.set_num_threads(min(n_threads, numba.config.NUMBA_NUM_THREADS))
     kappa = np.zeros(0) if curvature is None else np.asarray(curvature, dtype=np.float64)
-    return _walk_rows_kernel(
+    X, missing = _walk_rows_kernel(
         H.indptr.astype(np.int64), H.indices.astype(np.int64),
         H.data.astype(np.float64), rows.astype(np.int64), walk_len,
         np.asarray(theta, dtype=np.float64).ravel(), float(tol),
         -1.0 if max_missing is None else float(max_missing), bool(shells),
         kappa, n_threads)
+    return (X, missing) if return_missing else X
 
 
 def _edge_triangles_kernel(indptr, indices, rank):
@@ -526,6 +535,19 @@ class RoleWalk:
         Names of the roles found by :meth:`fit`, indexed by label. Only
         stored, and saved along with the model.
 
+    Attributes
+    ----------
+    missing_ : ndarray of shape (n_nodes, n_blocks)
+        After :meth:`transform`, the probability mass each embedded node
+        lost to pruning at each step of each walk (out-walk then in-walk
+        steps, then the two mixed probes). 0 everywhere with ``tol=0``.
+    certificate_ : ndarray of shape (n_nodes,) or None
+        Bound on the distance between each embedded node's features and its
+        exact features (``tol=0``), in exact arithmetic (see the paper,
+        certified pruning): ``||theta|| sqrt(5 sum r^2 + 4 sum r_mixed^2)``
+        (4 instead of 5 without layers). None with curvature or more than
+        three steps, which it does not cover.
+
     Notes
     -----
     Embeddings only depend on the parameters above and on each node's
@@ -614,11 +636,24 @@ class RoleWalk:
         walks = [H]
         if nx.is_directed(G):
             walks.append(lazy_walk(A.T))
-        X = np.hstack([self._embed_blocks(W, rows, kappa) for W in walks])
+        parts = [self._embed_blocks(W, rows, kappa) for W in walks]
+        mixed = []
         if self.mixed and len(walks) == 2:
             H_out, H_in = walks
-            X = np.hstack([X, self._mixed_blocks(H_out, H_in, rows),
-                           self._mixed_blocks(H_in, H_out, rows)])
+            mixed = [self._mixed_blocks(H_out, H_in, rows),
+                     self._mixed_blocks(H_in, H_out, rows)]
+        X = np.hstack([x for x, _ in parts + mixed])
+        pure = np.hstack([r for _, r in parts])
+        self.missing_ = np.hstack([pure] + [r for _, r in mixed])
+        self.certificate_ = None
+        if not self.curvature and self.walk_len <= 3 and self.aggregate == "sum":
+            # proposition "certified pruning": 2 ||theta|| r per CF block,
+            # ||theta|| r per layer block
+            c = 5 if self.shells else 4
+            sq = c * (pure ** 2).sum(axis=1)
+            if mixed:
+                sq = sq + 4 * sum((r ** 2).sum(axis=1) for _, r in mixed)
+            self.certificate_ = np.linalg.norm(self.theta) * np.sqrt(sq)
 
         # random projection
         if self.embedding_dim is not None:
@@ -647,17 +682,18 @@ class RoleWalk:
         """Characteristic function of the rows of ``first @ second``, by
         blocks whose product has at most about ``block_work`` entries before
         pruning."""
-        out = []
+        out, missing = [], []
         for block in self._row_blocks(first, rows, second):
             T = (first[block] @ second).tocsr()
             if self.tol:
                 T = _prune(T, self.tol, self.max_missing)
             phi = compute_iter(T, self.theta, self.aggregate)
+            pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
             if self.tol and self.aggregate == "sum":
-                pruned = 1 - np.asarray(T.sum(axis=1)).ravel()
                 phi[:, self.theta.shape[1]:] += pruned[:, None] * self.theta
             out.append(phi)
-        return np.vstack(out)
+            missing.append(np.maximum(pruned, 0))
+        return np.vstack(out), np.concatenate(missing)[:, None]
 
     def _embed_blocks(self, H, rows, kappa):
         """compute_embedding over blocks of rows of similar expansion work,
@@ -665,12 +701,12 @@ class RoleWalk:
         if numba is not None and self.aggregate == "sum":
             return compute_embedding_fused(
                 H, self.theta, self.walk_len, self.tol, rows, self.shells,
-                kappa, self.max_missing, self.n_jobs)
-        return np.vstack([
-            compute_embedding(H, self.theta, self.walk_len, self.aggregate,
-                              self.tol, block, self.shells, kappa,
-                              self.max_missing)
-            for block in self._row_blocks(H, rows)])
+                kappa, self.max_missing, self.n_jobs, return_missing=True)
+        blocks = [compute_embedding(H, self.theta, self.walk_len, self.aggregate,
+                                    self.tol, block, self.shells, kappa,
+                                    self.max_missing, return_missing=True)
+                  for block in self._row_blocks(H, rows)]
+        return np.vstack([x for x, _ in blocks]), np.vstack([r for _, r in blocks])
 
     def fit(
         self, G, n_roles=None, max_n_roles=40, tolerance=0.05,

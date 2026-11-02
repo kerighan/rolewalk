@@ -378,3 +378,30 @@ def test_weighted_walk_ignores_units():
     V.add_nodes_from(U)
     V.add_edges_from(U.edges)
     np.testing.assert_array_equal(RoleWalk().transform(U), RoleWalk().transform(V))
+
+
+def test_certificate_bounds_pruning_error():
+    import rolewalk
+    G = nx.barabasi_albert_graph(2000, 2, seed=6)
+    D = nx.gnp_random_graph(400, 0.02, seed=7, directed=True)
+    for graph in (G, D):
+        exact = RoleWalk(tol=0).transform(graph)
+        for kw in (dict(tol=1e-3), dict(tol=1e-2, max_missing=0.05)):
+            for use_numba in (True, False):
+                saved = rolewalk.numba
+                if not use_numba:
+                    rolewalk.numba = None
+                try:
+                    model = RoleWalk(**kw)
+                    X = model.transform(graph)
+                finally:
+                    rolewalk.numba = saved
+                error = np.linalg.norm(X - exact, axis=1)
+                assert (error <= model.certificate_ + 1e-3).all()
+                assert model.missing_.min() >= 0
+                if "max_missing" in kw:
+                    assert model.missing_.max() <= 0.05 + 1e-9
+    model = RoleWalk(tol=0)
+    model.transform(G)
+    assert model.missing_.max() < 1e-9
+    assert RoleWalk(curvature=True).fit(G, n_roles=3).certificate_ is None
