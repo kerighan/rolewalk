@@ -13,9 +13,11 @@ target), and summarised by its mean and a t-interval over pairs: pairs are
 independent, so no correction for overlap is needed. Pairs with a constant
 target (k-core on Barabasi-Albert) are left out.
 
-    python transfer_analysis.py
+    python transfer_analysis.py                                  # size, 4x
+    python transfer_analysis.py "transfer_shift/*.csv" shift_paired.csv
 """
 import glob
+import sys
 
 import numpy as np
 import pandas as pd
@@ -36,7 +38,9 @@ def interval(d):
 
 
 def main():
-    df = pd.concat([pd.read_csv(f) for f in sorted(glob.glob("transfer_seeds/x4_*.csv"))])
+    pattern = sys.argv[1] if len(sys.argv) > 1 else "transfer_seeds/x4_*.csv"
+    output = sys.argv[2] if len(sys.argv) > 2 else "transfer_paired.csv"
+    df = pd.concat([pd.read_csv(f) for f in sorted(glob.glob(pattern))])
     df = df[df.target.isin(TARGETS)]
     # drop (pair, target) cells whose target is constant: NaN for every method
     wide = df.pivot_table(index=["graph", "seed", "target"], columns="features",
@@ -74,7 +78,7 @@ def main():
                          "high": high, "p": p, "pairs won": (d > 0).mean(),
                          "families won": f"{fam}/{d.index.get_level_values('graph').nunique()}"})
     out = pd.DataFrame(rows)
-    out.to_csv("transfer_paired.csv", index=False)
+    out.to_csv(output, index=False)
     with pd.option_context("display.width", 200, "display.max_rows", None):
         print("RoleWalk minus other: paired over graph pairs (95% t-interval)")
         print(out.round(3).to_string(index=False))
