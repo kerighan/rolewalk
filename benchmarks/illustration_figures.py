@@ -56,6 +56,8 @@ def radial_layout(G, root, rmax=4):
         def key(v):
             prev = [angle[x] for x in G[v] if x in angle]
             return np.angle(np.exp(1j * np.array(prev)).mean()) if prev else 0.0
+        if not layer:
+            break
         layer.sort(key=key)
         shift = key(layer[0]) if k > 1 else np.pi / 2
         for i, v in enumerate(layer):
@@ -64,7 +66,7 @@ def radial_layout(G, root, rmax=4):
     return pos, dist
 
 
-def method_figure(L=3, root=16):
+def method_figure(L=3, root=3):
     G = nx.karate_club_graph()
     H = lazy_walk(G)
     pos, dist = radial_layout(G, root)
@@ -82,7 +84,10 @@ def method_figure(L=3, root=16):
     # the walk only sees the ball of radius L: draw it alone
     ball = [v for v in G if dist[v] <= L]
     for u, v in G.subgraph(ball).edges():
-        ax.plot(*zip(pos[u], pos[v]), color=EDGE, lw=0.6, zorder=1)
+        # edges that step outwards carry the onion; edges within a layer recede
+        outward = dist[u] != dist[v]
+        ax.plot(*zip(pos[u], pos[v]), color="#a9a79e" if outward else "#e6e5df",
+                lw=0.7 if outward else 0.45, zorder=1.5 if outward else 1)
     for v in ball:
         size = 14 + 380 * np.sqrt(P[v])
         ax.scatter(*pos[v], s=size, color=LAYERS[dist[v]], ec="#ffffff", lw=0.8, zorder=3)
