@@ -50,6 +50,13 @@ Empirically, RoleWalk is competitive with the best role embeddings on five class
 % ---------------------------------------------------------------------------
 \section{Introduction}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_roles.pdf}
+\caption{Structural roles on eight houses attached to a cycle, the setting of GraphWave \citep{donnat2018}. (a) Nodes coloured by $k$-means ($k = 7$) on default RoleWalk embeddings; colours are matched to the seven true roles, and every node lands in its role's cluster. Far-apart copies of the same position get the same coordinates. (b) First two principal components of the standardised embeddings, coloured by true role; nodes in the same role coincide exactly, and a small jitter is added to show them.}
+\label{fig:roles}
+\end{figure}
+
 Two airports can play the same role --- a regional hub feeding a national one --- without sharing a single route.
 \emph{Structural} embeddings capture this kind of similarity: nodes are close when their neighbourhoods look alike, wherever they are in the graph \citep{henderson2012,ribeiro2017,donnat2018}.
 They are used for role discovery, for network alignment, where a node must be recognised in a second graph \citep{heimann2018,ceylan2022}, and as positional or structural encodings in graph neural networks and graph transformers \citep{dwivedi2022,rampasek2022}.
@@ -104,6 +111,13 @@ What is new is their combination into fixed, local, training-free coordinates fo
 % ---------------------------------------------------------------------------
 \section{Method}\label{sec:method}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_method.pdf}
+\caption{RoleWalk on one node $u$ of Zachary's karate club. (a) The three-step walk from $u$ never leaves the ball of radius 3, drawn by onion layer (distance to $u$); node size is the probability of the walker being there after three steps. At each step $w$, RoleWalk reads two laws of the walker: (b) the multiset of its probabilities, which the characteristic function $\phi^w_u$ summarises without knowing where the mass is, and (b$'$) the law of its distance to $u$, which says how much mass sits in each layer. (c) Each step contributes the real and imaginary parts of $\phi^w_u$ at ten frequencies (shade: magnitude, scaled per block) and $w+1$ layer masses scaled by $\nTh$.}
+\label{fig:method}
+\end{figure}
+
 \paragraph{Lazy walk.}
 Let $G=(V,E)$ be a graph with non-negative weights $A$, directed or not.
 Self-loops in the input are ignored. For node $u$, let $s_u$ be its weighted out-degree and $d_u$ its number of out-neighbours with positive weight.
@@ -129,7 +143,7 @@ Let $d(u,j)$ be the shortest-path distance in the direction of the walk (out-dis
 s^w_u(k) = \Pr\big(d(u,X_w) = k\big) = \sum_{j:\,d(u,j)=k} p^w_{uj}, \qquad k = 0,\dots,w .
 \end{equation}
 It takes $w+1$ values, and the multiset of probabilities ignores it: it says whether the walk lingers near $u$ (loops, triangles) or moves out.
-We call the sets of nodes at each distance \emph{onion layers}. The distances come from the supports of earlier powers, so no extra walk is computed.
+We call the sets of nodes at each distance \emph{onion layers} (\cref{fig:method}). The distances come from the supports of earlier powers, so no extra walk is computed.
 
 \paragraph{Embedding.}
 For each step $w = 1,\dots,L$ ($L = 3$ by default), RoleWalk concatenates $\operatorname{Re}\phi^w_u$, $\operatorname{Im}\phi^w_u$ and $\nTh\, s^w_u$, where $\nTh = (\sum_\theta \theta^2)^{1/2}$.
