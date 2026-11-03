@@ -114,7 +114,7 @@ What is new is their combination into fixed, local, training-free coordinates fo
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_method.pdf}
-\caption{RoleWalk on one node $u$ of Zachary's karate club. (a) The three-step walk from $u$ never leaves the ball of radius 3, drawn by onion layer (distance to $u$); node size is the probability of the walker being there after three steps. At each step $w$, RoleWalk reads two laws of the walker: (b) the multiset of its probabilities, which the characteristic function $\phi^w_u$ summarises without knowing where the mass is, and (b$'$) the law of its distance to $u$, which says how much mass sits in each layer. (c) Each step contributes the real and imaginary parts of $\phi^w_u$ at ten frequencies (shade: magnitude, scaled per block) and $w+1$ layer masses scaled by $\nTh$.}
+\caption{RoleWalk on one node $u$ of Zachary's karate club. (a) The three-step walk from $u$ never leaves the ball of radius 3, drawn by onion layer (distance to $u$); node size is the probability of the walker being there after three steps. At each step $w$, RoleWalk reads two laws of the same walk, in parallel. (b) The multiset of its probabilities (grey: their location is ignored) gives the real and imaginary parts of the characteristic function $\phi^w_u$ at ten frequencies (shade: magnitude, scaled per block). (c) The law of its distance to $u$, the mass in each onion layer, gives $w+1$ coordinates scaled by $\nTh$.}
 \label{fig:method}
 \end{figure}
 

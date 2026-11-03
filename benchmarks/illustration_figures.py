@@ -29,6 +29,7 @@ from rolewalk import RoleWalk  # noqa: E402
 
 OUT = os.path.join("..", "paper", "human")
 INK, MUTED, EDGE, GRID = "#0b0b0b", "#52514e", "#c3c2b7", "#e1e0d9"
+OTHER = "#8a8985"
 # onion layers: one blue ramp, darkest at the root
 LAYERS = ["#0d366b", "#2a78d6", "#6da7ec", "#b7d3f6"]
 CF = plt.get_cmap("Oranges")
@@ -104,15 +105,20 @@ def method_figure(L=3, root=3):
     ax.axis("off")
     ax.set_title("(a) 3-ball of $u$, onion layers; size $= p^3_{uj}$", fontsize=8, color=INK)
 
-    # (b) per step: the multiset of probabilities and the law of the distance,
-    # (c) the coordinates they give
+    # two parallel readings of the same walk at each step:
+    # (b) how concentrated: the values p^w_uj, wherever they are -> phi^w_u
+    # (c) how far: the law of d(u, X_w) -> the layer coordinates
     cv = fig.add_axes([0.35, 0.02, 0.65, 0.92])
     cv.set_xlim(0, 100)
     cv.set_ylim(0, 40)
     cv.axis("off")
-    cv.text(12, 38.5, "(b) probabilities $p^w_{uj}$", ha="center", fontsize=8)
-    cv.text(41, 38.5, "(b') law of $d(u, X_w)$", ha="center", fontsize=8)
-    cv.text(78, 38.5, "(c) coordinates of step $w$", ha="center", fontsize=8)
+    cv.text(29, 39.5, "(b) how concentrated", ha="center", fontsize=8)
+    cv.text(29, 36.6, r"values $p^w_{uj}$, wherever they are $\to$ $\phi^w_u$", ha="center",
+            fontsize=6.5, color=MUTED)
+    cv.text(78, 39.5, "(c) how far", ha="center", fontsize=8)
+    cv.text(78, 36.6, r"law of $d(u, X_w)$ $\to$ layer masses", ha="center", fontsize=6.5,
+            color=MUTED)
+    cv.plot([61, 61], [3, 37], color=GRID, lw=0.6, ls=(0, (2, 2)))
     Hw = np.eye(len(G))
     pmax = max(np.linalg.matrix_power(H, w)[root].max() for w in range(1, L + 1))
     for w in range(1, L + 1):
@@ -120,46 +126,45 @@ def method_figure(L=3, root=3):
         p = Hw[root]
         y0 = 36 - w * 11.5
         cv.text(-1.5, y0 + 4, f"$w={w}$", ha="right", va="center", fontsize=8)
-        # sorted probabilities, coloured by layer
+        # sorted probabilities, in neutral grey: phi ignores where the mass is
         order = np.argsort(-p)
         order = order[p[order] > 0]
         bw = 22 / 20
         for i, j in enumerate(order[:20]):
             h = 8.5 * p[j] / pmax
-            cv.add_patch(Rectangle((1 + i * bw, y0), bw * 0.8, max(h, 0.15),
-                                   color=LAYERS[min(dist[j], L)], lw=0))
+            cv.add_patch(Rectangle((1 + i * bw, y0), bw * 0.8, max(h, 0.15), color=OTHER, lw=0))
         cv.plot([1, 23.5], [y0, y0], color=EDGE, lw=0.5)
-        # law of the distance as one stacked bar
-        s = np.array([p[[j for j in G if dist[j] == k]].sum() for k in range(w + 1)])
-        x = 31
-        for k in range(w + 1):
-            cv.add_patch(Rectangle((x, y0 + 2.5), 20 * s[k], 3.5, color=LAYERS[k], lw=0))
-            x += 20 * s[k]
-        # coordinates: Re phi, Im phi (orange by magnitude), layers (blue by layer)
+        # Re phi, Im phi (orange by magnitude)
         phi = (np.exp(1j * np.outer(theta, p[p > 0])) - 1).sum(1)
-        x0, sq = 56.5, 1.55
+        x0, sq = 28.5, 1.45
         for b, vals in enumerate([phi.real, phi.imag]):
             m = np.abs(vals) / max(np.abs(vals).max(), 1e-9)
             for i, v in enumerate(m):
-                cv.add_patch(Rectangle((x0 + (b * 10 + i) * sq, y0 + 2.5), sq * 0.85, 3.5,
-                                       color=CF(0.15 + 0.75 * v), lw=0))
-        xl = x0 + 20 * sq + 1.2
+                cv.add_patch(Rectangle((x0 + (b * 10 + i) * sq + b * 0.8, y0 + 2.5), sq * 0.85,
+                                       3.5, color=CF(0.15 + 0.75 * v), lw=0))
+        # law of the distance as one stacked bar, then the layer coordinates
+        s = np.array([p[[j for j in G if dist[j] == k]].sum() for k in range(w + 1)])
+        x = 64
+        for k in range(w + 1):
+            cv.add_patch(Rectangle((x, y0 + 2.5), 16 * s[k], 3.5, color=LAYERS[k], lw=0))
+            x += 16 * s[k]
+        xl, sl = 86, 1.55
         for k in range(w + 1):  # bar height = mass of layer k
-            cv.add_patch(Rectangle((xl + k * sq, y0 + 2.5), sq * 0.85, 3.5, fill=False,
+            cv.add_patch(Rectangle((xl + k * sl, y0 + 2.5), sl * 0.85, 3.5, fill=False,
                                    ec=GRID, lw=0.5))
-            cv.add_patch(Rectangle((xl + k * sq, y0 + 2.5), sq * 0.85, 3.5 * s[k],
+            cv.add_patch(Rectangle((xl + k * sl, y0 + 2.5), sl * 0.85, 3.5 * s[k],
                                    color=LAYERS[k], lw=0))
         if w == 1:
             for xc, lab in [(x0 + 5 * sq, r"Re $\phi^w_u(\theta)$"),
-                            (x0 + 15 * sq, r"Im $\phi^w_u(\theta)$"),
-                            (xl + 1.5 * sq, r"$\|\Theta\|\,s^w_u$")]:
+                            (x0 + 15 * sq + 0.8, r"Im $\phi^w_u(\theta)$"),
+                            (72, r"$s^w_u(k)$, $k = 0..w$"),
+                            (xl + 1.5 * sl, r"$\|\Theta\|\,s^w_u$")]:
                 cv.text(xc, y0 + 7.3, lab, ha="center", fontsize=6.5, color=MUTED)
-        for xa, xb in [(24.5, 29.5), (52, 55.5)]:
+        for xa, xb in [(24.2, 27.8), (81, 85)]:
             cv.add_patch(FancyArrowPatch((xa, y0 + 4.2), (xb, y0 + 4.2), arrowstyle="-|>",
                                          mutation_scale=7, color=MUTED, lw=0.6))
-    cv.text(56.5, 1.0, r"$\theta$ log-spaced in $[1, 100]$; concatenated over $w = 1, 2, 3$: "
-            r"$3 \times 20 + 9 = 69$ coordinates", fontsize=6.5, color=MUTED)
-    cv.text(56.5, -2.0, "shade = magnitude; layer bars = mass at each distance",
+    cv.text(28.5, 1.0, r"$\theta$ log-spaced in $[1, 100]$; shade = magnitude. "
+            r"Per step: 20 + $(w+1)$ coordinates; over $w = 1, 2, 3$: $60 + 9 = 69$",
             fontsize=6.5, color=MUTED)
     fig.savefig(os.path.join(OUT, "fig_method.pdf"), bbox_inches="tight")
     fig.savefig(os.path.join(OUT, "fig_method.png"), dpi=200, bbox_inches="tight")
