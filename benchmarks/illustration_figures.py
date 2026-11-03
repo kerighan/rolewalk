@@ -109,7 +109,7 @@ def method_figure(L=3, root=3):
     # (b) how concentrated: the values p^w_uj, wherever they are -> phi^w_u
     # (c) how far: the law of d(u, X_w) -> the layer coordinates
     cv = fig.add_axes([0.35, 0.02, 0.65, 0.92])
-    cv.set_xlim(0, 100)
+    cv.set_xlim(0, 92)
     cv.set_ylim(0, 40)
     cv.axis("off")
     cv.text(29, 39.5, "(b) how concentrated", ha="center", fontsize=8)
@@ -163,9 +163,10 @@ def method_figure(L=3, root=3):
         for xa, xb in [(24.2, 27.8), (81, 85)]:
             cv.add_patch(FancyArrowPatch((xa, y0 + 4.2), (xb, y0 + 4.2), arrowstyle="-|>",
                                          mutation_scale=7, color=MUTED, lw=0.6))
-    cv.text(28.5, 1.0, r"$\theta$ log-spaced in $[1, 100]$; shade = magnitude. "
-            r"Per step: 20 + $(w+1)$ coordinates; over $w = 1, 2, 3$: $60 + 9 = 69$",
+    cv.text(28.5, 1.0, r"$\theta$ log-spaced in $[1, 100]$; shade = magnitude",
             fontsize=6.5, color=MUTED)
+    cv.text(28.5, -1.9, r"over $w = 1, 2, 3$: $60 + 9 = 69$ coordinates", fontsize=6.5,
+            color=MUTED)
     fig.savefig(os.path.join(OUT, "fig_method.pdf"), bbox_inches="tight")
     fig.savefig(os.path.join(OUT, "fig_method.png"), dpi=200, bbox_inches="tight")
 
