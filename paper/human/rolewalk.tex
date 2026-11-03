@@ -30,8 +30,17 @@
 \newcommand{\best}[1]{\textbf{#1}}
 \newcommand{\second}[1]{\underline{#1}}
 
+% Anonymous submission: \anontrue. Camera-ready or arXiv: \anonfalse.
+\newif\ifanon
+\anonfalse
+\ifanon
+  \newcommand{\codeurl}{\url{https://anonymous.4open.science/r/rolewalk}}
+\else
+  \newcommand{\codeurl}{\url{https://github.com/kerighan/rolewalk}}
+\fi
+
 \title{\textbf{RoleWalk: training-free structural embeddings\\ for directed graphs that transfer across graphs}}
-\author{Maixent Chenebaux}
+\author{\ifanon Anonymous authors\else Maixent Chenebaux\fi}
 \date{}
 
 \begin{document}
@@ -45,6 +54,7 @@ On directed graphs, walks that go forward then backward add who shares a node's 
 The embedding depends only on a node's neighbourhood within a fixed radius, so its coordinates mean the same thing in every graph.
 We show that, without curvature, it is the kernel mean embedding of the walk's footprint, that it separates graphs that the Weisfeiler--Leman test cannot, and that pruning small probabilities comes with a per-node error certificate.
 Empirically, RoleWalk is competitive with the best role embeddings on five classification benchmarks at a fraction of their cost, has the highest scores on real directed roles in Wikipedia adminship, exceeds the published accuracy of Digraphwave at every noise level of its own Enron network-alignment benchmark, transfers centrality predictors to graphs four times larger better than existing inductive embeddings, hand-made features and a trained GIN, and embeds a million nodes in 20\,s to 3\,min on one CPU core.
+The code is open source (BSD license): \codeurl.
 \end{abstract}
 
 % ---------------------------------------------------------------------------
@@ -77,7 +87,7 @@ RoleWalk encodes both, at each of a few steps, with fixed functions that need no
 \item \textbf{Properties} (\cref{sec:theory}): locality and invariance, an interpretation as a kernel mean embedding, triangle counting and incomparability with 1-WL, a provable failure class, and a per-node certificate for pruned computation.
 \item \textbf{Experiments} (\cref{sec:experiments}): role classification on five networks, real directed roles, network alignment on Digraphwave's own protocol, transfer of centralities across graph sizes, and scaling to a million nodes.
 \end{itemize}
-Code and every result file are released with the paper; a complete technical report with all ablations, negative results and additional benchmarks accompanies it as supplementary material.
+RoleWalk is an open-source Python library (BSD license; \codeurl), released with the benchmark scripts and every result file; a complete technical report with all ablations, negative results and additional benchmarks accompanies it as supplementary material.
 
 % ---------------------------------------------------------------------------
 \section{Related work}
