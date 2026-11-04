@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rolewalk"
+version = "1.5.0"
+description = "Fast, inductive structural role embeddings for directed and undirected graphs"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "BSD-3-Clause"
+license-files = ["LICENSE.txt"]
+authors = [{ name = "Maixent Chenebaux", email = "max.chbx@gmail.com" }]
+keywords = ["graph", "node embedding", "structural roles", "random walks", "positional encoding"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "networkx>=2.7",
+    "scikit-learn",
+    "pandas",
+]
+
+[project.optional-dependencies]
+fast = ["numba"]
+test = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/kerighan/rolewalk"
+Source = "https://github.com/kerighan/rolewalk"
+
+[tool.setuptools]
+py-modules = ["rolewalk"]

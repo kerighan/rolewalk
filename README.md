@@ -40,8 +40,8 @@ Install
 -------
 
 ```bash
-pip install .          # from a clone of this repository
-pip install ".[fast]"  # with numba: fused walk kernel, ~2x faster, low memory
+pip install rolewalk          # from PyPI
+pip install "rolewalk[fast]"  # with numba: fused walk kernel, ~2x faster, low memory
 ```
 
 Quickstart
@@ -150,13 +150,13 @@ core.
 ### Role recovery
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/role_recovery-dark.png">
-  <img alt="RoleWalk recovers roles better than GraphWave at every noise level" src="docs/img/role_recovery-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/role_recovery-dark.png">
+  <img alt="RoleWalk recovers roles better than GraphWave at every noise level" src="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/role_recovery-light.png">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/speed-dark.png">
-  <img alt="RoleWalk embeds 180 to 2,700 times faster than GraphWave" src="docs/img/speed-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/speed-dark.png">
+  <img alt="RoleWalk embeds 180 to 2,700 times faster than GraphWave" src="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/speed-light.png">
 </picture>
 
 The GraphWave paper's setting (Donnat et al., KDD 2018): house, star,
@@ -180,8 +180,8 @@ same-role nodes by embedding distance.
 ### Predicting centralities
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/centrality-dark.png">
-  <img alt="Spearman correlation of predicted centralities, log-degree vs RoleWalk" src="docs/img/centrality-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/centrality-dark.png">
+  <img alt="Spearman correlation of predicted centralities, log-degree vs RoleWalk" src="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/centrality-light.png">
 </picture>
 
 Gradient boosting on the embedding, Spearman correlation with the true
@@ -207,8 +207,8 @@ the hardest to read from a few walk steps.
 ### Betweenness: learning vs sampling
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/betweenness-dark.png">
-  <img alt="Spearman correlation vs time for RoleWalk and source sampling on three graph families" src="docs/img/betweenness-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/betweenness-dark.png">
+  <img alt="Spearman correlation vs time for RoleWalk and source sampling on three graph families" src="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/betweenness-light.png">
 </picture>
 
 The usual way to estimate betweenness on large graphs is to run the
@@ -233,8 +233,8 @@ betweenness as `k` grows, whereas RoleWalk ranks nodes, plateaus around
 ### Finding roles
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/clustering-dark.png">
-  <img alt="ARI of methods that choose the number of roles" src="docs/img/clustering-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/clustering-dark.png">
+  <img alt="ARI of methods that choose the number of roles" src="https://raw.githubusercontent.com/kerighan/rolewalk/master/docs/img/clustering-light.png">
 </picture>
 
 ARI against true roles on the synthetic graphs, noise 0-5%
