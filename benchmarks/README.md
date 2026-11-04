@@ -291,8 +291,10 @@ python betweenness_benchmark.py
 
 ## Plots
 
-`plot_benchmarks.py` draws the README's charts from the CSVs above, in
-light and dark versions, into `docs/img/`.
+`plot_benchmarks.py` draws the README's charts, in light and dark versions,
+into `docs/img/`: the roles of houses on a cycle (computed), accuracy against
+time (from the role CSVs, as `speed_figure.py`), and the paper's alignment,
+centrality-transfer and scale tables.
 
 ```bash
 python plot_benchmarks.py
