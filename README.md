@@ -32,8 +32,17 @@ Install
 -------
 
 ```bash
-pip install rolewalk          # numpy, scipy, networkx, scikit-learn, pandas
-pip install "rolewalk[fast]"  # with numba: fused walk kernel, faster, O(n) memory
+pip install rolewalk
+```
+
+numba is installed with it and compiles a fused walk kernel (about twice as
+fast, O(n) memory). Where numba cannot be installed (it supports a new Python
+version a few months after its release), RoleWalk falls back to sparse
+matrix products, with the same embeddings up to rounding:
+
+```bash
+pip install --no-deps rolewalk
+pip install numpy scipy networkx scikit-learn pandas
 ```
 
 Quickstart

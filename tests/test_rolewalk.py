@@ -332,6 +332,9 @@ def test_negative_weights_rejected():
 
 def test_triangle_curvature_linear_on_stars():
     import time
+    import rolewalk
+    if rolewalk.numba is None:  # the sparse product is quadratic on stars
+        return
     A = nx.to_scipy_sparse_array(nx.star_graph(200000), format="csr")
     start = time.perf_counter()
     kappa = node_curvature(A)

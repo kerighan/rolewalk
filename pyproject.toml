@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rolewalk"
-version = "2.0.0"
+version = "2.0.1"
 description = "Fast, inductive structural role embeddings for directed and undirected graphs"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -27,10 +27,11 @@ dependencies = [
     "networkx>=2.7",
     "scikit-learn",
     "pandas",
+    "numba",
 ]
 
 [project.optional-dependencies]
-fast = ["numba"]
+fast = []  # numba is a dependency since 2.0.1; kept so "rolewalk[fast]" still installs
 test = ["pytest"]
 
 [project.urls]
