@@ -196,7 +196,7 @@ This is what makes transfer well defined: a coordinate means the same thing in e
 
 \begin{proposition}[One kernel on the walk's footprint]\label{prop:mmd}
 Mark each node $j$ reached at step $w$ by $(w, p^w_{uj}, d(u,j))$, and let $\mu_u$ be the resulting finite measure (the \emph{footprint} of the walks from $u$).
-Without curvature, $\lVert X_u - X_v\rVert^2$ is the squared maximum mean discrepancy \citep{gretton2012} between $\mu_u$ and $\mu_v$ for the positive-semidefinite kernel
+Without curvature, $\lVert X_u - X_v\rVert^2$ is the squared maximum mean discrepancy \citep{gretton2012} between $\mu_u$ and $\mu_v$ for the positive semidefinite kernel
 \begin{multline*}
 K\big((w,a,\ell),(w',b,\ell')\big) \\ = \delta_{ww'}\Big[\textstyle\sum_{\theta\in\Th}\big(\cos\theta(a-b) - \cos\theta a - \cos\theta b + 1\big) + \nTh^2\, ab\,\delta_{\ell\ell'}\Big].
 \end{multline*}
